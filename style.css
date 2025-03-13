@@ -4,11 +4,9 @@ body {
     font-size: 1.4rem;
     line-height: 1.5;
     color: hsl(27 deg 95% 90%);
-    background-image: linear-gradient(
+    background-image: radial-gradient(
         to right bottom,
-        hsl(141deg, 78.9%, 85.1%),
-         hsl(142deg, 69.2%, 58.0%),
-          hsl(142deg, 70.6%, 43.5%))
+        hsl(198deg, 93%, 60%), hsl(242deg, 47%, 34%))
 }
 
 .header {
