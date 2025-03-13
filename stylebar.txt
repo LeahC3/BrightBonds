@@ -9,14 +9,7 @@ body {
         hsl(198deg, 93%, 60%), hsl(242deg, 47%, 34%))
 }
 
-a {
-    color: hsl(216deg 94% 16%);
-    text-decoration: none;
-    display: inline-block;
-    padding: 2rem 2rem;
-}
-
-/* .header {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -65,4 +58,4 @@ a {
         margin-block-start: 1rem;
         flex-wrap: wrap;
     }
-} */
+}

@@ -3,10 +3,10 @@
 <html>
     <head>
         <title>Bright Bonds</title>
-        <link rel="icon" type="image/x-icon" href="favicon.png">
+        <link rel="icon" type="image/x-icon" href="brightBondsLogo.PNG">
         <link rel="stylesheet" href="style.css">
     </head>
-    <!-- <header class="header">
+    <header class="header">
         <h1 class="header__logo">
             <a href="">
                 <img src="brightBondsLogo.PNG" class="header__img" alt="CSS weekly logo" width="100px" height="100px">
@@ -21,10 +21,6 @@
                 <li><a href="" class="header__a">idk</a></li>
             </ul>
         </nav>
-    </header> -->
-
-    <body>
-        <a>Hi Savannah :D</a>
-    </body>
+    </header>
     
 </html>
