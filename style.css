@@ -21,7 +21,18 @@ nav ul {
     width: 4rem;
     height: 4rem;
     margin-left: 1rem;
-    margin-top: 0.3rem;
+    margin-top: 0.4rem;
+}
+
+#logoText {
+    float: left;
+    color: #baf0f4;
+    font-family: "Adamina", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    margin-left: 1.2rem;
+    margin-top: 1.3rem;
 }
 
 nav li a {
@@ -32,9 +43,11 @@ nav li a {
     padding: 1.7rem 1.7rem;
     text-decoration: none;
 
-    font-family: "Nunito Sans", sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
-    font-size: 1rem;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1.1rem;
 }
 
 nav li a:hover {
