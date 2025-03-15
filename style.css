@@ -1,5 +1,11 @@
 body {
     background-color:white;
+    margin: 0px;
+}
+
+nav {
+    top: 0;
+    position: sticky;
 }
 
 nav ul {
@@ -12,9 +18,10 @@ nav ul {
 
 #navLogo {
     float: left;
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 4rem;
     margin-left: 1rem;
+    margin-top: 0.3rem;
 }
 
 nav li a {
@@ -22,15 +29,18 @@ nav li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 1.5rem 2rem;
+    padding: 1.7rem 1.7rem;
     text-decoration: none;
 
     font-family: "Nunito Sans", sans-serif;
     font-optical-sizing: auto;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 
 nav li a:hover {
     background-color: #00184c;
 }
 
+p {
+    font-size: 2rem;
+}
