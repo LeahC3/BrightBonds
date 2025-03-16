@@ -1,0 +1,52 @@
+body {
+    background-color: white;
+}
+
+.outer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.errorText {
+    display: inline-block;
+    align-items: center;
+}
+
+.ig {
+    display: inline-flex;
+    align-items: center;
+}
+
+h1 {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: 4rem;
+    padding: 0rem;
+    margin: 0rem;
+}
+
+p {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-size: 2rem;
+    padding: 0rem;
+    margin: 0rem;
+}
+
+#errorImg {
+    width: 10rem;
+    height: 10rem;
+}
+
+button  {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    text-decoration: none;
+}
