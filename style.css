@@ -45,7 +45,7 @@ nav li a {
 
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
-    font-weight: 300;
+    font-weight: 400;
     font-style: normal;
     font-size: 1.1rem;
 }
@@ -54,9 +54,22 @@ nav li a:hover {
     background-color: #00184c;
 }
 
+h1 {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2rem;
+    padding: 1rem 2rem 0rem 2rem;
+}
+
 p {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
     font-size: 1.5rem;
-    padding: 2rem;
+    padding: 0rem 2rem 0rem 2rem;
 }
 
 footer {
@@ -66,5 +79,32 @@ footer {
     font-optical-sizing: auto;
     font-weight: 300;
     font-size: 1rem;
-    padding: 1rem;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+form {
+    padding: 0rem 2rem 1rem 2rem;
+}
+
+label {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1.3rem;
+}
+
+input {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-size: 1.3rem;
+
+    width: 20rem;
+    margin-bottom: 1rem;
+}
+
+.submitButton {
+    margin-top: 0.5rem;
+    margin-bottom: 0rem;
 }
