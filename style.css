@@ -1,48 +1,51 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
 body {
-    background-color:white;
-    margin: 0px;
+    background-color: white;
 }
 
 nav {
-    top: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: right;
+    background-color: #012572;
+    width: 100vw;
+
+    top:0;
     position: sticky;
 }
 
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #012572;
-}
-
-#navLogo {
-    float: left;
-    width: 4rem;
-    height: 4rem;
+.logo {
+    display: inline-flex;
+    align-items: center;
     margin-left: 1rem;
-    margin-top: 0.4rem;
+    margin-right: auto;
 }
 
 #logoText {
-    float: left;
-    color: #baf0f4;
+    margin-left: 1rem;
+
     font-family: "Adamina", serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
-    margin-left: 1.2rem;
-    margin-top: 1.3rem;
+    color: white;
 }
 
-nav li a {
-    float: right;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 1.7rem 1.7rem;
-    text-decoration: none;
+#brightbondsimg {
+    width: 4rem;
+    height: 4rem;
+}
 
+.page {
+    padding: 2.5rem 1.5rem;
+
+
+    text-decoration: none;
+    color: white;
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
@@ -50,8 +53,12 @@ nav li a {
     font-size: 1.1rem;
 }
 
-nav li a:hover {
-    background-color: #00184c;
+#active {
+    background-color: #001f61;
+}
+
+.page:hover {
+    background-color: #00184c !important;
 }
 
 h1 {
@@ -60,7 +67,7 @@ h1 {
     font-weight: 400;
     font-style: normal;
     font-size: 2rem;
-    padding: 1rem 2rem 0rem 2rem;
+    padding: 2rem 2rem 0rem 2rem;
 }
 
 p {
@@ -69,7 +76,7 @@ p {
     font-weight: 300;
     font-style: normal;
     font-size: 1.5rem;
-    padding: 0rem 2rem 0rem 2rem;
+    padding: 1rem 2rem 0rem 2rem;
 }
 
 footer {
