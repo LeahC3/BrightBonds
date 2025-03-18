@@ -7,58 +7,130 @@ body {
     background-color: white;
 }
 
-nav {
-    display: inline-flex;
-    align-items: center;
-    justify-content: right;
-    background-color: #012572;
-    width: 100vw;
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    nav {
+        display: inline-flex;
+        align-items: center;
+        justify-content: right;
+        background-color: #012572;
+        width: 100vw;
 
-    top:0;
-    position: sticky;
+        top:0;
+        position: sticky;
+    }
+
+    .logo {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 1rem;
+        margin-right: auto;
+    }
+
+    #logoText {
+        margin-left: 1rem;
+
+        font-family: "Adamina", serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    #brightbondsimg {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .hamburgerMenu
+    {
+        display:none;
+    }
+
+    .page {
+        padding: 2.5rem 1.5rem;
+        text-decoration: none;
+        color: white;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.1rem;
+    }
+
+    #active {
+        background-color: #001f61;
+    }
+
+    .page:hover {
+        background-color: #00184c !important;
+    }
 }
 
-.logo {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 1rem;
-    margin-right: auto;
-}
+@media only screen and (max-width: 600px) {
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+        background-color: #012572;
+        /* width: 100vw; */
+    
+        top:0;
+        position: sticky;
+    }
+    
+    .logo {
+        display: flex;
+        align-items: center;
+        margin-left: 1rem;
+    }
+    
+    #logoText {
+        margin-left: 1rem;
+    
+        font-family: "Adamina", serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.5rem;
+        color: white;
+    }
+    
+    #brightbondsimg {
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+        width: 4rem;
+        height: 4rem;
+    }
+    
+    .hamburgerMenu {
+        margin-right: 1rem;
+        margin-left: auto;
+        color: white;
+        width: 2rem;
+        height: 2rem;
+    }
 
-#logoText {
-    margin-left: 1rem;
-
-    font-family: "Adamina", serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 1.5rem;
-    color: white;
-}
-
-#brightbondsimg {
-    width: 4rem;
-    height: 4rem;
-}
-
-.page {
-    padding: 2.5rem 1.5rem;
-
-
-    text-decoration: none;
-    color: white;
-    font-family: "Open Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 1.1rem;
-}
-
-#active {
-    background-color: #001f61;
-}
-
-.page:hover {
-    background-color: #00184c !important;
+    .page {
+        width: 100vw;
+        padding: 0rem;
+        text-decoration: none;
+        color: #001f61;
+        background-color: #baf0f4;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 0rem;
+    }
+    
+    #active {
+        background-color: #9ddce1;
+    }
+    
+    .page:hover {
+        background-color: #8bccd0 !important;
+    }
 }
 
 h1 {
