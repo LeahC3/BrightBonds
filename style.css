@@ -163,7 +163,8 @@ footer {
 }
 
 form {
-    padding: 0rem 2rem 1rem 2rem;
+    padding: 1rem 0rem;
+    text-align: center;
 }
 
 label {
@@ -178,12 +179,47 @@ input {
     font-optical-sizing: auto;
     font-weight: 300;
     font-size: 1.3rem;
-
-    width: 20rem;
     margin-bottom: 1rem;
+    width: 20rem;
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    border-width: 0.1rem;
+    border-color: lightgray;
+    border-style:solid;
 }
 
 .submitButton {
     margin-top: 0.5rem;
-    margin-bottom: 0rem;
+    margin-bottom: 1rem;
+    border-style: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: #baf0f4;
+}
+
+.submitButton:hover {
+    opacity: 70%;
+}
+
+.gradient {
+    background-image: linear-gradient(rgb(56, 189, 248), rgb(186, 230, 253));
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    width: 100vw;
+}
+
+.container {
+    background-color: white;
+    border-radius: 1rem;
+    display: flex;
+    width: 28rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
