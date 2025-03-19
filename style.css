@@ -195,6 +195,7 @@ input {
     border-radius: 0.5rem;
     padding: 0.5rem;
     background-color: #baf0f4;
+    color: black;
 }
 
 .submitButton:hover {
