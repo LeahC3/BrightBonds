@@ -211,7 +211,7 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    padding-top: 5rem;
     width: 100vw;
 }
 
