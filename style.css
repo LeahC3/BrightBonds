@@ -5,9 +5,14 @@
 
 body {
     background-color: white;
-    overflow-x: hidden;
+    position: relative;
     max-width: 100%;
 }
+
+html, body {
+    overflow-x: hidden;
+}
+
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
