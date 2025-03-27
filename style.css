@@ -80,6 +80,7 @@ body {
     
         top:0;
         position: sticky;
+        z-index: 1100;
     }
     
     .logo {
@@ -188,6 +189,11 @@ input {
     border-width: 0.1rem;
     border-color: lightgray;
     border-style:solid;
+
+    text-overflow: ellipsis;
+    /* Required for text-overflow to do anything */
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .submitButton {
@@ -235,6 +241,7 @@ input {
     justify-content: center;
     align-items: center;
     margin: 5rem 0rem;
+    flex-wrap: wrap;
 }
 
 
@@ -244,14 +251,21 @@ input {
 }
 
 .backImg {
-    width: 100vw;
+    height: 90vh;
 }
 
-h2 {
+.overImg
+{
+    display: flex;
     position: absolute;
     right: 3rem;
     top: 40%;
+    align-items: end;
+    flex-direction: column;
+    text-align: right;
+}
 
+h2 {
     background-color: #baf0f4;
     color: black;
     font-family: "Open Sans", sans-serif;
@@ -267,10 +281,8 @@ h2 {
 }
 
 #learnMore {
-    position: absolute;
     padding: 1rem 3rem;
-    right: 3rem;
-    top: 50%;
+    margin-top: 1rem;
 
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
@@ -292,8 +304,8 @@ h2 {
 }
 
 #handsImg {
-    padding-top: 2rem;
     width: 30rem;
+    margin-top: 1rem;
 }
 
 .textContainer  {
@@ -315,6 +327,7 @@ h2 {
 
     margin-top: 1rem;
     margin-left: 2rem;
+    margin-bottom: 2rem;
 }
 
 .button:hover {
