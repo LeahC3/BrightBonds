@@ -272,7 +272,7 @@ input {
     text-align: right;
 }
 
-h2 {
+h5 {
     background-color: #baf0f4;
     color: black;
     font-family: "Open Sans", sans-serif;
@@ -313,6 +313,7 @@ h2 {
 #handsImg {
     width: 30rem;
     margin-top: 1rem;
+    max-width: 90vw;
 }
 
 .textContainer  {
@@ -333,8 +334,11 @@ h2 {
     color: #001f61;
 
     margin-top: 1rem;
-    margin-left: 2rem;
     margin-bottom: 2rem;
+}
+
+.buttonContainer {
+    margin-left: 2rem;
 }
 
 .button:hover {
@@ -355,6 +359,30 @@ h2 {
 @keyframes slideInFromBottom {
     0% {
         transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+h2 {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 3.5rem;
+    padding: 2rem 2rem 0rem 2rem;
+    color: #012572;
+
+    animation-name: slideInFromTop;
+    animation-duration: 0.5s;
+}
+
+@keyframes slideInFromTop {
+    0% {
+        transform: translateY(-100%);
         opacity: 0;
     }
     100% {
