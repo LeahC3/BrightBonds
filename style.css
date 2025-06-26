@@ -308,6 +308,7 @@ h5 {
 
 #learnMore:hover {
     opacity: 70%;
+    cursor: pointer;
 }
 
 #handsImg {
@@ -343,6 +344,7 @@ h5 {
 
 .button:hover {
     opacity: 70%;
+    cursor: pointer;
 }
 
 @keyframes slideInFromRight {

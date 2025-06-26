@@ -17,3 +17,14 @@ function togglePages() {
     }
 
   }
+
+// const signUpButton=document.getElementById("sign_up_button")
+// const signInButton=document.getElementById("sign_in_button")
+// const signInForm=document.getElementById("signin_form")
+// const signUpForm=document.getElementById("signup_form")
+
+// signUpButton.addEventListener("click", function(){
+//     alert("hi");
+// })
+
+// alert("run")
