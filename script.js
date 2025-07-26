@@ -18,13 +18,36 @@ function togglePages() {
 
   }
 
-// const signUpButton=document.getElementById("sign_up_button")
-// const signInButton=document.getElementById("sign_in_button")
-// const signInForm=document.getElementById("signin_form")
-// const signUpForm=document.getElementById("signup_form")
+document.addEventListener("DOMContentLoaded", function () {
+  const signupForm = document.getElementById("signup_form");
+  if (signupForm) {
+    signupForm.addEventListener("submit", async function (e) {
+      e.preventDefault(); // Stop the form from reloading the page
 
-// signUpButton.addEventListener("click", function(){
-//     alert("hi");
-// })
+      const formData = new FormData(signupForm);
+      const data = Object.fromEntries(formData.entries());
 
-// alert("run")
+      // Optional: Check password match
+      if (data.password !== data.confirm_password) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      try {
+        const response = await fetch("YOUR_API_GATEWAY_URL", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        alert(result.message || "Form submitted!");
+      } catch (err) {
+        console.error("Error submitting form:", err);
+        alert("There was a problem submitting the form.");
+      }
+    });
+  }
+});
