@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const response = await fetch("YOUR_API_GATEWAY_URL", {
+        const response = await fetch("https://8fulahgtxb.execute-api.us-east-2.amazonaws.com/beta", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
