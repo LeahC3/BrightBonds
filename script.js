@@ -1,44 +1,41 @@
-window.onload = () => {
-  const { Amplify, Auth } = window.AWSAmplify;
+const { Amplify, Auth } = window.AWSAmplify;
 
-  Amplify.configure({
-    Auth: {
-      region: "us-east-2", // Replace with your actual region
-      userPoolId: "us-east-2_erpO5r38p", // Replace with your User Pool ID
-      userPoolWebClientId: "2qth4hv9mjbs5l57dc2rkughi3" // Replace with your App Client ID
-    }
-  });
+Amplify.configure({
+  Auth: {
+    region: "us-east-1",
+    userPoolId: "us-east-1_ABC123XYZ",
+    userPoolWebClientId: "abc123def456ghi789"
+  }
+});
 
-  // Now you can hook up your form event listener:
-  document.getElementById("signup-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+document.getElementById("signup-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const birthdate = document.getElementById("birthdate").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const birthdate = document.getElementById("birthdate").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    try {
-      const result = await Auth.signUp({
-        username: email,
-        password: password,
-        attributes: {
-          email: email,
-          given_name: firstName,
-          family_name: lastName,
-          birthdate: birthdate
-        }
-      });
+  try {
+    const result = await Auth.signUp({
+      username: email,
+      password: password,
+      attributes: {
+        email: email,
+        given_name: firstName,
+        family_name: lastName,
+        birthdate: birthdate
+      }
+    });
 
-      console.log("Sign-up successful:", result);
-      alert("Check your email to confirm your account!");
-    } catch (error) {
-      console.error("Sign-up error:", error);
-      alert("Error: " + error.message);
-    }
-  });
-};
+    console.log("Sign-up successful:", result);
+    alert("Check your email to confirm your account!");
+  } catch (error) {
+    console.error("Sign-up error:", error);
+    alert("Error: " + error.message);
+  }
+});
 
 
 /* Toggle between showing and hiding page menu when hamburger icon clicked*/
