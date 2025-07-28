@@ -61,7 +61,7 @@ function togglePages() {
 //   }
 // });
 
-const { Amplify, Auth } = window.aws_amplify;
+const { Amplify, Auth } = window.AWSAmplify;
 
 Amplify.configure({
   Auth: {
