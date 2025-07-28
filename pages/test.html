@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cognito Signup Test</title>
+</head>
+<body>
+  <h2>Test Signup</h2>
+  <form id="signup-form">
+    <input type="text" id="firstName" placeholder="First Name" required />
+    <input type="text" id="lastName" placeholder="Last Name" required />
+    <input type="date" id="birthdate" placeholder="Birthdate" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <!-- ✅ Load Amplify FIRST -->
+  <script src="https://unpkg.com/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
+
+  <!-- ✅ Run signup logic directly -->
+  <script>
+    console.log("window.AWSAmplify =", window.AWSAmplify); // should NOT be undefined
+
+    const { Amplify, Auth } = window.AWSAmplify;
+
+    Amplify.configure({
+      Auth: {
+        region: "us-east-1", // 🔁 your region
+        userPoolId: "us-east-1_ABC123XYZ", // 🔁 your User Pool ID
+        userPoolWebClientId: "abc123def456ghi789" // 🔁 your App Client ID
+      }
+    });
+
+    document.getElementById("signup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const firstName = document.getElementById("firstName").value;
+      const lastName = document.getElementById("lastName").value;
+      const birthdate = document.getElementById("birthdate").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const result = await Auth.signUp({
+          username: email,
+          password: password,
+          attributes: {
+            email: email,
+            given_name: firstName,
+            family_name: lastName,
+            birthdate: birthdate
+          }
+        });
+
+        console.log("Signup successful:", result);
+        alert("Check your email to confirm your account!");
+      } catch (error) {
+        console.error("Signup error:", error);
+        alert("Error: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
