@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const response = await fetch("https://8fulahgtxb.execute-api.us-east-2.amazonaws.com/beta", {
+        const response = await fetch("https://8fulahgtxb.execute-api.us-east-2.amazonaws.com", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
