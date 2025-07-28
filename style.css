@@ -117,7 +117,7 @@ body {
 
     .page {
         width: 100vw;
-        padding: 0rem;
+        padding: 0.6rem 1.5rem;
         text-decoration: none;
         color: #001f61;
         background-color: #baf0f4;
@@ -125,7 +125,20 @@ body {
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
-        font-size: 0rem;
+        font-size: 1.1rem;
+        display: none;
+        overflow: hidden;
+
+        transform: translateY(50px); /* For a slide-down effect */
+        transition: max-height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    .page.visible {
+        display: flex;
+        max-height: 200px; /* Or a suitable height */
+        opacity: 1;
+        transform: translateY(-200px);
+        color: #610000;
     }
     
     #active {
