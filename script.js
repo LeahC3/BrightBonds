@@ -65,11 +65,12 @@ const { Amplify, Auth } = window.aws_amplify;
 
 Amplify.configure({
   Auth: {
-    region: "us-east-1", // e.g. "us-east-1"
+    region: "us-east-2", // e.g. "us-east-1"
     userPoolId: "us-east-2_erpO5r38p", // e.g. "us-east-1_AbC123XYZ"
     userPoolWebClientId: "2qth4hv9mjbs5l57dc2rkughi3" // no client secret
   }
 });
+
 
 document.getElementById("signup-form").addEventListener("submit", async (e) => {
   e.preventDefault();
