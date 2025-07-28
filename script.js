@@ -1,3 +1,46 @@
+window.onload = () => {
+  const { Amplify, Auth } = window.AWSAmplify;
+
+  Amplify.configure({
+    Auth: {
+      region: "us-east-2", // Replace with your actual region
+      userPoolId: "us-east-2_erpO5r38p", // Replace with your User Pool ID
+      userPoolWebClientId: "2qth4hv9mjbs5l57dc2rkughi3" // Replace with your App Client ID
+    }
+  });
+
+  // Now you can hook up your form event listener:
+  document.getElementById("signup-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const birthdate = document.getElementById("birthdate").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const result = await Auth.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          email: email,
+          given_name: firstName,
+          family_name: lastName,
+          birthdate: birthdate
+        }
+      });
+
+      console.log("Sign-up successful:", result);
+      alert("Check your email to confirm your account!");
+    } catch (error) {
+      console.error("Sign-up error:", error);
+      alert("Error: " + error.message);
+    }
+  });
+};
+
+
 /* Toggle between showing and hiding page menu when hamburger icon clicked*/
 function togglePages() {
     const pages = document.getElementsByClassName("page");
@@ -60,43 +103,3 @@ function togglePages() {
 //     });
 //   }
 // });
-
-const { Amplify, Auth } = window.AWSAmplify;
-
-Amplify.configure({
-  Auth: {
-    region: "us-east-2", // e.g. "us-east-1"
-    userPoolId: "us-east-2_erpO5r38p", // e.g. "us-east-1_AbC123XYZ"
-    userPoolWebClientId: "2qth4hv9mjbs5l57dc2rkughi3" // no client secret
-  }
-});
-
-
-document.getElementById("signup-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const firstName = document.getElementById("firstName").value;
-  const lastName = document.getElementById("lastName").value;
-  const birthdate = document.getElementById("birthdate").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  try {
-    const result = await Auth.signUp({
-      username: email,
-      password: password,
-      attributes: {
-        email: email,
-        given_name: firstName,
-        family_name: lastName,
-        birthdate: birthdate
-      }
-    });
-
-    console.log("Sign-up successful:", result);
-    alert("Check your email to confirm your account!");
-  } catch (error) {
-    console.error("Sign-up error:", error);
-    alert("Error: " + error.message);
-  }
-});
