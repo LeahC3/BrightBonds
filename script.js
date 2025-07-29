@@ -13,6 +13,7 @@ Amplify.configure(awsExports);
 
 
   async function signUp() {
+    alert("button clicked");
     const username = document.getElementById("signup-username").value;
     const password = document.getElementById("signup-password").value;
     const email = document.getElementById("signup-email").value;
@@ -41,7 +42,7 @@ Amplify.configure(awsExports);
     }
   }
 
-  
+
 
 /* Toggle between showing and hiding page menu when hamburger icon clicked*/
 function togglePages() {
