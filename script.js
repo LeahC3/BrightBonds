@@ -12,6 +12,37 @@ Amplify.configure(awsExports);
   AWS.Amplify.Amplify.configure(amplifyConfig);
 
 
+  async function signUp() {
+    const username = document.getElementById("signup-username").value;
+    const password = document.getElementById("signup-password").value;
+    const email = document.getElementById("signup-email").value;
+
+    try {
+      const { user } = await AWS.Amplify.Auth.signUp({
+        username,
+        password,
+        attributes: { email }
+      });
+      document.getElementById("status").innerText = "Sign up successful. Check your email to confirm.";
+    } catch (error) {
+      document.getElementById("status").innerText = "Error: " + error.message;
+    }
+  }
+
+  async function signIn() {
+    const username = document.getElementById("signin-username").value;
+    const password = document.getElementById("signin-password").value;
+
+    try {
+      const user = await AWS.Amplify.Auth.signIn(username, password);
+      document.getElementById("status").innerText = "Signed in successfully as " + user.username;
+    } catch (error) {
+      document.getElementById("status").innerText = "Error: " + error.message;
+    }
+  }
+
+  
+
 /* Toggle between showing and hiding page menu when hamburger icon clicked*/
 function togglePages() {
     const pages = document.getElementsByClassName("page");
