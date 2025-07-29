@@ -8,30 +8,39 @@ body {
     overflow-x: hidden;
 }
 
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
+/* Large devices */
 @media only screen and (min-width: 600px) {
     nav {
         display: inline-flex;
         align-items: center;
-        justify-content: right;
         background-color: #012572;
         width: 100vw;
 
         top:0;
         position: sticky;
         z-index: 1100;
+        justify-content: right;
+    }
+
+    .topNavbar {
+        align-items: center;
+        background-color: #012572;
+
+        top:0;
+        position: sticky;
+        z-index: 1100;
+        margin-left: 1rem;
+        margin-right: auto;
     }
 
     .logo {
         display: inline-flex;
         align-items: center;
-        margin-left: 1rem;
-        margin-right: auto;
     }
 
     #logoText {
         margin-left: 1rem;
+
 
         font-family: "Adamina", serif;
         font-weight: 400;
@@ -61,6 +70,16 @@ body {
         font-size: 1.1rem;
     }
 
+    .menu {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+
+        top:0;
+        position: sticky;
+        z-index: 1100;
+    }
+
     #active {
         background-color: #001f61;
     }
@@ -70,49 +89,70 @@ body {
     }
 }
 
+/* Small devices only */
 @media only screen and (max-width: 600px) {
     nav {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: left;
+   
+        top: 0;
+        position: sticky;
+        z-index: 1000;
+    }
+
+    .topNavbar {
+        width: 100vw;
+        display: flex;
+        align-items: center;
         background-color: #012572;
-        /* width: 100vw; */
-    
+
         top:0;
         position: sticky;
         z-index: 1100;
     }
-    
+   
     .logo {
         display: flex;
         align-items: center;
         margin-left: 1rem;
     }
-    
+   
     #logoText {
         margin-left: 1rem;
-    
+   
         font-family: "Adamina", serif;
         font-weight: 400;
         font-style: normal;
         font-size: 1.5rem;
         color: white;
     }
-    
+   
     #brightbondsimg {
         margin-top: 1.25rem;
         margin-bottom: 1.25rem;
         width: 4rem;
         height: 4rem;
     }
-    
+   
     .hamburgerMenu {
         margin-right: 1rem;
         margin-left: auto;
         color: white;
         width: 2rem;
         height: 2rem;
+    }
+
+    .menu {
+        position: fixed;
+        top: -5rem;
+        transition: top 0.3s ease; /* Only transition the bottom property */
+        z-index: 1000;
+    }
+
+    .menu.visible{
+        top: 3.4rem;
     }
 
     .page {
@@ -126,29 +166,23 @@ body {
         font-weight: 400;
         font-style: normal;
         font-size: 1.1rem;
-        display: none;
+        display: flex;
         overflow: hidden;
+
 
         transform: translateY(50px); /* For a slide-down effect */
         transition: max-height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
     }
-
-    .page.visible {
-        display: flex;
-        max-height: 200px; /* Or a suitable height */
-        opacity: 1;
-        transform: translateY(-200px);
-        color: #610000;
-    }
-    
+   
     #active {
         background-color: #9ddce1;
     }
-    
+   
     .page:hover {
         background-color: #8bccd0 !important;
     }
 }
+
 
 h1 {
     font-family: "Open Sans", sans-serif;
@@ -159,6 +193,7 @@ h1 {
     padding: 2rem 2rem 0rem 2rem;
 }
 
+
 p {
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
@@ -167,6 +202,7 @@ p {
     font-size: 1.5rem;
     padding: 1rem 2rem 0rem 2rem;
 }
+
 
 footer {
     background-color: rgb(43, 43, 43);
@@ -179,10 +215,12 @@ footer {
     margin-top: 2rem;
 }
 
+
 form {
     padding: 1rem 0rem;
     text-align: center;
 }
+
 
 label {
     font-family: "Open Sans", sans-serif;
@@ -190,6 +228,7 @@ label {
     font-weight: 400;
     font-size: 1.3rem;
 }
+
 
 input {
     font-family: "Open Sans", sans-serif;
@@ -204,11 +243,13 @@ input {
     border-color: lightgray;
     border-style:solid;
 
+
     text-overflow: ellipsis;
     /* Required for text-overflow to do anything */
     white-space: nowrap;
     overflow: hidden;
 }
+
 
 .submitButton {
     margin-top: 0.5rem;
@@ -220,15 +261,18 @@ input {
     color: black;
 }
 
+
 .submitButton:hover {
     opacity: 70%;
 }
+
 
 .gradient {
     background-image: linear-gradient(rgb(0, 36, 120), rgb(186, 230, 253));
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
+
 
 .login {
     display: flex;
@@ -237,9 +281,11 @@ input {
     padding-top: 5rem;
     width: 100vw;
 
+
     animation-name: slideInFromBottom;
     animation-duration: 0.5s;
 }
+
 
 .container {
     background-color: white;
@@ -250,6 +296,7 @@ input {
     justify-content: center;
 }
 
+
 #connecting {
     display: flex;
     justify-content: center;
@@ -259,20 +306,25 @@ input {
 }
 
 
+
+
 .landing {
     position: relative;
     text-align: center;
 }
 
+
 .backImg {
     height: 90vh;
 }
+
 
 .imgContainer {
     object-fit: cover;
     overflow: hidden;
     width: 100vw;
 }
+
 
 .overImg
 {
@@ -285,6 +337,7 @@ input {
     text-align: right;
 }
 
+
 h5 {
     background-color: #baf0f4;
     color: black;
@@ -294,15 +347,19 @@ h5 {
     font-style: normal;
     font-size: 3rem;
 
+
     padding: 0.5rem 1rem;
+
 
     animation-name: slideInFromRight;
     animation-duration: 1.5s;
 }
 
+
 #learnMore {
     padding: 1rem 3rem;
     margin-top: 1rem;
+
 
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
@@ -310,19 +367,23 @@ h5 {
     font-style: normal;
     font-size: 1rem;
 
+
     border-style: none;
     border-radius: 0.5rem;
     background-color: white;
     color: black;
 
+
     animation-name: slideInFromRight;
     animation-duration: 1.5s;
 }
+
 
 #learnMore:hover {
     opacity: 70%;
     cursor: pointer;
 }
+
 
 #handsImg {
     width: 30rem;
@@ -330,15 +391,18 @@ h5 {
     max-width: 90vw;
 }
 
+
 .textContainer  {
     width: 27rem;
 }
+
 
 .button{
     padding: 0.5rem 2rem;
     border-style: none;
     background-color:rgb(186, 230, 253);
     border-radius: 0.5rem;
+
 
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
@@ -347,18 +411,22 @@ h5 {
     font-size: 1rem;
     color: #001f61;
 
+
     margin-top: 1rem;
     margin-bottom: 2rem;
 }
+
 
 .buttonContainer {
     margin-left: 2rem;
 }
 
+
 .button:hover {
     opacity: 70%;
     cursor: pointer;
 }
+
 
 @keyframes slideInFromRight {
     0% {
@@ -371,6 +439,7 @@ h5 {
     }
 }
 
+
 @keyframes slideInFromBottom {
     0% {
         transform: translateY(100%);
@@ -382,6 +451,7 @@ h5 {
     }
 }
 
+
 h2 {
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
@@ -391,9 +461,11 @@ h2 {
     padding: 2rem 2rem 0rem 2rem;
     color: #012572;
 
+
     animation-name: slideInFromTop;
     animation-duration: 0.5s;
 }
+
 
 @keyframes slideInFromTop {
     0% {
@@ -405,3 +477,4 @@ h2 {
         opacity: 1;
     }
 }
+

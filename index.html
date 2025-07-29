@@ -18,7 +18,7 @@
         
         <!-- script -->
         <script src="https://unpkg.com/aws-amplify@6.15.4/dist/aws-amplify.min.js"></script>
-        <script src="../script.js"></script>
+        <script src="script.js"></script>
 
         <!-- Nunito Sans, Adamina, Open Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +30,7 @@
 
     <body>
         <nav>
+        <div class="topNavbar">
             <div class="logo">
                 <img id="brightbondsimg" src="brightBondsLogo.PNG" alt="Bright Bonds logo">
                 <a id="logoText">Bright Bonds</a>
@@ -39,10 +40,13 @@
             <svg class= "hamburgerMenu" onclick="togglePages()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
                 <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
               </svg>
+        </div>
 
-            <a class= "page" id="active" href="index.html">Home</a>
-            <a class="page" href="pages/aboutUs.html">About Us</a>
-            <a class="page" href="pages/logIn.html">Log In</a>
+            <div class="menu" id="menu">
+                <a class= "page" id="active" href="index.html">Home</a>
+                <a class="page" href="pages/aboutUs.html">About Us</a>
+                <a class="page" href="pages/logIn.html">Log In</a>
+            </div>
         </nav>
 
         <section class="landing">
