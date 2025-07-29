@@ -1,0 +1,30 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-brightbonds-dev-aa6f6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::851725407388:role/amplify-brightbonds-dev-aa6f6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::851725407388:role/amplify-brightbonds-dev-aa6f6-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-brightbonds-dev-aa6f6-deployment",
+      "UnauthRoleName": "amplify-brightbonds-dev-aa6f6-unauthRole",
+      "StackName": "amplify-brightbonds-dev-aa6f6",
+      "StackId": "arn:aws:cloudformation:us-east-1:851725407388:stack/amplify-brightbonds-dev-aa6f6/476a3730-6c42-11f0-8992-0afffa9210af",
+      "AmplifyAppId": "d30o01xj3hri2d",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-brightbonds-dev-aa6f6-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "brightbondsd6637b7f": {}
+      },
+      "function": {
+        "brightbondsd6637b7fCustomMessage": {
+          "REDIRECTURL": "https://brightbonds.org/pages/home.html",
+          "EMAILSUBJECT": "BrightBonds Email Verification",
+          "EMAILMESSAGE": "Welcome to BrightBonds! Let's finish setting up your account by verifying your email address. Click the link below! If you didn't sign up for BrightBonds, kindly disregard this message.",
+          "deploymentBucketName": "amplify-brightbonds-dev-aa6f6-deployment",
+          "s3Key": "amplify-builds/brightbondsd6637b7fCustomMessage-644a3247557258696d73-build.zip"
+        }
+      }
+    }
+  }
+}

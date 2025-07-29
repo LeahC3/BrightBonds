@@ -15,11 +15,10 @@
 
         <!-- stylesheet-->
         <link rel="stylesheet" href="../style.css">
-    
+
         <!-- script -->
         <script src="https://unpkg.com/aws-amplify@6.15.4/dist/aws-amplify.min.js"></script>
         <script src="../script.js" defer></script>
-
 
         <!-- Nunito Sans, Adamina, Open Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +28,7 @@
     </head>
 
 
-    <body>
+    <body class="gradient">
         <nav>
             <div class="logo">
                 <img id="brightbondsimg" src="../brightBondsLogo.PNG" alt="Bright Bonds logo">
@@ -42,38 +41,52 @@
               </svg>
 
             <a class= "page" href="../index.html">Home</a>
-            <a class="page"  id="active" href="aboutUs.html">About Us</a>
-            <a class="page" href="logIn.html">Log In</a>
+            <a class="page" href="aboutUs.html">About Us</a>
+            <a class="page" id="active" href="logIn.html">Log In</a>
         </nav>
-        <section>
-            <h2>
-                About Us
-            </h2>
-            <p>
-                At Bright Bonds, we believe that meaningful connections can bridge the gap between generations. Bright Bonds combats loneliness in nursing homes by pairing high school students with seniors to build lasting friendships through in-person visits, letters, and emails.
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-username" placeholder="Username" />
+        <input type="password" id="signup-password" placeholder="Password" />
+        <input type="email" id="signup-email" placeholder="Email" />
+        <button onclick="signUp()">Sign Up</button>
 
-Our vision is to create an environment where no senior feels lonely and every student has the opportunity to learn from the wisdom of older generations.
-Our mission is to build lasting friendships that inspire, comfort, and uplift both seniors and students through meaningful and heartwarming interactions.
-            </p>
+        <h2>Sign In</h2>
+        <input type="text" id="signin-username" placeholder="Username" />
+        <input type="password" id="signin-password" placeholder="Password" />
+        <button onclick="signIn()">Sign In</button>
 
-            <h1>
-                Our Story
-            </h1>
-            <p>
-                Founded by students Leah and Savannah from Bishop Verot Catholic High School, Bright Bonds aims to enrich the lives of both teens and seniors by fostering companionship and sharing stories, hobbies, laughter and more. We believe that everyone deserves a friend and that age should never be a barrier for connections and relationships.
-            </p>
+        <p id="status"></p>
 
-            <h1>
-                How It Works
-            </h1>
-            <p>
-                1. Resident Profiles: Caregivers or staff create profiles for residents, highlighting their hobbies, interests, and preferred ways to connect. <br>
-                2. Teen Volunteers: High school students create similar profiles and are matched with seniors through an interest-based algorithm. <br>
-                3. Connection and Interaction: Once paired, teens and seniors engage in regular interactions, such as visits, letters, or emails. <br>
-            </p>
-        </section>
-        <footer>Bright Bonds</footer>
+        <script>
+  async function signUp() {
+    const username = document.getElementById("signup-username").value;
+    const password = document.getElementById("signup-password").value;
+    const email = document.getElementById("signup-email").value;
 
-        </body>
+    try {
+      const { user } = await AWS.Amplify.Auth.signUp({
+        username,
+        password,
+        attributes: { email }
+      });
+      document.getElementById("status").innerText = "Sign up successful. Check your email to confirm.";
+    } catch (error) {
+      document.getElementById("status").innerText = "Error: " + error.message;
+    }
+  }
 
+  async function signIn() {
+    const username = document.getElementById("signin-username").value;
+    const password = document.getElementById("signin-password").value;
+
+    try {
+      const user = await AWS.Amplify.Auth.signIn(username, password);
+      document.getElementById("status").innerText = "Signed in successfully as " + user.username;
+    } catch (error) {
+      document.getElementById("status").innerText = "Error: " + error.message;
+    }
+  }
+</script>
+
+    </body>
 </html>

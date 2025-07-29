@@ -1,41 +1,15 @@
-const { Amplify, Auth } = window.AWSAmplify;
+import { Amplify } from 'aws-amplify';
+import awsExports from './aws-exports';
+Amplify.configure(awsExports);
 
-Amplify.configure({
-  Auth: {
-    region: "us-east-1",
-    userPoolId: "us-east-1_ABC123XYZ",
-    userPoolWebClientId: "abc123def456ghi789"
-  }
-});
-
-document.getElementById("signup-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const firstName = document.getElementById("firstName").value;
-  const lastName = document.getElementById("lastName").value;
-  const birthdate = document.getElementById("birthdate").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  try {
-    const result = await Auth.signUp({
-      username: email,
-      password: password,
-      attributes: {
-        email: email,
-        given_name: firstName,
-        family_name: lastName,
-        birthdate: birthdate
-      }
-    });
-
-    console.log("Sign-up successful:", result);
-    alert("Check your email to confirm your account!");
-  } catch (error) {
-    console.error("Sign-up error:", error);
-    alert("Error: " + error.message);
-  }
-});
+  const amplifyConfig = {
+    Auth: {
+      region: 'us-east-1', // replace with your actual region
+      userPoolId: 'us-east-1_XKYkYd6ID', // replace with your actual User Pool ID
+      userPoolWebClientId: 'qlnbi35jjb553dgarc2a780p9', // replace with your actual client ID
+    }
+  };
+  AWS.Amplify.Amplify.configure(amplifyConfig);
 
 
 /* Toggle between showing and hiding page menu when hamburger icon clicked*/
