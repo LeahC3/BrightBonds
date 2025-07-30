@@ -149,6 +149,7 @@ body {
         top: -5rem;
         transition: top 0.3s ease; /* Only transition the bottom property */
         z-index: 1000;
+        width: 100vw;
     }
 
     .menu.visible{
