@@ -50,7 +50,11 @@ function togglePages() {
     const menu = document.getElementById("menu");
     if (menu.classList.contains("visible")) {
       menu.classList.remove('visible');
+      menu.addEventListener('transitionend', () => {
+        menu.style.opacity = 0;
+    }, { once: true }); // Use { once: true } to automatically remove the listener after it fires
     } else {
+      menu.style.opacity = 1;
       menu.classList.add("visible");
     }
   }
