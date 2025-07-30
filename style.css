@@ -151,11 +151,12 @@ body {
         transition: top 0.3s ease; /* Only transition the bottom property */
         z-index: 1000;
         width: 100vw;
-        overflow-x: hidden;
+        overflow: hidden;
+        max-height: 15rem;
     }
 
     .menu.visible{
-        top: 3.4rem;
+        top: 6.5rem;
     }
 
     .page {
@@ -171,10 +172,6 @@ body {
         font-size: 1.1rem;
         display: flex;
         overflow: hidden;
-
-
-        transform: translateY(50px); /* For a slide-down effect */
-        transition: max-height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
     }
    
     #active {
