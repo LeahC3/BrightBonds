@@ -15,12 +15,11 @@
 
         <!-- stylesheet-->
         <link rel="stylesheet" href="../style.css">
-    
+
         <!-- Load Amplify from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <!-- script -->
         <script src="../script.js"></script>
-
 
         <!-- Nunito Sans, Adamina, Open Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +29,7 @@
     </head>
 
 
-    <body>
+    <body class="gradient">
         <nav>
         <div class="topNavbar">
             <div class="logo">
@@ -46,39 +45,25 @@
 
             <div class="menu" id="menu">
                 <a class= "page" href="../index.html">Home</a>
-                <a class="page" id="active" href="aboutUs.html">About Us</a>
-                <a class="page" href="logIn.html">Log In</a>
+                <a class="page" href="aboutUs.html">About Us</a>
+                <a class="page" id="active" href="logIn.html">Log In</a>
             </div>
         </nav>
-        <section>
-            <h2>
-                About Us
-            </h2>
-            <p>
-                At Bright Bonds, we believe that meaningful connections can bridge the gap between generations. Bright Bonds combats loneliness in nursing homes by pairing high school students with seniors to build lasting friendships through in-person visits, letters, and emails.
+        <div class="login">
+            <div class="container">
+                <h1>
+                    Verify Your Account
+                </h1>
+                <p>
+                    We sent a code to <span id="email_text">[Loading...]</span>. Type it in to verify your account. Click <a onclick="resendCode()" href="#">here</a> to send a different code.
+                </p>
 
-Our vision is to create an environment where no senior feels lonely and every student has the opportunity to learn from the wisdom of older generations.
-Our mission is to build lasting friendships that inspire, comfort, and uplift both seniors and students through meaningful and heartwarming interactions.
-            </p>
-
-            <h1>
-                Our Story
-            </h1>
-            <p>
-                Founded by students Leah and Savannah from Bishop Verot Catholic High School, Bright Bonds aims to enrich the lives of both teens and seniors by fostering companionship and sharing stories, hobbies, laughter and more. We believe that everyone deserves a friend and that age should never be a barrier for connections and relationships.
-            </p>
-
-            <h1>
-                How It Works
-            </h1>
-            <p>
-                1. Resident Profiles: Caregivers or staff create profiles for residents, highlighting their hobbies, interests, and preferred ways to connect. <br>
-                2. Teen Volunteers: High school students create similar profiles and are matched with seniors through an interest-based algorithm. <br>
-                3. Connection and Interaction: Once paired, teens and seniors engage in regular interactions, such as visits, letters, or emails. <br>
-            </p>
-        </section>
-        <footer>Bright Bonds</footer>
-
-        </body>
-
+                <form id="verify_form">
+                  <label for="verify_code">Enter Verification Code</label><br>
+                  <input type="text" id="verify_code" required><br>
+                  <input type="submit" value="Verify">
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

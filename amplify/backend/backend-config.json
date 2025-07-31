@@ -1,18 +1,8 @@
 {
   "auth": {
-    "brightbondsd6637b7f": {
+    "brightbondscdd97a1f": {
       "customAuth": false,
-      "dependsOn": [
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "brightbondsd6637b7fCustomMessage",
-          "triggerProvider": "Cognito"
-        }
-      ],
+      "dependsOn": [],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -26,7 +16,6 @@
           "BIRTHDATE",
           "EMAIL",
           "FAMILY_NAME",
-          "GENDER",
           "GIVEN_NAME"
         ],
         "socialProviders": [],
@@ -39,55 +28,6 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    }
-  },
-  "function": {
-    "brightbondsd6637b7fCustomMessage": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_function_brightbondsd6637b7fCustomMessage_EMAILMESSAGE": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "brightbondsd6637b7fCustomMessage"
-        }
-      ]
-    },
-    "AMPLIFY_function_brightbondsd6637b7fCustomMessage_EMAILSUBJECT": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "brightbondsd6637b7fCustomMessage"
-        }
-      ]
-    },
-    "AMPLIFY_function_brightbondsd6637b7fCustomMessage_REDIRECTURL": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "brightbondsd6637b7fCustomMessage"
-        }
-      ]
-    },
-    "AMPLIFY_function_brightbondsd6637b7fCustomMessage_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "brightbondsd6637b7fCustomMessage"
-        }
-      ]
-    },
-    "AMPLIFY_function_brightbondsd6637b7fCustomMessage_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "brightbondsd6637b7fCustomMessage"
-        }
-      ]
     }
   }
 }

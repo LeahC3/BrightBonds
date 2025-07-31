@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "brightbondsd6637b7f_identitypool_d6637b7f",
+    "identityPoolName": "brightbondscdd97a1f_identitypool_cdd97a1f",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "brightd6637b7f",
-    "userPoolName": "brightbondsd6637b7f_userpool_d6637b7f",
+    "resourceNameTruncated": "brightcdd97a1f",
+    "userPoolName": "brightbondscdd97a1f_userpool_cdd97a1f",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -23,7 +23,6 @@
       "birthdate",
       "email",
       "family_name",
-      "gender",
       "given_name"
     ],
     "aliasAttributes": [],
@@ -35,23 +34,18 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "brightd6637b7f_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "brightcdd97a1f_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "d6637b7f",
-    "resourceName": "brightbondsd6637b7f",
+    "sharedId": "cdd97a1f",
+    "resourceName": "brightbondscdd97a1f",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
       "email"
     ],
-    "triggers": {
-      "CustomMessage": [
-        "verification-link"
-      ]
-    },
+    "triggers": {},
     "userPoolGroupList": [],
     "serviceName": "Cognito",
-    "verificationBucketName": "brightbondsd6637b7fverificationbucket",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true
   }

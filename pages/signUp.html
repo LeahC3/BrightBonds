@@ -16,9 +16,10 @@
         <!-- stylesheet-->
         <link rel="stylesheet" href="../style.css">
 
+        <!-- Load Amplify from CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <!-- script -->
-        <script src="https://unpkg.com/aws-amplify@6.15.4/dist/aws-amplify.min.js"></script>
-        <script src="../script.js" defer></script>
+        <script src="../script.js"></script>
 
         <!-- Nunito Sans, Adamina, Open Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,18 +58,18 @@
                     Already have an account? <a href="logIn.html">Log in</a>.
                 </p>
 
-                <form name="signup" id="signup_form" action="" method="get">
-                    <label for="first">First Name</label><br>
+                <form name="signup" id="signup_form" action="" method="get" onsubmit="return signUp(event)">
+                    <label for="first_input">First Name</label><br>
                     <input type="text" id="first_input" name="fname" required><br>
-                    <label for="email">Last Name</label><br>
+                    <label for="last_input">Last Name</label><br>
                     <input type="text" id="last_input" name="lname" required><br>
-                    <label for="dob">Date of Birth</label><br>
+                    <label for="dob_input">Date of Birth</label><br>
                     <input type="date" id="dob_input" name="dob" required><br>
-                    <label for="email">Email</label><br>
-                    <input type="email" id="email_input" name="email" required><br>
-                    <label for="password">Password</label><br>
+                    <label for="email_input">Email</label><br>
+                    <input type="email" id="email_input" name="email" autocomplete="on" required><br>
+                    <label for="pw_input">Password</label><br>
                     <input type="password" id="pw_input" name="password" required><br>
-                    <label for="password">Confirm Password</label><br>
+                    <label for="conf_pw_input">Confirm Password</label><br>
                     <input type="password" id="conf_pw_input" name="confirm_password" required><br>
                     <input class="submitButton" id="sign_up_button" type="submit" value="Submit">
                 </form>

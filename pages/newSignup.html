@@ -1,61 +1,93 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AWS Amplify Auth Test</title>
+</head>
+<body>
+  <h1>Sign Up</h1>
+    <input type="text" id="signup-username" placeholder="Username" />
+    <input type="password" id="signup-password" placeholder="Password" />
+    <input type="email" id="signup-email" placeholder="Email" />
+    <input type="text" id="signup-firstname" placeholder="First Name" />
+    <input type="text" id="signup-lastname" placeholder="Last Name" />
+    <input type="date" id="signup-birthdate" placeholder="Birthdate" />
+    <select id="signup-gender">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+</select>
 
-<html>
-    <head>
-        <title>Bright Bonds</title>
-        <!-- favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
-        <link rel="icon" href="http://www.brightbonds.org/favicon.ico?v=2" />
-        <link rel="manifest" href="../favicon_io/site.webmanifest">
+  <button onclick="signUp()">Sign Up</button>
 
-        <!-- different size for different device -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <h1>Sign In</h1>
+  <input type="text" id="signin-username" placeholder="Username" />
+  <input type="password" id="signin-password" placeholder="Password" />
+  <button onclick="signIn()">Sign In</button>
 
-        <!-- stylesheet-->
-        <link rel="stylesheet" href="../style.css">
+  <p id="status"></p>
 
-        <!-- script -->
-        <script src="https://unpkg.com/aws-amplify@6.15.4/dist/aws-amplify.min.js"></script>
-        <script src="../script.js" defer></script>
+  <!-- Load Amplify from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
 
-        <!-- Nunito Sans, Adamina, Open Sans -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <script>
+    window.onload = function () {
+      const AmplifyGlobal = window.aws_amplify;
 
-    </head>
+      if (!AmplifyGlobal) {
+        document.getElementById("status").innerText = "Amplify failed to load.";
+        return;
+      }
+
+      const { Amplify, Auth } = AmplifyGlobal;
+
+      Amplify.configure({
+        Auth: {
+          region: 'us-east-1',
+          userPoolId: 'us-east-1_XKYkYd6ID',
+          userPoolWebClientId: 'qlnbi35jjb553dgarc2a780p9',
+        }
+      });
+window.signUp = async function () {
+  const username = document.getElementById("signup-username").value;
+  const password = document.getElementById("signup-password").value;
+  const email = document.getElementById("signup-email").value;
+  const givenName = document.getElementById("signup-firstname").value;
+  const familyName = document.getElementById("signup-lastname").value;
+  const birthdate = document.getElementById("signup-birthdate").value;
+  const gender = document.getElementById("signup-gender").value;
+
+  try {
+    await Auth.signUp({
+      username,
+      password,
+      attributes: {
+        email,
+        'birthdate': birthdate,
+        'gender': gender,
+        'given_name': givenName,
+        'family_name': familyName,
+      }
+    });
+    document.getElementById("status").innerText = "Signup successful!";
+  } catch (err) {
+    document.getElementById("status").innerText = "Error: " + err.message;
+  }
+};
 
 
-    <body class="gradient">
-        <nav>
-            <div class="logo">
-                <img id="brightbondsimg" src="../brightBondsLogo.PNG" alt="Bright Bonds logo">
-                <a id="logoText">Bright Bonds</a>
-            </div>
-    
-            <!-- "Hamburger menu" to toggle page links -->
-            <svg class= "hamburgerMenu" onclick="togglePages()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewbox="0 0 16 16">
-                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-              </svg>
+      window.signIn = async function () {
+        const username = document.getElementById("signin-username").value;
+        const password = document.getElementById("signin-password").value;
 
-            <a class= "page" href="../index.html">Home</a>
-            <a class="page" href="aboutUs.html">About Us</a>
-            <a class="page" id="active" href="logIn.html">Log In</a>
-        </nav>
-        <h2>Sign Up</h2>
-        <input type="text" id="signup-username" placeholder="Username" />
-        <input type="password" id="signup-password" placeholder="Password" />
-        <input type="email" id="signup-email" placeholder="Email" />
-        <button onclick="signUp()">Sign Up</button>
-
-        <h2>Sign In</h2>
-        <input type="text" id="signin-username" placeholder="Username" />
-        <input type="password" id="signin-password" placeholder="Password" />
-        <button onclick="signIn()">Sign In</button>
-
-        <p id="status"></p>
-
-    </body>
+        try {
+          const user = await Auth.signIn(username, password);
+          document.getElementById("status").innerText = "Welcome, " + user.username;
+        } catch (err) {
+          document.getElementById("status").innerText = "Error: " + err.message;
+        }
+      };
+    };
+  </script>
+</body>
 </html>

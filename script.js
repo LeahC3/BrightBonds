@@ -1,52 +1,169 @@
-// import { Amplify } from 'aws-amplify';
-// import awsExports from './aws-exports';
-// Amplify.configure(awsExports);
+window.onload = function () {
+  // Set up Amplify
+  const AmplifyGlobal = window.aws_amplify;
 
-//   const amplifyConfig = {
-//     Auth: {
-//       region: 'us-east-1', // replace with your actual region
-//       userPoolId: 'us-east-1_XKYkYd6ID', // replace with your actual User Pool ID
-//       userPoolWebClientId: 'qlnbi35jjb553dgarc2a780p9', // replace with your actual client ID
-//     }
-//   };
-//   AWS.Amplify.Amplify.configure(amplifyConfig);
+  if (!AmplifyGlobal) {
+    alert("Amplify failed to load.");
+    return;
+  }
 
+  const { Amplify, Auth } = AmplifyGlobal;
 
-//   async function signUp() {
-//     alert("button clicked");
-//     const username = document.getElementById("signup-username").value;
-//     const password = document.getElementById("signup-password").value;
-//     const email = document.getElementById("signup-email").value;
+  Amplify.configure({
+    Auth: {
+      region: 'us-east-2',
+      userPoolId: 'us-east-2_AxTL9MRLy',
+      userPoolWebClientId: '69hs07li090olcre8pg8uji24r',
+    }
+  });
 
-//     try {
-//       const { user } = await AWS.Amplify.Auth.signUp({
-//         username,
-//         password,
-//         attributes: { email }
-//       });
-//       document.getElementById("status").innerText = "Sign up successful. Check your email to confirm.";
-//     } catch (error) {
-//       document.getElementById("status").innerText = "Error: " + error.message;
-//     }
-//   }
+  const path = window.location.pathname;
 
-//   async function signIn() {
-//     const username = document.getElementById("signin-username").value;
-//     const password = document.getElementById("signin-password").value;
+  // Sign-up page logic
+  if (path.endsWith("signUp.html")) {
+    window.signUp = async function (event) {
+      event.preventDefault();
+      const email = document.getElementById("email_input").value;
+      const givenName = document.getElementById("first_input").value;
+      const familyName = document.getElementById("last_input").value;
+      const birthdate = document.getElementById("dob_input").value;
+      const password = document.getElementById("pw_input").value;
 
-//     try {
-//       const user = await AWS.Amplify.Auth.signIn(username, password);
-//       document.getElementById("status").innerText = "Signed in successfully as " + user.username;
-//     } catch (error) {
-//       document.getElementById("status").innerText = "Error: " + error.message;
-//     }
-//   }
+      try {
+        await Auth.signUp({
+          username: email,
+          password,
+          attributes: {
+            birthdate,
+            given_name: givenName,
+            family_name: familyName,
+          }
+        });
 
+        localStorage.setItem("signupEmail", email);
+        window.location.replace("verify.html");
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    };
+  }
+
+// Verification page logic
+if (path.endsWith("verify.html")) {
+  const email = localStorage.getItem("signupEmail");
+
+  // Block access if no email is stored
+  if (!email) {
+    alert("Access denied. Please sign up first.");
+    window.location.replace("login.html");
+    return;
+  }
+
+  // check if user is confirmed or not
+  Auth.signIn(email, "fake-password")
+    .then(() => {
+      // If this succeeds, user is already confirmed (which is weird since password is wrong)
+      alert("This account is already confirmed. Please log in.");
+      window.location.replace("login.html");
+    })
+    .catch(err => {
+      if (err.code === "UserNotConfirmedException") {
+        // They still need to verify
+        document.getElementById("email_text").textContent = email;
+
+        const form = document.getElementById("verify_form");
+        if (form) {
+          form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const code = document.getElementById("verify_code").value.trim();
+
+            try {
+              await Auth.confirmSignUp(email, code);
+              alert("User confirmed successfully!");
+              localStorage.removeItem("signupEmail");
+              window.location.replace("signUp.html");
+            } catch (err) {
+              alert("Confirmation failed: " + err.message);
+            }
+          });
+        }
+
+        window.resendCode = async function () {
+          try {
+            await Auth.resendSignUp(email);
+            alert("New confirmation code sent.");
+          } catch (err) {
+            alert("Error resending code: " + err.message);
+          }
+        };
+      } else if (err.code === "NotAuthorizedException") {
+        // Password was wrong but user IS confirmed
+        alert("This account is already confirmed. Please log in.");
+        window.location.replace("login.html");
+      } else if (err.code === "UserNotFoundException") {
+        alert("This user does not exist. Please sign up first.");
+        window.location.replace("signUp.html");
+      } else {
+        console.log("Unexpected error:", err);
+        alert("Something went wrong. Please try again.");
+        window.location.replace("login.html");
+      }
+    });
+
+}
+
+  // Sign-in page logic
+  if (path.endsWith("login.html")) {
+    window.signIn = async function (event) {
+      event.preventDefault();
+      const email = document.getElementById("email_input").value;
+      const password = document.getElementById("pw_input").value;
+
+      try {
+        const user = await Auth.signIn(email, password);
+        // redirect to home or dashboard
+        window.location.replace("home.html");
+        
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    };
+  }
+
+  if (path.endsWith("home.html")) {
+  // Check if user is signed in
+  Auth.currentAuthenticatedUser()
+    .then(async user => {
+      const userInfo = await Auth.currentUserInfo();
+      const name = userInfo?.attributes?.given_name || "Friend";
+
+      document.getElementById("welcome_name").textContent = name;
+    })
+    .catch(err => {
+      // Not signed in → redirect to login
+      console.log("Not authenticated:", err);
+      window.location.replace("login.html");
+    });
+
+  // Optional: sign-out button
+  const signOutBtn = document.getElementById("signOut");
+  if (signOutBtn) {
+    signOutBtn.addEventListener("click", async () => {
+      try {
+        await Auth.signOut();
+        window.location.replace("login.html");
+      } catch (err) {
+        alert("Sign out error: " + err.message);
+      }
+    });
+  }
+}
+};
 
 
 /* Toggle between showing and hiding page menu when hamburger icon clicked*/
 function togglePages() {
-
+    alert("click");
     const menu = document.getElementById("menu");
     if (menu.classList.contains("visible")) {
       menu.classList.remove('visible');
@@ -57,38 +174,9 @@ function togglePages() {
       menu.style.opacity = 1;
       menu.classList.add("visible");
     }
-  }
+}
 
-// document.addEventListener("DOMContentLoaded", function () {
-//   const signupForm = document.getElementById("signup_form");
-//   if (signupForm) {
-//     signupForm.addEventListener("submit", async function (e) {
-//       e.preventDefault(); // Stop the form from reloading the page
-
-//       const formData = new FormData(signupForm);
-//       const data = Object.fromEntries(formData.entries());
-
-//       // Optional: Check password match
-//       if (data.password !== data.confirm_password) {
-//         alert("Passwords do not match!");
-//         return;
-//       }
-
-//       try {
-//         const response = await fetch("https://8fulahgtxb.execute-api.us-east-2.amazonaws.com/beta/", {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json"
-//           },
-//           body: JSON.stringify(data)
-//         });
-
-//         const result = await response.json();
-//         alert(result.message || "Form submitted!");
-//       } catch (err) {
-//         console.error("Error submitting form:", err);
-//         alert("There was a problem submitting the form.");
-//       }
-//     });
-//   }
-// });
+function signUpTwo(event) {
+    event.preventDefault();
+    alert("sent");
+    }
