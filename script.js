@@ -1,4 +1,6 @@
 window.onload = function () {
+  console.log("Script loaded:", window.location.pathname);
+
   // Set up Amplify
   const AmplifyGlobal = window.aws_amplify;
 
@@ -175,8 +177,3 @@ function togglePages() {
       menu.classList.add("visible");
     }
 }
-
-function signUpTwo(event) {
-    event.preventDefault();
-    alert("sent");
-    }
