@@ -1,3 +1,7 @@
+window.addEventListener("error", function (e) {
+  console.error("Caught global error:", e.error);
+});
+
 window.onload = function () {
   console.log("Script loaded:", window.location.pathname);
 
