@@ -120,21 +120,32 @@ if (path.endsWith("verify.html")) {
 
   // Sign-in page logic
   if (path.endsWith("login.html")) {
-    window.signIn = async function (event) {
-      event.preventDefault();
-      const email = document.getElementById("email_input").value;
-      const password = document.getElementById("pw_input").value;
+    if (path.endsWith("login.html")) {
+    const form = document.getElementById("login_form");
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault(); // Stop the form from submitting
 
       try {
+        const email = document.getElementById("email_input").value;
+        const password = document.getElementById("pw_input").value;
+        console.log("Signing in with", email);
+
         const user = await Auth.signIn(email, password);
-        // redirect to home or dashboard
+        console.log("Signed in:", user);
+
         window.location.replace("home.html");
-        
       } catch (err) {
-        alert("Error: " + err.message);
+        console.error("Sign-in failed:", err);
+        alert("Sign-in error: " + err.message);
       }
-    };
+    });
   }
+
+  // GLOBAL error listener (keeps errors visible)
+  window.addEventListener("error", function (e) {
+    console.error("Global error caught:", e.message, e.error);
+  });
+};
 
   if (path.endsWith("home.html")) {
   // Check if user is signed in
