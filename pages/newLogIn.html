@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Test</title>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
+  <script defer src="newscript.js"></script> <!-- Ensure it runs after DOM loads -->
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="login_form">
+    <label for="email_input">Email:</label><br>
+    <input type="email" id="email_input" autocomplete="email"><br>
+
+    <label for="pw_input">Password:</label><br>
+    <input type="password" id="pw_input" autocomplete="current-password"><br>
+
+    <input type="submit" value="Log In">
+  </form>
+
+  <p id="result"></p>
+</body>
+</html>
