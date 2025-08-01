@@ -1,8 +1,10 @@
 window.onload = function () {
   const form = document.getElementById("signup_form");
+  const result = document.getElementById("result");
+
   if (!form || !window.Auth) return;
 
-  form.addEventListener("submit", async function (event) {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const email = document.getElementById("email_input").value;
     const givenName = document.getElementById("first_input").value;
@@ -24,6 +26,7 @@ window.onload = function () {
       localStorage.setItem("signupEmail", email);
       localStorage.setItem("signupPassword", password);
       window.location.replace("verify.html");
+      
     } catch (err) {
       if (result) result.textContent = "Signup failed: " + err.message;
     }
