@@ -58,15 +58,16 @@
                     Don't have an account? <a href="signUp.html">Sign up</a>.
                 </p>
 
-                <form name="login" id="login_form">
-                    <label for="email_input">Email</label><br>
-                    <input type="text" id="email_input" name="email" autocomplete="on"><br>
+                <form id="login_form">
+                    <label for="email_input">Email:</label><br>
+                    <input type="email" id="email_input" autocomplete="email"><br>
 
-                    <label for="pw_input">Password</label><br>
-                    <input type="password" id="pw_input" name="password" autocomplete="current-password"><br>
+                    <label for="pw_input">Password:</label><br>
+                    <input type="password" id="pw_input" autocomplete="current-password"><br>
 
-                    <input class="submitButton" id="sign_in_button" type="submit" value="Submit">
+                    <input type="submit" value="Log In">
                 </form>
+                <p id="result"></p>
             </div>
         </div>
     </body>

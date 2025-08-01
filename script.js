@@ -115,23 +115,27 @@ window.onload = function () {
   // ========== LOGIN PAGE ==========
   if (path.endsWith("login.html")) {
     const form = document.getElementById("login_form");
+  const result = document.getElementById("result");
 
     if (form) {
-      form.addEventListener("submit", async function (event) {
-        event.preventDefault(); // <-- this stops the page from refreshing
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // ✅ Prevent form from refreshing the page
 
         const email = document.getElementById("email_input").value.trim();
         const password = document.getElementById("pw_input").value;
 
+        console.log("Form submitted with:", email, "(password hidden)");
+
         try {
           const user = await Auth.signIn(email, password);
-          alert("Welcome, " + (user.attributes?.given_name || "Friend"));
-          window.location.replace("home.html");
+          result.textContent = "Login successful. Welcome " + (user.attributes?.given_name || "friend") + "!";
         } catch (err) {
-          alert("Sign-in failed: " + err.message);
-          console.error("Sign-in error:", err);
+          console.error("Login error:", err);
+          result.textContent = "Login failed: " + err.message;
         }
       });
+    } else {
+      console.error("Login form not found.");
     }
   }
 
