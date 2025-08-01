@@ -3,11 +3,9 @@ window.addEventListener("error", function (e) {
 });
 
 window.onload = function () {
-  console.log("Script loaded:", window.location.pathname);
+  console.log("Script loaded for:", window.location.pathname);
 
-  // Set up Amplify
   const AmplifyGlobal = window.aws_amplify;
-
   if (!AmplifyGlobal) {
     alert("Amplify failed to load.");
     return;
@@ -25,170 +23,156 @@ window.onload = function () {
 
   const path = window.location.pathname;
 
-  // Sign-up page logic
+  // ========== SIGN UP PAGE ==========
   if (path.endsWith("signUp.html")) {
-    window.signUp = async function (event) {
-      event.preventDefault();
-      const email = document.getElementById("email_input").value;
-      const givenName = document.getElementById("first_input").value;
-      const familyName = document.getElementById("last_input").value;
-      const birthdate = document.getElementById("dob_input").value;
-      const password = document.getElementById("pw_input").value;
+    const form = document.getElementById("signup_form");
+    if (form) {
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-      try {
-        await Auth.signUp({
-          username: email,
-          password,
-          attributes: {
-            birthdate,
-            given_name: givenName,
-            family_name: familyName,
+        const email = document.getElementById("email_input").value;
+        const givenName = document.getElementById("first_input").value;
+        const familyName = document.getElementById("last_input").value;
+        const birthdate = document.getElementById("dob_input").value;
+        const password = document.getElementById("pw_input").value;
+
+        try {
+          await Auth.signUp({
+            username: email,
+            password,
+            attributes: {
+              birthdate,
+              given_name: givenName,
+              family_name: familyName,
+            }
+          });
+
+          localStorage.setItem("signupEmail", email);
+          localStorage.setItem("signupPassword", password); // optionally auto-login after confirmation
+          window.location.replace("verify.html");
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      });
+    } else {
+      console.warn("signup_form not found.");
+    }
+  }
+
+  // ========== VERIFY PAGE ==========
+  if (path.endsWith("verify.html")) {
+    const email = localStorage.getItem("signupEmail");
+
+    if (!email) {
+      alert("Access denied. Please sign up first.");
+      window.location.replace("login.html");
+      return;
+    }
+
+    // Show email on screen
+    const emailText = document.getElementById("email_text");
+    if (emailText) {
+      emailText.textContent = email;
+    }
+
+    // Handle code submission
+    const verifyForm = document.getElementById("verify_form");
+    if (verifyForm) {
+      verifyForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const code = document.getElementById("verify_code").value.trim();
+
+        try {
+          await Auth.confirmSignUp(email, code);
+          alert("User confirmed successfully!");
+
+          // Optionally auto-sign-in
+          const password = localStorage.getItem("signupPassword");
+          if (password) {
+            await Auth.signIn(email, password);
+            localStorage.removeItem("signupEmail");
+            localStorage.removeItem("signupPassword");
+            window.location.replace("home.html");
+          } else {
+            window.location.replace("login.html");
           }
-        });
+        } catch (err) {
+          alert("Confirmation failed: " + err.message);
+        }
+      });
+    }
 
-        localStorage.setItem("signupEmail", email);
-        window.location.replace("verify.html");
+    window.resendCode = async function () {
+      try {
+        await Auth.resendSignUp(email);
+        alert("New confirmation code sent.");
       } catch (err) {
-        alert("Error: " + err.message);
+        alert("Error resending code: " + err.message);
       }
     };
   }
 
-// Verification page logic
-if (path.endsWith("verify.html")) {
-  const email = localStorage.getItem("signupEmail");
-
-  // Block access if no email is stored
-  if (!email) {
-    alert("Access denied. Please sign up first.");
-    window.location.replace("login.html");
-    return;
-  }
-
-  // check if user is confirmed or not
-  Auth.signIn(email, "fake-password")
-    .then(() => {
-      // If this succeeds, user is already confirmed (which is weird since password is wrong)
-      alert("This account is already confirmed. Please log in.");
-      window.location.replace("login.html");
-    })
-    .catch(err => {
-      if (err.code === "UserNotConfirmedException") {
-        // They still need to verify
-        document.getElementById("email_text").textContent = email;
-
-        const form = document.getElementById("verify_form");
-        if (form) {
-          form.addEventListener("submit", async function (event) {
-            event.preventDefault();
-            const code = document.getElementById("verify_code").value.trim();
-
-            try {
-              await Auth.confirmSignUp(email, code);
-              alert("User confirmed successfully!");
-              localStorage.removeItem("signupEmail");
-              window.location.replace("signUp.html");
-            } catch (err) {
-              alert("Confirmation failed: " + err.message);
-            }
-          });
-        }
-
-        window.resendCode = async function () {
-          try {
-            await Auth.resendSignUp(email);
-            alert("New confirmation code sent.");
-          } catch (err) {
-            alert("Error resending code: " + err.message);
-          }
-        };
-      } else if (err.code === "NotAuthorizedException") {
-        // Password was wrong but user IS confirmed
-        alert("This account is already confirmed. Please log in.");
-        window.location.replace("login.html");
-      } else if (err.code === "UserNotFoundException") {
-        alert("This user does not exist. Please sign up first.");
-        window.location.replace("signUp.html");
-      } else {
-        console.log("Unexpected error:", err);
-        alert("Something went wrong. Please try again.");
-        window.location.replace("login.html");
-      }
-    });
-
-}
-
-  // Sign-in page logic
+  // ========== LOGIN PAGE ==========
   if (path.endsWith("login.html")) {
-    if (path.endsWith("login.html")) {
     const form = document.getElementById("login_form");
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault(); // Stop the form from submitting
+    if (form) {
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-      try {
         const email = document.getElementById("email_input").value;
         const password = document.getElementById("pw_input").value;
-        console.log("Signing in with", email);
 
-        const user = await Auth.signIn(email, password);
-        console.log("Signed in:", user);
-
-        window.location.replace("home.html");
-      } catch (err) {
-        console.error("Sign-in failed:", err);
-        alert("Sign-in error: " + err.message);
-      }
-    });
-  }
-
-  // GLOBAL error listener (keeps errors visible)
-  window.addEventListener("error", function (e) {
-    console.error("Global error caught:", e.message, e.error);
-  });
-};
-
-  if (path.endsWith("home.html")) {
-  // Check if user is signed in
-  Auth.currentAuthenticatedUser()
-    .then(async user => {
-      const userInfo = await Auth.currentUserInfo();
-      const name = userInfo?.attributes?.given_name || "Friend";
-
-      document.getElementById("welcome_name").textContent = name;
-    })
-    .catch(err => {
-      // Not signed in → redirect to login
-      console.log("Not authenticated:", err);
-      window.location.replace("login.html");
-    });
-
-  // Optional: sign-out button
-  const signOutBtn = document.getElementById("signOut");
-  if (signOutBtn) {
-    signOutBtn.addEventListener("click", async () => {
-      try {
-        await Auth.signOut();
-        window.location.replace("login.html");
-      } catch (err) {
-        alert("Sign out error: " + err.message);
-      }
-    });
-  }
-}
-};
-
-
-/* Toggle between showing and hiding page menu when hamburger icon clicked*/
-function togglePages() {
-    alert("click");
-    const menu = document.getElementById("menu");
-    if (menu.classList.contains("visible")) {
-      menu.classList.remove('visible');
-      menu.addEventListener('transitionend', () => {
-        menu.style.opacity = 0;
-    }, { once: true }); // Use { once: true } to automatically remove the listener after it fires
+        try {
+          const user = await Auth.signIn(email, password);
+          console.log("Login successful:", user);
+          window.location.replace("home.html");
+        } catch (err) {
+          alert("Login error: " + err.message);
+        }
+      });
     } else {
-      menu.style.opacity = 1;
-      menu.classList.add("visible");
+      console.warn("login_form not found.");
     }
+  }
+
+  // ========== HOME PAGE ==========
+  if (path.endsWith("home.html")) {
+    Auth.currentAuthenticatedUser()
+      .then(async user => {
+        const userInfo = await Auth.currentUserInfo();
+        const name = userInfo?.attributes?.given_name || "Friend";
+        const welcomeEl = document.getElementById("welcome_name");
+        if (welcomeEl) welcomeEl.textContent = name;
+      })
+      .catch(err => {
+        console.warn("Not signed in:", err);
+        window.location.replace("login.html");
+      });
+
+    const signOutBtn = document.getElementById("signOut");
+    if (signOutBtn) {
+      signOutBtn.addEventListener("click", async () => {
+        try {
+          await Auth.signOut();
+          window.location.replace("login.html");
+        } catch (err) {
+          alert("Sign out error: " + err.message);
+        }
+      });
+    }
+  }
+};
+
+// ========== TOGGLE MENU FUNCTION ==========
+function togglePages() {
+  const menu = document.getElementById("menu");
+  if (menu.classList.contains("visible")) {
+    menu.classList.remove('visible');
+    menu.addEventListener('transitionend', () => {
+      menu.style.opacity = 0;
+    }, { once: true });
+  } else {
+    menu.style.opacity = 1;
+    menu.classList.add("visible");
+  }
 }
