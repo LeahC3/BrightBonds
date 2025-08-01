@@ -28,6 +28,7 @@ if (!AmplifyGlobal) {
   const signOutBtn = document.getElementById("signOut");
   if (signOutBtn) {
     signOutBtn.addEventListener("click", async () => {
+      alert("click");
       try {
         await Auth.signOut();
         window.location.replace("login.html");
