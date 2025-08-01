@@ -59,21 +59,28 @@
                     Already have an account? <a href="logIn.html">Log in</a>.
                 </p>
 
-                <form name="signup" id="signup_form" action="">
+                <form name="signup" id="signup_form">
                     <label for="first_input">First Name</label><br>
                     <input type="text" id="first_input" name="fname" required><br>
+
                     <label for="last_input">Last Name</label><br>
                     <input type="text" id="last_input" name="lname" required><br>
+
                     <label for="dob_input">Date of Birth</label><br>
                     <input type="date" id="dob_input" name="dob" required><br>
+
                     <label for="email_input">Email</label><br>
                     <input type="email" id="email_input" name="email" autocomplete="on" required><br>
+
                     <label for="pw_input">Password</label><br>
                     <input type="password" id="pw_input" name="password" required><br>
+
                     <label for="conf_pw_input">Confirm Password</label><br>
                     <input type="password" id="conf_pw_input" name="confirm_password" required><br>
+
                     <input class="submitButton" id="sign_up_button" type="submit" value="Submit">
                 </form>
+                <c id="result"></c>
             </div>
         </div>
     </body>

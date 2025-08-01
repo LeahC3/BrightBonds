@@ -25,7 +25,7 @@ window.onload = function () {
       localStorage.setItem("signupPassword", password);
       window.location.replace("verify.html");
     } catch (err) {
-      alert("Error: " + err.message);
+      if (result) result.textContent = "Signup failed: " + err.message;
     }
   });
 };
