@@ -3,7 +3,7 @@ window.addEventListener("error", function (e) {
 });
 
 window.onload = function () {
-  console.log("Script loaded for:", window.location.pathname);
+  console.log("Script loaded on:", window.location.pathname);
 
   const AmplifyGlobal = window.aws_amplify;
   if (!AmplifyGlobal) {
@@ -115,25 +115,26 @@ window.onload = function () {
   // ========== LOGIN PAGE ==========
   if (path.endsWith("login.html")) {
     const form = document.getElementById("login_form");
+
     if (form) {
       form.addEventListener("submit", async function (event) {
-        event.preventDefault();
+        event.preventDefault(); // <-- this stops the page from refreshing
 
-        const email = document.getElementById("email_input").value;
+        const email = document.getElementById("email_input").value.trim();
         const password = document.getElementById("pw_input").value;
 
         try {
           const user = await Auth.signIn(email, password);
-          console.log("Login successful:", user);
+          alert("Welcome, " + (user.attributes?.given_name || "Friend"));
           window.location.replace("home.html");
         } catch (err) {
-          alert("Login error: " + err.message);
+          alert("Sign-in failed: " + err.message);
+          console.error("Sign-in error:", err);
         }
       });
-    } else {
-      console.warn("login_form not found.");
     }
   }
+
 
   // ========== HOME PAGE ==========
   if (path.endsWith("home.html")) {
