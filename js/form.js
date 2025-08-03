@@ -1,5 +1,3 @@
-import { Auth } from 'aws-amplify';
-
 document.getElementById("match_form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
