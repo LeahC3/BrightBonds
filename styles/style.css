@@ -1,0 +1,494 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: white;
+    overflow-x: hidden;
+}
+
+/* Large devices */
+@media only screen and (min-width: 600px) {
+    nav {
+        display: inline-flex;
+        align-items: center;
+        background-color: #012572;
+        width: 100vw;
+
+        top:0;
+        position: sticky;
+        z-index: 1100;
+        justify-content: right;
+    }
+
+    .topNavbar {
+        align-items: center;
+        background-color: #012572;
+
+        top:0;
+        position: sticky;
+        z-index: 1100;
+        margin-left: 1rem;
+        margin-right: auto;
+    }
+
+    .logo {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    #logoText {
+        margin-left: 1rem;
+
+
+        font-family: "Adamina", serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    #brightbondsimg {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .hamburgerMenu
+    {
+        display:none;
+    }
+
+    .page {
+        padding: 2.5rem 1.5rem;
+        text-decoration: none;
+        color: white;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.1rem;
+    }
+
+    .menu {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+
+        top:0;
+        position: sticky;
+        z-index: 1100;
+    }
+
+    #active {
+        background-color: #001f61;
+    }
+
+    .page:hover {
+        background-color: #00184c !important;
+    }
+}
+
+/* Small devices only */
+@media only screen and (max-width: 600px) {
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: left;
+   
+        top: 0;
+        position: sticky;
+        z-index: 1000;
+        width: 100vw;
+    }
+
+    .topNavbar {
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        background-color: #012572;
+
+        top:0;
+        position: sticky;
+        z-index: 1100;
+    }
+   
+    .logo {
+        display: flex;
+        align-items: center;
+        margin-left: 1rem;
+    }
+   
+    #logoText {
+        margin-left: 1rem;
+   
+        font-family: "Adamina", serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.5rem;
+        color: white;
+    }
+   
+    #brightbondsimg {
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+        width: 4rem;
+        height: 4rem;
+    }
+   
+    .hamburgerMenu {
+        margin-right: 1rem;
+        margin-left: auto;
+        color: white;
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .menu {
+        position: absolute;
+        top: -5rem;
+        transition: top 0.3s ease; /* Only transition the bottom property */
+        z-index: 1000;
+        width: 100vw;
+        overflow: hidden;
+        max-height: 15rem;
+    }
+
+    .menu.visible{
+        top: 6.5rem;
+    }
+
+    .page {
+        width: 100vw;
+        padding: 0.6rem 1.5rem;
+        text-decoration: none;
+        color: #001f61;
+        background-color: #baf0f4;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.1rem;
+        display: flex;
+        overflow: hidden;
+    }
+   
+    #active {
+        background-color: #9ddce1;
+    }
+   
+    .page:hover {
+        background-color: #8bccd0 !important;
+    }
+}
+
+
+h1 {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2rem;
+    padding: 2rem 2rem 0rem 2rem;
+}
+
+
+p {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1.5rem;
+    padding: 1rem 2rem 0rem 2rem;
+}
+
+
+footer {
+    background-color: rgb(43, 43, 43);
+    color: white;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-size: 1rem;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+
+form {
+    padding: 1rem 0rem;
+    text-align: center;
+    justify-content: center;
+}
+
+
+label {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1.3rem;
+}
+
+
+input {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    width: 20rem;
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    border-width: 0.1rem;
+    border-color: lightgray;
+    border-style:solid;
+
+
+    text-overflow: ellipsis;
+    /* Required for text-overflow to do anything */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.submitButton {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border-style: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: #baf0f4;
+    color: black;
+}
+
+
+.submitButton:hover {
+    opacity: 70%;
+    cursor: pointer;
+}
+
+
+.gradient {
+    background-image: linear-gradient(rgb(0, 36, 120), rgb(186, 230, 253));
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5rem;
+    width: 100vw;
+
+
+    animation-name: slideInFromBottom;
+    animation-duration: 0.5s;
+}
+
+
+.container {
+    background-color: white;
+    border-radius: 1rem;
+    display: inline-flex;
+    flex-direction: column;
+    width: 28rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+
+#connecting {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5rem 0rem;
+    flex-wrap: wrap;
+}
+
+
+
+
+.landing {
+    position: relative;
+    text-align: center;
+}
+
+
+.backImg {
+    height: 90vh;
+}
+
+
+.imgContainer {
+    object-fit: cover;
+    overflow: hidden;
+    width: 100vw;
+}
+
+
+.overImg
+{
+    display: flex;
+    position: absolute;
+    right: 3rem;
+    top: 40%;
+    align-items: end;
+    flex-direction: column;
+    text-align: right;
+}
+
+
+h5 {
+    background-color: #baf0f4;
+    color: black;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 2.5rem;
+
+
+    padding: 0.5rem 1rem;
+
+
+    animation-name: slideInFromRight;
+    animation-duration: 1.5s;
+}
+
+
+#learnMore {
+    padding: 1rem 3rem;
+    margin-top: 1rem;
+
+
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 1rem;
+
+
+    border-style: none;
+    border-radius: 0.5rem;
+    background-color: white;
+    color: black;
+
+
+    animation-name: slideInFromRight;
+    animation-duration: 1.5s;
+}
+
+
+#learnMore:hover {
+    opacity: 70%;
+    cursor: pointer;
+}
+
+
+#handsImg {
+    width: 30rem;
+    margin-top: 1rem;
+    max-width: 90vw;
+}
+
+
+.textContainer  {
+    width: 27rem;
+}
+
+
+.button{
+    padding: 0.5rem 2rem;
+    border-style: none;
+    background-color:rgb(186, 230, 253);
+    border-radius: 0.5rem;
+
+
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 1rem;
+    color: #001f61;
+
+
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+
+.buttonContainer {
+    margin-left: 2rem;
+}
+
+
+.button:hover {
+    opacity: 70%;
+    cursor: pointer;
+}
+
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+@keyframes slideInFromBottom {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+h2 {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 3.5rem;
+    padding: 2rem 2rem 0rem 2rem;
+    color: #012572;
+
+
+    animation-name: slideInFromTop;
+    animation-duration: 0.5s;
+}
+
+c {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1.2rem;
+    padding: 0rem 1rem 1.5rem;
+    color: #ff0000
+}
+
+
+@keyframes slideInFromTop {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+

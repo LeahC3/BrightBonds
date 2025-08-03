@@ -14,7 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- stylesheet-->
-        <link rel="stylesheet" href="../style.css">
+        <link rel="stylesheet" href="../styles/style.css">
 
         <!-- Load Amplify from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
@@ -61,12 +61,12 @@
 
                 <form id="login_form">
                     <label for="email_input">Email:</label><br>
-                    <input type="email" id="email_input" autocomplete="email"><br>
+                    <input type="email" id="email_input" autocomplete="email" required><br>
 
                     <label for="pw_input">Password:</label><br>
-                    <input type="password" id="pw_input" autocomplete="current-password"><br>
+                    <input type="password" id="pw_input" autocomplete="current-password" required><br>
 
-                    <input type="submit" value="Log In">
+                    <input type="submit" class="submitButton" value="Log In">
                 </form>
                 <c id="result"></c>
             </div>

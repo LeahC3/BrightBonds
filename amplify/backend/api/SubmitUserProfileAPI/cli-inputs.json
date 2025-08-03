@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "paths": {
+    "/submitForm": {
+      "name": "/submitForm",
+      "lambdaFunction": "submitUserForm",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create"
+        ]
+      }
+    }
+  }
+}

@@ -1,7 +1,6 @@
 window.onload = function () {
   const email = localStorage.getItem("signupEmail");
   if (!email || !window.Auth) {
-    alert("Access denied. Please sign up first.");
     window.location.replace("login.html");
     return;
   }
@@ -27,7 +26,7 @@ window.onload = function () {
           window.location.replace("login.html");
         }
       } catch (err) {
-        alert("Confirmation failed: " + err.message);
+        if (result) result.textContent = "Confirmation failed: " + err.message;
       }
     });
   }
@@ -35,9 +34,9 @@ window.onload = function () {
   window.resendCode = async function () {
     try {
       await Auth.resendSignUp(email);
-      alert("New confirmation code sent.");
+      if (result) result.textContent = "New confirmation code sent.";
     } catch (err) {
-      alert("Error resending code: " + err.message);
+      if (result) result.textContent = "Error resending code: " + err.message;
     }
   };
 };

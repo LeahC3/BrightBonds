@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bright Bonds</title>
+        <!-- favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+        <link rel="icon" href="http://www.brightbonds.org/favicon.ico?v=2" />
+        <link rel="manifest" href="../favicon_io/site.webmanifest">
+
+        <!-- different size for different device -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- stylesheet-->
+        <link rel="stylesheet" href="../styles/homeStyle.css">
+
+        <!-- Load Amplify from CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
+        <!-- script -->
+        <script src="../js/homeMain.js" defer></script>
+        <script src="../js/form.js" defer></script>
+
+        <!-- Nunito Sans, Adamina, Open Sans -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    </head>
+
+    <body class="gradient">
+    <div class="container">
+        <h1>Tell Us About Yourself</h1>
+        <form id="match_form">
+
+            <!-- Hobbies -->
+            <fieldset>
+                <legend>What are some of your favorite hobbies? (select all that apply)</legend>
+                <label><input type="checkbox" name="hobbies" value="Reading"> Reading</label><br>
+                <label><input type="checkbox" name="hobbies" value="Gardening"> Gardening</label><br>
+                <label><input type="checkbox" name="hobbies" value="Music"> Music</label><br>
+                <label><input type="checkbox" name="hobbies" value="Drawing or painting"> Drawing or painting</label><br>
+                <label><input type="checkbox" name="hobbies" value="Writing or journaling"> Writing or journaling</label><br>
+                <label><input type="checkbox" name="hobbies" value="Crafting or DIY projects"> Crafting or DIY projects</label><br>
+                <label><input type="checkbox" name="hobbies" value="Cooking or baking"> Cooking or baking</label><br>
+                <label><input type="checkbox" name="hobbies" value="Dancing"> Dancing</label><br>
+                <label><input type="checkbox" name="hobbies" value="Playing an instrument"> Playing an instrument</label><br>
+                <label><input type="checkbox" name="hobbies" value="Knitting, sewing, or embroidery"> Knitting, sewing, or embroidery</label><br>
+                <label><input type="checkbox" name="hobbies" value="Collecting (e.g. stamps, coins)"> Collecting (e.g. stamps, coins)</label><br>
+                <label><input type="checkbox" name="hobbies" value="Watching movies or TV"> Watching movies or TV</label><br>
+                <label><input type="checkbox" name="hobbies" value="Volunteering or mentoring"> Volunteering or mentoring</label><br>
+            </fieldset>
+
+            <!-- Games -->
+            <fieldset>
+                <legend>Do you enjoy playing games? If so, what kind? (select all that apply)</legend>
+                <label><input type="checkbox" name="games" value="Board games"> Board games</label><br>
+                <label><input type="checkbox" name="games" value="Card games"> Card games</label><br>
+                <label><input type="checkbox" name="games" value="Video games"> Video games</label><br>
+                <label><input type="checkbox" name="games" value="Word games (like Scrabble)"> Word games (like Scrabble)</label><br>
+                <label><input type="checkbox" name="games" value="Puzzle games"> Puzzle games</label><br>
+                <label><input type="checkbox" name="games" value="Trivia or quiz games"> Trivia or quiz games</label><br>
+            </fieldset>
+
+            <!-- Music -->
+            <fieldset>
+                <legend>Do you like listening to music? If so, what kind? (select all that apply)</legend>
+                <label><input type="checkbox" name="music" value="Classical"> Classical</label><br>
+                <label><input type="checkbox" name="music" value="Jazz"> Jazz</label><br>
+                <label><input type="checkbox" name="music" value="Pop"> Pop</label><br>
+                <label><input type="checkbox" name="music" value="Rock"> Rock</label><br>
+                <label><input type="checkbox" name="music" value="Country"> Country</label><br>
+                <label><input type="checkbox" name="music" value="Folk"> Folk</label><br>
+                <label><input type="checkbox" name="music" value="Gospel"> Gospel</label><br>
+                <label><input type="checkbox" name="music" value="R&B / Soul"> R&B / Soul</label><br>
+                <label><input type="checkbox" name="music" value="Dancing"> Dancing</label><br>
+                <label><input type="checkbox" name="music" value="Musical theater"> Musical theater</label><br>
+            </fieldset>
+
+            <!-- Reading -->
+            <fieldset>
+                <legend>Are you interested in reading books?</legend>
+                <label><input type="radio" name="reading" value="Yes"> Yes</label>
+                <label><input type="radio" name="reading" value="No"> No</label>
+                <label><input type="radio" name="reading" value="Sometimes"> Sometimes</label>
+            </fieldset>
+
+            <!-- Free Time -->
+            <fieldset>
+                <legend>How do you usually like to spend your free time? (select all that apply)</legend>
+                <label><input type="checkbox" name="freeTime" value="Relaxing"> Relaxing/quiet time</label><br>
+                <label><input type="checkbox" name="freeTime" value="Creative activities (writing, drawing, etc.)"> Creative activities (writing, drawing, etc.)</label><br>
+                <label><input type="checkbox" name="freeTime" value="Socializing or talking"> Socializing or talking</label><br>
+                <label><input type="checkbox" name="freeTime" value="Outdoor activities"> Outdoor activities</label><br>
+                <label><input type="checkbox" name="freeTime" value="Watching movies or TV"> Watching movies or TV</label><br>
+                <label><input type="checkbox" name="freeTime" value="Reading"> Reading</label><br>
+            </fieldset>
+
+            <!-- Topics -->
+            <fieldset>
+                <legend>What topics do you enjoy talking about? (select all that apply)</legend>
+                <label><input type="checkbox" name="topics" value="History"> History</label><br>
+                <label><input type="checkbox" name="topics" value="Science"> Science</label><br>
+                <label><input type="checkbox" name="topics" value="Technology"> Technology</label><br>
+                <label><input type="checkbox" name="topics" value="Current events/news"> Current events/news</label><br>
+                <label><input type="checkbox" name="topics" value="Family and life stories"> Family and life stories</label><br>
+                <label><input type="checkbox" name="topics" value="Hobbies"> Hobbies</label><br>
+                <label><input type="checkbox" name="topics" value="Movies/TV"> Movies/TV</label><br>
+                <label><input type="checkbox" name="topics" value="Food and recipes"> Food and recipes</label><br>
+                <label><input type="checkbox" name="topics" value="Nature or outdoors"> Nature or outdoors</label><br>
+                <label><input type="checkbox" name="topics" value="Sports"> Sports</label><br>
+            </fieldset>
+
+            <!-- Life & Travel -->
+            <label for="lifeExperience">What’s something interesting about your life experience you’d like to share?</label><br>
+            <textarea name="lifeExperience" id="lifeExperience" rows="3"></textarea><br>
+
+            <!-- Communication frequency-->
+            <fieldset>
+                <legend>How often would you like to connect?</legend>
+                <label><input type="radio" name="frequency" value="Once a week"> Once a week</label>
+                <label><input type="radio" name="frequency" value="Every other week"> Every other week</label>
+                <label><input type="radio" name="frequency" value="No preference"> No preference</label>
+            </fieldset>
+
+            <!-- Availability-->
+            <fieldset>
+                <legend>What days are usually best for you to visit? (select all that apply)</legend>
+                <label><input type="checkbox" name="availability" value="Weekdays"> Weekdays</label><br>
+                <label><input type="checkbox" name="availability" value="Weekends"> Weekends</label><br>
+            </fieldset>
+
+            <!-- Times -->
+            <fieldset>
+                <legend>What times of the day are usually best for you to visit? (select all that apply)</legend>
+                <label><input type="checkbox" name="times" value="Mornings"> Mornings</label><br>
+                <label><input type="checkbox" name="times" value="Afternoons"> Afternoons</label><br>
+                <label><input type="checkbox" name="times" value="Evenings"> Evenings</label><br>
+            </fieldset>
+
+            <!-- Talking style -->
+            <fieldset>
+                <legend>Would you describe yourself as more…</legend>
+                <label><input type="radio" name="talkStyle" value="Talkative"> Talkative</label>
+                <label><input type="radio" name="talkStyle" value="Listener"> A good listener</label>
+                <label><input type="radio" name="talkStyle" value="Both"> Both</label>
+                <label><input type="radio" name="talkStyle" value="Depends on the day"> Depends on the day</label>
+            </fieldset>
+
+            <!-- Personality type -->
+            <fieldset>
+                <legend>Are you more…</legend>
+                <label><input type="radio" name="personality" value="Introverted"> Introverted</label>
+                <label><input type="radio" name="personality" value="Extroverted"> Extroverted</label>
+                <label><input type="radio" name="personality" value="Somewhere in between"> Somewhere in between</label>
+            </fieldset>
+
+            <!-- Jokes & Humor -->
+            <fieldset>
+                <legend>Do you enjoy jokes and humor in conversation?</legend>
+                <label><input type="radio" name="jokes" value="yes"> Yes</label>
+                <label><input type="radio" name="jokes" value="Not really"> Not really</label>
+                <label><input type="radio" name="jokes" value="Sometimes"> Sometimes</label>
+            </fieldset>
+
+            <!-- Conversation Preference -->
+             <fieldset>
+                <legend>What kinds of conversations do you prefer?</legend>
+                <label><input type="radio" name="convoPreference" value="Deep and thoughtful"> Deep and thoughtful</label>
+                <label><input type="radio" name="convoPreference" value="Lighthearted and fun"> Lighthearted and fun</label>
+                <label><input type="radio" name="convoPreference" value="A mix of both"> A mix of both</label>
+            </fieldset>
+
+            <!-- Conversation Pace -->
+             <fieldset>
+                <legend>What pace of interaction do you enjoy most?</legend>
+                <label><input type="radio" name="pace" value="Calm and slow"> Calm and slow</label>
+                <label><input type="radio" name="pace" value="Friendly and chatty"> Friendly and chatty</label>
+                <label><input type="radio" name="pace" value="Energetic and playful"> Energetic and playful</label>
+                <label><input type="radio" name="pace" value="Depends on the day"> Depends on the day</label>
+            </fieldset>
+
+            <!-- Submit -->
+            <input type="submit" class="submitButton" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,4 +1,20 @@
 {
+  "api": {
+    "SubmitUserProfileAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "submitUserForm"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
   "auth": {
     "brightbondscdd97a1f": {
       "customAuth": false,
@@ -28,6 +44,31 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "submitUserForm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_submitUserForm_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "submitUserForm"
+        }
+      ]
+    },
+    "AMPLIFY_function_submitUserForm_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "submitUserForm"
+        }
+      ]
     }
   }
 }

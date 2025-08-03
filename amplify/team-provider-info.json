@@ -9,11 +9,21 @@
       "UnauthRoleName": "amplify-BrightBonds-dev-065205-unauthRole",
       "StackName": "amplify-BrightBonds-dev-065205",
       "StackId": "arn:aws:cloudformation:us-east-2:851725407388:stack/amplify-BrightBonds-dev-065205/4d3527c0-6ddb-11f0-bc96-0a1b5dfbcab7",
-      "AmplifyAppId": "d2ekwb42nxm0ul"
+      "AmplifyAppId": "d2ekwb42nxm0ul",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/brightbonds-dev-065205-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
         "brightbondscdd97a1f": {}
+      },
+      "function": {
+        "submitUserForm": {
+          "deploymentBucketName": "brightbonds-dev-065205-deployment",
+          "s3Key": "amplify-builds/submitUserForm-7231656c564b76716f66-build.zip"
+        }
+      },
+      "api": {
+        "SubmitUserProfileAPI": {}
       }
     }
   }
