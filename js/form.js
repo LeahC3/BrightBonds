@@ -1,3 +1,5 @@
+import { Auth } from 'aws-amplify';
+
 document.getElementById("match_form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -15,11 +17,22 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
   }
 
   try {
-    const response = await fetch("https://YOUR_API_ID.execute-api.us-east-2.amazonaws.com/YOUR_STAGE/submitForm", {
+    // Get current Cognito JWT token
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+
+    const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/submitForm", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token,
+      },
       body: JSON.stringify(data),
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} - ${await response.text()}`);
+    }
 
     const result = await response.json();
     alert("Form submitted successfully!");
