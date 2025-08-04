@@ -1,3 +1,8 @@
+window.onload = function () {
+  if (!window.Auth) return;
+};
+
+
 document.getElementById("match_form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
