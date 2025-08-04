@@ -20,13 +20,11 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
     const token = session.getIdToken().getJwtToken();
 
     const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/submitForm", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": token,
-      },
-      body: JSON.stringify(data),
-    });
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",  // 👈 Needed for Auth + CORS
+    body: JSON.stringify(data),
+  });
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status} - ${await response.text()}`);
