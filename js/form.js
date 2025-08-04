@@ -11,6 +11,15 @@ window.onload = function () {
 };
 
 
+// Configure Amplify
+aws_amplify.Amplify.configure({
+  Auth: {
+    region: 'us-east-2',
+    userPoolId: 'us-east-2_AxTL9MRLy',
+    userPoolWebClientId: '69hs07li090olcre8pg8uji24r',
+  }
+});
+
 document.getElementById("match_form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -28,20 +37,19 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
   }
 
   try {
-    // Get current Cognito JWT token
-    const session = await Auth.currentSession();
+    const session = await aws_amplify.Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
 
     const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/default/submitUserForm-dev", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",  // 👈 Needed for Auth + CORS
-    body: JSON.stringify(data),
-  });
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
+    });
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status} - ${await response.text()}`);
-    }
+    if (!response.ok) throw new Error(`HTTP ${response.status} - ${await response.text()}`);
 
     const result = await response.json();
     alert("Form submitted successfully!");
