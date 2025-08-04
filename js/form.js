@@ -32,7 +32,7 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
 
-    const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/default/", {
+    const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/default/submitUserForm-dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",  // 👈 Needed for Auth + CORS
