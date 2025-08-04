@@ -1,5 +1,13 @@
 window.onload = function () {
   if (!window.Auth) return;
+
+  Auth.currentAuthenticatedUser()
+    .then(async user => {
+      const name = user?.attributes?.given_name || "Friend";
+    })
+    .catch(() => {
+      window.location.replace("login.html");
+    });
 };
 
 
