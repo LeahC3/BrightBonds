@@ -1,3 +1,6 @@
+const Amplify = window.aws_amplify.Amplify;
+const Auth = Amplify.Auth;
+
 window.onload = function () {
   if (!window.Auth) return;
 
