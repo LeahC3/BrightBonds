@@ -42,7 +42,7 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
   try {
     const session = await Auth.currentSession();  // <-- Better than currentAuthenticatedUser
     const token = session.getIdToken().getJwtToken();
-    console.log("JWT Token:", idToken);
+    console.log("JWT Token:", token);
 
     const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/default/submitUserForm-dev", {
       method: "POST",
