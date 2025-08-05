@@ -40,31 +40,28 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
   }
 
   try {
-    // Get current session token
-    const session = await Amplify.Auth.currentSession();
+    const session = await Auth.currentSession();  // <-- Better than currentAuthenticatedUser
     const token = session.getIdToken().getJwtToken();
 
-    // Send data to API with Authorization header
     const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/default/submitUserForm-dev", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": token,
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`${response.status} - ${JSON.stringify(errorData)}`);
+      const message = await response.text();
+      throw new Error(`HTTP ${response.status} - ${message}`);
     }
 
     const result = await response.json();
     alert("Form submitted successfully!");
     console.log(result);
-
   } catch (err) {
     console.error("Form submission error:", err);
-    alert("There was an error submitting the form: " + err.message);
+    alert("There was an error submitting the form.");
   }
 });
