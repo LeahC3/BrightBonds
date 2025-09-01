@@ -1,20 +1,5 @@
 {
-  "api": {
-    "SubmitUserProfileAPI": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "submitUserForm"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    }
-  },
+  "api": {},
   "auth": {
     "brightbondscdd97a1f": {
       "customAuth": false,

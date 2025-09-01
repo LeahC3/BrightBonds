@@ -44,11 +44,11 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
     const token = session.getIdToken().getJwtToken();
     console.log("JWT Token:", token);
 
-    const response = await fetch("https://1asmlb4abc.execute-api.us-east-2.amazonaws.com/default/submitUserForm-dev", {
+    const response = await fetch("https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": token,
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
