@@ -1,0 +1,72 @@
+{
+    "version": "2.0",
+    "routeKey": "POST /submitUserForm-dev",
+    "rawPath": "/default/submitUserForm-dev",
+    "rawQueryString": "",
+    "headers": {
+        "accept": "*/*",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": "eyJraWQiOiJNT25xTnYzN1AyUzAyMHJYMXZNbjF5Y0xWOE9OcFZFUzJUVGszY0RsWnZZPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4MWJiNTVlMC0yMDQxLTcwY2UtY2JhMS1kMzk1NGUxNGEwOWEiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYmlydGhkYXRlIjoiMjAwOS0wNi0yOCIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0yX0F4VEw5TVJMeSIsImNvZ25pdG86dXNlcm5hbWUiOiI4MWJiNTVlMC0yMDQxLTcwY2UtY2JhMS1kMzk1NGUxNGEwOWEiLCJnaXZlbl9uYW1lIjoiSm9obiIsIm9yaWdpbl9qdGkiOiI5ZWRmZWQ4MC00NmEzLTQ2MWItOGI3NS1iMTVhMDhmMmQ4NTAiLCJhdWQiOiI2OWhzMDdsaTA5MG9sY3JlOHBnOHVqaTI0ciIsImV2ZW50X2lkIjoiYzQ4OTg2YTUtNmQ3OS00NDI5LTlhNDgtODRmN2Q0ZjA4N2ExIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3NTY2NjQyMDUsImV4cCI6MTc1NjY2NzgwNSwiaWF0IjoxNzU2NjY0MjA1LCJmYW1pbHlfbmFtZSI6IkRvZSIsImp0aSI6ImRhNWM1NDYyLWJjODctNDZhMy05ZTViLTJkMjRmMDQ0NDExMSIsImVtYWlsIjoibGM5M3NwQGdtYWlsLmNvbSJ9.bg4uLfxDHE-z0rWK25Cb03E1Ieiaf6YqSDot1vFqDqJIkNUxpJOjOKeF919wmRYIJK_RtaazR2fQNM0aDFM0EYPwPJzjRuvlxNCM5D1fVt7r5V-wGYtCQAJwTsRtQ4hNcY7uelRJrozwSDgnqND7OXKIaxThH1CodEtfwBc1Y3vuNI4Ki-_-u8Ob8PXENdlNEQCVIwsjL1FB1bpOdjfLy6V_CfeecA8OuUkJnXzGN-nZ-awOxKyy_jOiT9sXvI9UBs4hN1JrV-hd4MzWu8ngKeuDfofKK21EPh3odrgfGrVeWww7VBOfQy177zmLp_GPNgm49gOLEfLg6bNhD02qDA",
+        "content-length": "21",
+        "content-type": "application/json",
+        "host": "1asmlb4abc.execute-api.us-east-2.amazonaws.com",
+        "origin": "https://www.brightbonds.org",
+        "priority": "u=1, i",
+        "referer": "https://www.brightbonds.org/",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "x-amzn-trace-id": "Root=1-68b49195-17bec2f77b743bb017f85afa",
+        "x-forwarded-for": "134.56.166.225",
+        "x-forwarded-port": "443",
+        "x-forwarded-proto": "https"
+    },
+    "requestContext": {
+        "accountId": "851725407388",
+        "apiId": "1asmlb4abc",
+        "authorizer": {
+            "jwt": {
+                "claims": {
+                    "aud": "69hs07li090olcre8pg8uji24r",
+                    "auth_time": "1756664205",
+                    "birthdate": "2009-06-28",
+                    "cognito:username": "81bb55e0-2041-70ce-cba1-d3954e14a09a",
+                    "email": "lc93sp@gmail.com",
+                    "email_verified": "true",
+                    "event_id": "c48986a5-6d79-4429-9a48-84f7d4f087a1",
+                    "exp": "1756667805",
+                    "family_name": "Doe",
+                    "given_name": "John",
+                    "iat": "1756664205",
+                    "iss": "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_AxTL9MRLy",
+                    "jti": "da5c5462-bc87-46a3-9e5b-2d24f0444111",
+                    "origin_jti": "9edfed80-46a3-461b-8b75-b15a08f2d850",
+                    "sub": "81bb55e0-2041-70ce-cba1-d3954e14a09a",
+                    "token_use": "id"
+                },
+                "scopes": null
+            }
+        },
+        "domainName": "1asmlb4abc.execute-api.us-east-2.amazonaws.com",
+        "domainPrefix": "1asmlb4abc",
+        "http": {
+            "method": "POST",
+            "path": "/default/submitUserForm-dev",
+            "protocol": "HTTP/1.1",
+            "sourceIp": "134.56.166.225",
+            "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+        },
+        "requestId": "QLuvdiE6CYcEMew=",
+        "routeKey": "POST /submitUserForm-dev",
+        "stage": "default",
+        "time": "31/Aug/2025:18:16:53 +0000",
+        "timeEpoch": 1756664213764
+    },
+    "body": "{\"lifeExperience\":\"\"}",
+    "isBase64Encoded": false
+}
