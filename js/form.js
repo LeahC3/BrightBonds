@@ -1,5 +1,6 @@
 const Amplify = window.aws_amplify.Amplify;
 const Auth = Amplify.Auth;
+const API = Amplify.API;
 
 window.onload = function () {
   if (!window.Auth) return;
@@ -20,6 +21,17 @@ aws_amplify.Amplify.configure({
     region: 'us-east-2',
     userPoolId: 'us-east-2_AxTL9MRLy',
     userPoolWebClientId: '69hs07li090olcre8pg8uji24r',
+  },
+  API: {
+    endpoints: [
+      {
+        name: "brightbondsapi",
+        endpoint: "https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws",
+        custom_header: async () => {
+          return { Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
+        }
+      }
+    ]
   }
 });
 
@@ -38,27 +50,14 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
       data[key] = value;
     }
   }
+  
+  console.log("Form data collected:", data);
 
   try {
-    const session = await Auth.currentSession();  // <-- Better than currentAuthenticatedUser
-    const token = session.getIdToken().getJwtToken();
-    console.log("JWT Token:", token);
-
-    const response = await fetch("https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
+    const result = await API.post('brightbondsapi', '/', {
+      body: data
     });
-
-    if (!response.ok) {
-      const message = await response.text();
-      throw new Error(`HTTP ${response.status} - ${message}`);
-    }
-
-    const result = await response.json();
+    
     alert("Form submitted successfully!");
     console.log(result);
   } catch (err) {

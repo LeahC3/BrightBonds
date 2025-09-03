@@ -1,5 +1,27 @@
 {
-  "api": {},
+  "api": {
+    "brightbondsapi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "submitUserForm"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "brightbondscdd97a1f"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
   "auth": {
     "brightbondscdd97a1f": {
       "customAuth": false,
