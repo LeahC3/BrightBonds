@@ -1,34 +1,21 @@
 <!DOCTYPE html>
-
 <html>
     <head>
-        <title>Bright Bonds</title>
-        <!-- favicon -->
+        <title>Bright Bonds - Messages</title>
         <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
         <link rel="icon" href="http://www.brightbonds.org/favicon.ico?v=2" />
         <link rel="manifest" href="../favicon_io/site.webmanifest">
-
-        <!-- different size for different device -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <!-- stylesheet-->
         <link rel="stylesheet" href="../styles/homeStyle.css">
-
-        <!-- Load Amplify from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
-        <!-- script -->
         <script src="../js/homeMain.js" defer></script>
-        <script src="../js/home.js" defer></script>
-
-        <!-- Nunito Sans, Adamina, Open Sans -->
+        <script src="../js/messages.js" defer></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-
     </head>
-
 
     <body>
         <!-- Mobile Overlay -->
@@ -55,8 +42,8 @@
             </div>
 
             <div class="nav-links">
-                <a class="page" id="active" href="home.html">Home</a>
-                <a class="page" href="messages.html">Messages</a>
+                <a class="page" href="home.html">Home</a>
+                <a class="page" id="active" href="messages.html">Messages</a>
                 <a class="page" href="#">Calendar</a>
                 <a class="page" href="#">Resources</a>
             </div>
@@ -71,40 +58,60 @@
         </nav>
 
         <main class="main-content">
-            <section class="welcome-section">
-                <h1>
-                    Welcome, <b id="welcome_name">Loading...</b><b>!</b>
-                </h1>
-            </section>
-            
-            <section class="notifications" id="notifications" style="display: none;">
-                <div class="notification-card">
-                    <div class="notification-icon">!</div>
-                    <div class="notification-content">
-                        <h3>Complete Your Profile</h3>
-                        <p>Please complete your interest form to get matched with a volunteer partner.</p>
-                        <button class="complete-btn" id="completeFormBtn">Complete Form</button>
+            <div class="messages-container">
+                <div class="messages-sidebar">
+                    <h2>Conversations</h2>
+                    <div class="conversation-list" id="conversationList">
+                        <div class="conversation-item active" data-user="Sarah Johnson">
+                            <div class="conversation-avatar">SJ</div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">Sarah Johnson</div>
+                                <div class="conversation-preview">Thanks for the book recommendation!</div>
+                                <div class="conversation-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="conversation-item" data-user="Michael Chen">
+                            <div class="conversation-avatar">MC</div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">Michael Chen</div>
+                                <div class="conversation-preview">Looking forward to our visit tomorrow</div>
+                                <div class="conversation-time">1 day ago</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-            
-            <section class="dashboard-cards">
-                <div class="card">
-                    <h3>Your Matches</h3>
-                    <p>View your volunteer connections</p>
-                    <span class="card-status">Coming Soon</span>
+
+                <div class="messages-main">
+                    <div class="messages-header">
+                        <div class="chat-user-info">
+                            <div class="chat-avatar">SJ</div>
+                            <div class="chat-user-name">Sarah Johnson</div>
+                        </div>
+                    </div>
+
+                    <div class="messages-content" id="messagesContent">
+                        <div class="message received">
+                            <div class="message-content">Hi! I hope you're having a wonderful day. I wanted to thank you for the book recommendation you gave me last week.</div>
+                            <div class="message-time">Yesterday 3:30 PM</div>
+                        </div>
+                        <div class="message sent">
+                            <div class="message-content">You're so welcome! I'm glad you enjoyed it. Did you finish it already?</div>
+                            <div class="message-time">Yesterday 4:15 PM</div>
+                        </div>
+                        <div class="message received">
+                            <div class="message-content">Yes! It was such a page-turner. Do you have any other recommendations in that genre?</div>
+                            <div class="message-time">Today 10:20 AM</div>
+                        </div>
+                    </div>
+
+                    <div class="message-input-container">
+                        <div class="message-input-wrapper">
+                            <input type="text" id="messageInput" placeholder="Type your message..." maxlength="500">
+                            <button id="sendButton" class="send-button">Send</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Messages</h3>
-                    <p>Chat with your matched partners</p>
-                    <span class="card-status">Coming Soon</span>
-                </div>
-                <div class="card">
-                    <h3>Calendar</h3>
-                    <p>Schedule your visits</p>
-                    <span class="card-status">Coming Soon</span>
-                </div>
-            </section>
+            </div>
         </main>
-    
+    </body>
 </html>

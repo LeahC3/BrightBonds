@@ -61,6 +61,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_submitConsentForm_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "submitConsentForm"
+        }
+      ]
+    },
+    "AMPLIFY_function_submitConsentForm_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "submitConsentForm"
+        }
+      ]
+    },
     "AMPLIFY_function_submitUserForm_deploymentBucketName": {
       "usedBy": [
         {

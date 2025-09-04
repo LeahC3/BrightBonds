@@ -6,7 +6,8 @@ from boto3.dynamodb.conditions import Key
 
 # Use Document Client for automatic data type conversion
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('dev-user-interests')
+interests_table = dynamodb.Table('dev-user-interests')
+consent_table = dynamodb.Table('dev-consent-forms')
 
 def handler(event, context):
     print(f"Event: {json.dumps(event)}")
@@ -18,6 +19,10 @@ def handler(event, context):
             'statusCode': 200,
             'body': ''
         }
+    
+    # Handle GET requests to check if user exists
+    if event.get('httpMethod') == 'GET' or 'check' in event.get('rawPath', ''):
+        return handle_get_request(event)
     
     try:
         # Parse form data from request body
@@ -60,22 +65,45 @@ def handler(event, context):
                 'body': json.dumps({'message': 'Invalid or expired token'})
             }
 
-        # Compose item - DynamoDB Document Client handles arrays automatically
+        # Determine if this is a consent form or interest form
+        form_type_field = body.get('formType')
+        has_parent_name = 'parentName' in body
+        has_guardian_name = 'guardianName' in body
+        is_consent_form = form_type_field == 'consent' or has_parent_name or has_guardian_name
+        
+        print(f"Form detection - formType: {form_type_field}, parentName: {has_parent_name}, guardianName: {has_guardian_name}, is_consent: {is_consent_form}")
+        
+        # Compose item
         item = {
             'userId': user_id,
             'timestamp': datetime.datetime.utcnow().isoformat(),
             **body
         }
         
-        print(f"Storing item: {json.dumps(item, default=str)}")
+        print(f"Storing {'consent' if is_consent_form else 'interest'} form: {json.dumps(item, default=str)}")
 
-        # Put item in DynamoDB using Document Client
-        response = table.put_item(Item=item)
-        print(f"DynamoDB response: {response}")
+        # Put item in appropriate table
+        if is_consent_form:
+            try:
+                response = consent_table.put_item(Item=item)
+                print(f"Successfully stored in consent table: {response}")
+            except Exception as consent_error:
+                print(f"Error storing in consent table: {consent_error}")
+                # Fallback to interests table if consent table fails
+                response = interests_table.put_item(Item=item)
+                print(f"Fallback: stored in interests table: {response}")
+        else:
+            response = interests_table.put_item(Item=item)
+            print(f"Stored in interests table: {response}")
 
         return {
             'statusCode': 200,
-            'body': json.dumps({'message': 'Form submitted successfully'})
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
+            },
+            'body': json.dumps({'message': 'Form submitted successfully', 'formType': 'consent' if is_consent_form else 'interest'})
         }
 
     except Exception as e:
@@ -83,4 +111,52 @@ def handler(event, context):
         return {
             'statusCode': 500,
             'body': json.dumps({'message': 'Error submitting form', 'error': str(e)})
+        }
+
+def handle_get_request(event):
+    try:
+        # Extract user ID from path
+        path = event.get('rawPath', '')
+        if '/check/' in path:
+            user_id = path.split('/check/')[-1]
+        else:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'message': 'Invalid request'})
+            }
+        
+        # Check both tables
+        try:
+            consent_response = consent_table.get_item(Key={'userId': user_id})
+            has_consent = 'Item' in consent_response
+        except Exception as e:
+            print(f"Error checking consent table: {e}")
+            has_consent = False
+            
+        try:
+            interest_response = interests_table.get_item(Key={'userId': user_id})
+            has_interest = 'Item' in interest_response
+        except Exception as e:
+            print(f"Error checking interests table: {e}")
+            has_interest = False
+        
+        if has_consent or has_interest:
+            return {
+                'statusCode': 200,
+                'body': json.dumps({
+                    'exists': True,
+                    'hasConsent': has_consent,
+                    'hasInterest': has_interest
+                })
+            }
+        else:
+            return {
+                'statusCode': 404,
+                'body': json.dumps({'exists': False})
+            }
+            
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
         }

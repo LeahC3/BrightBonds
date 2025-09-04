@@ -7,18 +7,50 @@ window.onload = function () {
       const welcomeEl = document.getElementById("welcome_name");
       if (welcomeEl) welcomeEl.textContent = name;
       
-      // Set up match form redirect based on birthdate
-      const matchLink = document.getElementById("matchLink");
-      if (matchLink) {
-        const birthdate = user?.attributes?.birthdate;
-        if (birthdate) {
-          const birthYear = new Date(birthdate).getFullYear();
-          const isStudent = birthYear > 1995;
-          matchLink.href = isStudent ? "studentForm.html" : "seniorForm.html";
+      // Determine correct form based on birthdate and age
+      const birthdate = user?.attributes?.birthdate;
+      let formUrl = "matchForm.html";
+      
+      if (birthdate) {
+        const birthDate = new Date(birthdate);
+        const today = new Date();
+        const birthYear = birthDate.getFullYear();
+        
+        // Calculate actual age
+        let age = today.getFullYear() - birthYear;
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        
+        const isStudent = birthYear > 1995;
+        
+        console.log(`User birthdate: ${birthdate}, calculated age: ${age}, isStudent: ${isStudent}`);
+        
+        if (isStudent && age < 18) {
+          console.log("under 18");
+          // Minor needs consent form first
+          formUrl = "consentForm.html";
+          console.log("Redirecting to consent form - user is under 18");
+        } else if (isStudent) {
+          // Adult student goes to student form
+          formUrl = "studentForm.html";
+          console.log("Redirecting to student form - user is 18+");
         } else {
-          matchLink.href = "matchForm.html"; // fallback
+          // Senior goes to senior form
+          formUrl = "seniorForm.html";
+          console.log("Redirecting to senior form - user is senior");
+        }
+        
+        // Set matchLink if it exists
+        const matchLink = document.getElementById("matchLink");
+        if (matchLink) {
+          matchLink.href = formUrl;
         }
       }
+      
+      // Check if user has completed their form
+      await checkFormCompletion(user.attributes.sub, formUrl);
     })
     .catch(() => {
       window.location.replace("login.html");
@@ -35,4 +67,96 @@ window.onload = function () {
       }
     });
   }
+  
+  // Mobile hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('nav');
+  const overlay = document.getElementById('mobileOverlay');
+  
+  function toggleMobileMenu() {
+    nav.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+  
+  function closeMobileMenu() {
+    nav.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+  
+  if (hamburger && nav && overlay) {
+    hamburger.addEventListener('click', toggleMobileMenu);
+    overlay.addEventListener('click', closeMobileMenu);
+    
+    // Close menu when clicking nav links
+    const navLinks = nav.querySelectorAll('.page');
+    navLinks.forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+  }
 };
+
+async function checkFormCompletion(userId, formUrl) {
+  try {
+    // Check form completion status
+    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/check/${userId}`, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
+    });
+    
+    let hasConsent = false;
+    let hasInterest = false;
+    
+    if (response.status === 200) {
+      const data = await response.json();
+      hasConsent = data.hasConsent;
+      hasInterest = data.hasInterest;
+    }
+    
+    // Check if user needs consent form (under 18)
+    if (formUrl.includes('consent')) {
+      if (!hasConsent) {
+        showFormNotification(formUrl);
+      } else if (!hasInterest) {
+        showFormNotification('studentForm.html');
+      } else {
+        hideNotification();
+      }
+    } else {
+      // Adult or senior - just check interest form
+      if (!hasInterest) {
+        showFormNotification(formUrl);
+      } else {
+        hideNotification();
+      }
+    }
+  } catch (error) {
+    console.log('Form check failed, showing notification');
+    showFormNotification(formUrl);
+  }
+}
+
+function showFormNotification(formUrl) {
+  const notifications = document.getElementById('notifications');
+  const completeBtn = document.getElementById('completeFormBtn');
+  const notificationText = document.querySelector('.notification-content p');
+  
+  if (notifications) {
+    notifications.style.display = 'block';
+  }
+  
+  // Update notification text based on form type
+  if (notificationText && formUrl.includes('consent')) {
+    notificationText.textContent = 'As a minor, you need parental consent before completing your interest form and finding a match.';
+  } else if (notificationText && formUrl.includes('student')) {
+    notificationText.textContent = 'Please complete your interest form to get matched with a senior partner.';
+  }
+  
+  if (completeBtn) {
+    completeBtn.onclick = () => window.location.href = formUrl;
+  }
+}
+
+function hideNotification() {
+  const notifications = document.getElementById('notifications');
+  if (notifications) notifications.style.display = 'none';
+}

@@ -1,6 +1,5 @@
 const Amplify = window.aws_amplify.Amplify;
 const Auth = Amplify.Auth;
-const API = Amplify.API;
 
 window.onload = function () {
   if (!window.Auth) return;
@@ -8,12 +7,28 @@ window.onload = function () {
   Auth.currentAuthenticatedUser()
     .then(async user => {
       const name = user?.attributes?.given_name || "Friend";
+      // Pre-fill student name if available
+      const studentNameField = document.getElementById('studentName');
+      if (studentNameField && user?.attributes?.given_name && user?.attributes?.family_name) {
+        studentNameField.value = `${user.attributes.given_name} ${user.attributes.family_name}`;
+      }
+      
+      // Pre-fill student DOB if available
+      const studentDOBField = document.getElementById('studentDOB');
+      if (studentDOBField && user?.attributes?.birthdate) {
+        studentDOBField.value = user.attributes.birthdate;
+      }
+      
+      // Set today's date for signature
+      const signatureDateField = document.getElementById('signatureDate');
+      if (signatureDateField) {
+        signatureDateField.value = new Date().toISOString().split('T')[0];
+      }
     })
     .catch(() => {
       window.location.replace("login.html");
     });
 };
-
 
 // Configure Amplify
 aws_amplify.Amplify.configure({
@@ -21,21 +36,10 @@ aws_amplify.Amplify.configure({
     region: 'us-east-2',
     userPoolId: 'us-east-2_AxTL9MRLy',
     userPoolWebClientId: '69hs07li090olcre8pg8uji24r',
-  },
-  API: {
-    endpoints: [
-      {
-        name: "brightbondsapi",
-        endpoint: "https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws",
-        custom_header: async () => {
-          return { Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
-        }
-      }
-    ]
   }
 });
 
-document.getElementById("match_form").addEventListener("submit", async (e) => {
+document.getElementById("consent_form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const form = e.target;
@@ -51,7 +55,7 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
     }
   }
   
-  console.log("Form data collected:", data);
+  console.log("Consent form data collected:", data);
 
   try {
     const session = await Auth.currentSession();
@@ -72,13 +76,13 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
     }
 
     const result = await response.json();
-    alert("Form submitted successfully!");
+    alert("Consent form submitted successfully! You can now complete your interest form.");
     console.log(result);
     
-    // Redirect to home page
-    window.location.href = "home.html";
+    // Redirect to student form
+    window.location.href = "studentForm.html";
   } catch (err) {
-    console.error("Form submission error:", err);
-    alert("There was an error submitting the form.");
+    console.error("Consent form submission error:", err);
+    alert("There was an error submitting the consent form.");
   }
 });

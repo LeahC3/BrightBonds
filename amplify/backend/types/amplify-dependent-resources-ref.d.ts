@@ -11,6 +11,14 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "submitConsentForm": {
+      "Arn": "string",
+      "FunctionUrl": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "submitUserForm": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

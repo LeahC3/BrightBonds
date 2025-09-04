@@ -19,7 +19,11 @@
       "function": {
         "submitUserForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitUserForm-4c4f78526b7548524a6d-build.zip"
+          "s3Key": "amplify-builds/submitUserForm-4a784a325069342b432b-build.zip"
+        },
+        "submitConsentForm": {
+          "deploymentBucketName": "brightbonds-dev-065205-deployment",
+          "s3Key": "amplify-builds/submitConsentForm-39453471334141796b50-build.zip"
         }
       }
     }
