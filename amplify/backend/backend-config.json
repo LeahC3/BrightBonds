@@ -54,6 +54,11 @@
     }
   },
   "function": {
+    "submitConsentForm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "submitUserForm": {
       "build": true,
       "providerPlugin": "awscloudformation",

@@ -61,7 +61,9 @@ document.getElementById("consent_form").addEventListener("submit", async (e) => 
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    const response = await fetch("https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/", {
+    const consentUrl = "https://arvatouve62zwtuw2milljprru0zeuvd.lambda-url.us-east-2.on.aws/";
+    console.log("Submitting consent form to:", consentUrl);
+    const response = await fetch(consentUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

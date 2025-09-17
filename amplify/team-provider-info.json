@@ -19,12 +19,14 @@
       "function": {
         "submitUserForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitUserForm-4a784a325069342b432b-build.zip"
+          "s3Key": "amplify-builds/submitUserForm-4155776a53742b6b3030-build.zip"
         },
         "submitConsentForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitConsentForm-39453471334141796b50-build.zip"
-        }
+          "s3Key": "amplify-builds/submitConsentForm-317878357276544d425a-build.zip"
+        },
+        "consentFormHandler": {},
+        "interestFormHandler": {}
       }
     }
   }

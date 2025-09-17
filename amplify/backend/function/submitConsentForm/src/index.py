@@ -10,17 +10,14 @@ table = dynamodb.Table('dev-consent-forms')
 def handler(event, context):
     print(f"Event: {json.dumps(event)}")
     
-    # Handle CORS preflight requests
+    # Handle CORS preflight requests (handled by Lambda Function URL)
     if event.get('httpMethod') == 'OPTIONS':
         return {
             'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
-            },
             'body': ''
         }
+    
+    # CORS is handled by Lambda Function URL configuration
     
     # Handle GET requests to check if consent exists
     if event.get('httpMethod') == 'GET' or 'check' in event.get('rawPath', ''):
@@ -35,7 +32,6 @@ def handler(event, context):
         if not auth_header:
             return {
                 'statusCode': 401,
-                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps({'message': 'Authorization header required'})
             }
         
@@ -58,7 +54,6 @@ def handler(event, context):
             print(f"Token validation error: {e}")
             return {
                 'statusCode': 401,
-                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps({'message': 'Invalid or expired token'})
             }
 
@@ -75,7 +70,6 @@ def handler(event, context):
 
         return {
             'statusCode': 200,
-            'headers': {'Access-Control-Allow-Origin': '*'},
             'body': json.dumps({'message': 'Consent form submitted successfully'})
         }
 
@@ -83,7 +77,6 @@ def handler(event, context):
         print("Error:", str(e))
         return {
             'statusCode': 500,
-            'headers': {'Access-Control-Allow-Origin': '*'},
             'body': json.dumps({'message': 'Error submitting consent form', 'error': str(e)})
         }
 
@@ -95,7 +88,6 @@ def handle_get_request(event):
         else:
             return {
                 'statusCode': 400,
-                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps({'message': 'Invalid request'})
             }
         
@@ -104,19 +96,16 @@ def handle_get_request(event):
         if 'Item' in response:
             return {
                 'statusCode': 200,
-                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps({'hasConsent': True})
             }
         else:
             return {
                 'statusCode': 404,
-                'headers': {'Access-Control-Allow-Origin': '*'},
                 'body': json.dumps({'hasConsent': False})
             }
             
     except Exception as e:
         return {
             'statusCode': 500,
-            'headers': {'Access-Control-Allow-Origin': '*'},
             'body': json.dumps({'error': str(e)})
         }

@@ -186,12 +186,7 @@
                 "dynamodb:Query",
                 "dynamodb:Scan"
               ],
-              "Resource": {
-                "Fn::GetAtt": [
-                  "ConsentFormsTable",
-                  "Arn"
-                ]
-              }
+              "Resource": "arn:aws:dynamodb:us-east-2:851725407388:table/dev-consent-forms"
             }
           ]
         }

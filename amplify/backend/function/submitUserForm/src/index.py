@@ -4,34 +4,48 @@ import datetime
 import base64
 from boto3.dynamodb.conditions import Key
 
-# Use Document Client for automatic data type conversion
+# Initialize DynamoDB resource for database operations
+# Using Document Client for automatic data type conversion (strings, numbers, etc.)
 dynamodb = boto3.resource('dynamodb')
-interests_table = dynamodb.Table('dev-user-interests')
-consent_table = dynamodb.Table('dev-consent-forms')
+interests_table = dynamodb.Table('dev-user-interests')  # Table for student/senior interest forms
+consent_table = dynamodb.Table('dev-consent-forms')    # Table for parental consent forms
 
 def handler(event, context):
+    """Main Lambda function handler for form submissions and user checks.
+    
+    This function handles:
+    1. CORS preflight requests (OPTIONS)
+    2. GET requests to check if user has completed forms
+    3. POST requests to submit interest forms (NOT consent forms)
+    
+    Note: This function was modified to ONLY handle interest forms.
+    Consent forms are rejected and should use a separate handler.
+    """
     print(f"Event: {json.dumps(event)}")
     print(f"Context: {context}")
     
-    # Handle CORS preflight requests
+    # Handle CORS preflight requests from browsers
+    # These are sent automatically before actual requests to check permissions
     if event.get('httpMethod') == 'OPTIONS':
         return {
             'statusCode': 200,
             'body': ''
         }
     
-    # Handle GET requests to check if user exists
+    # Handle GET requests to check if user has completed their forms
+    # URL pattern: /check/{userId}
     if event.get('httpMethod') == 'GET' or 'check' in event.get('rawPath', ''):
         return handle_get_request(event)
     
     try:
-        # Parse form data from request body
+        # Parse the JSON form data from the request body
         body = json.loads(event.get('body', '{}'))
 
-        # For testing with open API, use a default user ID or extract from JWT if available
+        # Default user ID for testing (will be overridden by JWT token)
         user_id = 'test-user'
         
-        # Get user ID from JWT token - now required
+        # AUTHENTICATION: Extract and validate JWT token from Authorization header
+        # All requests must include a valid JWT token from AWS Cognito
         auth_header = event.get('headers', {}).get('Authorization') or event.get('headers', {}).get('authorization')
         if not auth_header:
             return {
@@ -40,19 +54,23 @@ def handler(event, context):
             }
         
         try:
-            # Remove 'Bearer ' prefix if present
+            # JWT token format: "Bearer <token>"
+            # Remove 'Bearer ' prefix to get just the token
             token = auth_header.replace('Bearer ', '')
-            # JWT tokens have 3 parts separated by dots
+            
+            # JWT tokens have 3 parts separated by dots: header.payload.signature
             token_parts = token.split('.')
             if len(token_parts) != 3:
                 raise ValueError('Invalid token format')
             
-            # Decode the payload (second part)
+            # Decode the payload (middle part) which contains user information
             payload = token_parts[1]
-            # Add padding if needed
+            # Base64 padding must be multiple of 4 characters
             payload += '=' * (4 - len(payload) % 4)
             decoded_payload = base64.b64decode(payload)
             claims = json.loads(decoded_payload)
+            
+            # Extract user ID from the 'sub' (subject) claim
             user_id = claims.get('sub')
             
             if not user_id:
@@ -65,48 +83,30 @@ def handler(event, context):
                 'body': json.dumps({'message': 'Invalid or expired token'})
             }
 
-        # Determine if this is a consent form or interest form
-        form_type_field = body.get('formType')
-        has_parent_name = 'parentName' in body
-        has_guardian_name = 'guardianName' in body
-        is_consent_form = form_type_field == 'consent' or has_parent_name or has_guardian_name
+        # This function handles interest forms (student/senior forms)
         
-        print(f"Form detection - formType: {form_type_field}, parentName: {has_parent_name}, guardianName: {has_guardian_name}, is_consent: {is_consent_form}")
-        
-        # Compose item
+        # Create the database item with user ID, timestamp, and all form data
         item = {
             'userId': user_id,
             'timestamp': datetime.datetime.utcnow().isoformat(),
-            **body
+            **body  # Spread operator - includes all form fields
         }
         
-        print(f"Storing {'consent' if is_consent_form else 'interest'} form: {json.dumps(item, default=str)}")
+        # Log what we're storing for debugging
+        print(f"Storing interest form: {json.dumps(item, default=str)}")
+        
+        # Save to DynamoDB interests table
+        response = interests_table.put_item(Item=item)
+        print(f"Stored in interests table: {response}")
 
-        # Put item in appropriate table
-        if is_consent_form:
-            try:
-                response = consent_table.put_item(Item=item)
-                print(f"Successfully stored in consent table: {response}")
-            except Exception as consent_error:
-                print(f"Error storing in consent table: {consent_error}")
-                # Fallback to interests table if consent table fails
-                response = interests_table.put_item(Item=item)
-                print(f"Fallback: stored in interests table: {response}")
-        else:
-            response = interests_table.put_item(Item=item)
-            print(f"Stored in interests table: {response}")
-
+        # Return success response with CORS headers
         return {
             'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
-            },
-            'body': json.dumps({'message': 'Form submitted successfully', 'formType': 'consent' if is_consent_form else 'interest'})
+            'body': json.dumps({'message': 'Interest form submitted successfully'})
         }
 
     except Exception as e:
+        # Log any errors and return 500 status
         print("Error:", str(e))
         return {
             'statusCode': 500,
@@ -114,48 +114,67 @@ def handler(event, context):
         }
 
 def handle_get_request(event):
+    """Handle GET requests to check if a user has completed their forms.
+    
+    URL pattern: /check/{userId}
+    
+    Returns:
+    - 200: User found with form completion status
+    - 404: User not found in either table
+    - 400: Invalid request format
+    - 500: Server error
+    """
     try:
-        # Extract user ID from path
+        # Extract user ID from the URL path
+        # Expected format: /check/81bb55e0-2041-70ce-cba1-d3954e14a09a
         path = event.get('rawPath', '')
         if '/check/' in path:
-            user_id = path.split('/check/')[-1]
+            user_id = path.split('/check/')[-1]  # Get everything after '/check/'
         else:
             return {
                 'statusCode': 400,
                 'body': json.dumps({'message': 'Invalid request'})
             }
         
-        # Check both tables
+        # Check both consent and interest tables to see what the user has completed
+        # This allows the frontend to determine what forms still need to be filled out
+        
+        # Check consent forms table
         try:
             consent_response = consent_table.get_item(Key={'userId': user_id})
-            has_consent = 'Item' in consent_response
+            has_consent = 'Item' in consent_response  # True if user has a consent form
         except Exception as e:
             print(f"Error checking consent table: {e}")
             has_consent = False
             
+        # Check interest forms table
         try:
             interest_response = interests_table.get_item(Key={'userId': user_id})
-            has_interest = 'Item' in interest_response
+            has_interest = 'Item' in interest_response  # True if user has an interest form
         except Exception as e:
             print(f"Error checking interests table: {e}")
             has_interest = False
         
+        # Return form completion status
+        # Frontend uses this to show appropriate notifications and redirect users
         if has_consent or has_interest:
             return {
                 'statusCode': 200,
                 'body': json.dumps({
                     'exists': True,
-                    'hasConsent': has_consent,
-                    'hasInterest': has_interest
+                    'hasConsent': has_consent,    # Boolean: user completed consent form
+                    'hasInterest': has_interest   # Boolean: user completed interest form
                 })
             }
         else:
+            # User hasn't completed any forms yet
             return {
                 'statusCode': 404,
                 'body': json.dumps({'exists': False})
             }
             
     except Exception as e:
+        # Log error and return 500 status
         return {
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
