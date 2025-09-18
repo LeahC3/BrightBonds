@@ -98,7 +98,7 @@ window.onload = function () {
 async function checkFormCompletion(userId, formUrl) {
   try {
     // Check form completion status using submitUserForm endpoint (it checks both tables)
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/check/${userId}`, {
+    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/check/${userId}?t=${Date.now()}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
     });

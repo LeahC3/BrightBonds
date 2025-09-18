@@ -54,6 +54,11 @@
     }
   },
   "function": {
+    "matchingAlgorithm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "submitConsentForm": {
       "build": true,
       "providerPlugin": "awscloudformation",

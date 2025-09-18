@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="../styles/homeStyle.css">
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <script src="../js/homeMain.js" defer></script>
-        <script src="../js/form.js" defer></script>
+        <script src="../js/form.js?v=3" defer></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
 
             <!-- Hobbies -->
             <fieldset>
-                <legend>What are some of your favorite hobbies? (select all that apply)</legend>
+                <legend>What are some of your favorite hobbies? (Select all that apply. If none of the above, leave blank)</legend>
                 <label><input type="checkbox" name="hobbies" value="Reading"> Reading</label><br>
                 <label><input type="checkbox" name="hobbies" value="Gardening"> Gardening</label><br>
                 <label><input type="checkbox" name="hobbies" value="Music"> Music</label><br>
@@ -51,7 +51,7 @@
 
             <!-- Games -->
             <fieldset>
-                <legend>Do you enjoy playing games? If so, what kind? (select all that apply)</legend>
+                <legend>Do you enjoy playing games? If so, what kind? (Select all that apply. If none of the above, leave blank)</legend>
                 <label><input type="checkbox" name="games" value="Board games"> Board games</label><br>
                 <label><input type="checkbox" name="games" value="Card games"> Card games</label><br>
                 <label><input type="checkbox" name="games" value="Video games"> Video games</label><br>
@@ -62,7 +62,7 @@
 
             <!-- Music -->
             <fieldset>
-                <legend>Do you like listening to music? If so, what kind? (select all that apply)</legend>
+                <legend>Do you like listening to music? If so, what kind? (Select all that apply. If none of the above, leave blank)</legend>
                 <label><input type="checkbox" name="music" value="Classical"> Classical</label><br>
                 <label><input type="checkbox" name="music" value="Jazz"> Jazz</label><br>
                 <label><input type="checkbox" name="music" value="Pop"> Pop</label><br>
@@ -85,7 +85,7 @@
 
             <!-- Free Time -->
             <fieldset>
-                <legend>How do you usually like to spend your free time? (select all that apply)</legend>
+                <legend>How do you usually like to spend your free time? (Select all that apply. If none of the above, leave blank)</legend>
                 <label><input type="checkbox" name="freeTime" value="Relaxing"> Relaxing/quiet time</label><br>
                 <label><input type="checkbox" name="freeTime" value="Creative activities (writing, drawing, etc.)"> Creative activities (writing, drawing, etc.)</label><br>
                 <label><input type="checkbox" name="freeTime" value="Socializing or talking"> Socializing or talking</label><br>
@@ -96,7 +96,7 @@
 
             <!-- Topics -->
             <fieldset>
-                <legend>What topics do you enjoy talking about? (select all that apply)</legend>
+                <legend>What topics do you enjoy talking about? (Select all that apply. If none of the above, leave blank)</legend>
                 <label><input type="checkbox" name="topics" value="History"> History</label><br>
                 <label><input type="checkbox" name="topics" value="Science"> Science</label><br>
                 <label><input type="checkbox" name="topics" value="Technology"> Technology</label><br>
@@ -107,6 +107,20 @@
                 <label><input type="checkbox" name="topics" value="Food and recipes"> Food and recipes</label><br>
                 <label><input type="checkbox" name="topics" value="Nature or outdoors"> Nature or outdoors</label><br>
                 <label><input type="checkbox" name="topics" value="Sports"> Sports</label><br>
+            </fieldset>
+
+            <!-- Sports -->
+            <fieldset>
+                <legend>Do you enjoy watching or playing sports? If so, what kind? (Select all that apply. If none of the above, leave blank)</legend>
+                <label><input type="checkbox" name="sports" value="Football"> Football</label><br>
+                <label><input type="checkbox" name="sports" value="Soccer"> Soccer</label><br>
+                <label><input type="checkbox" name="sports" value="Basketball"> Basketball</label><br>
+                <label><input type="checkbox" name="sports" value="Volleyball"> Volleyball</label><br>
+                <label><input type="checkbox" name="sports" value="Swimming"> Swimming</label><br>
+                <label><input type="checkbox" name="sports" value="Golf"> Golf</label><br>
+                <label><input type="checkbox" name="sports" value="Hockey"> Hockey</label><br>
+                <label><input type="checkbox" name="sports" value="Baseball/Softball"> Baseball/Softball</label><br>
+                <label><input type="checkbox" name="sports" value="Tennis/Pickleball"> Tennis/Pickleball</label><br>
             </fieldset>
 
             <!-- Life Experience -->
@@ -123,14 +137,14 @@
 
             <!-- Availability-->
             <fieldset>
-                <legend>What days are usually best for you to visit? (select all that apply)</legend>
+                <legend>What days are usually best for you to meet with a student? (select all that apply)</legend>
                 <label><input type="checkbox" name="availability" value="Weekdays"> Weekdays</label><br>
                 <label><input type="checkbox" name="availability" value="Weekends"> Weekends</label><br>
             </fieldset>
 
             <!-- Times -->
             <fieldset>
-                <legend>What times of the day are usually best for you to visit? (select all that apply)</legend>
+                <legend>What times of the day are usually best for you to meet with a student? (select all that apply)</legend>
                 <label><input type="checkbox" name="times" value="Mornings"> Mornings</label><br>
                 <label><input type="checkbox" name="times" value="Afternoons"> Afternoons</label><br>
                 <label><input type="checkbox" name="times" value="Evenings"> Evenings</label><br>

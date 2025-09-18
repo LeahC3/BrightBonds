@@ -1,1 +1,1 @@
-{"statusCode": 200, "headers": {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "Content-Type,Authorization", "Access-Control-Allow-Methods": "POST,OPTIONS"}, "body": "{\"message\": \"Form submitted successfully\"}"}
+{"statusCode": 200, "body": "{\"message\": \"Matching complete. Created 0 matches.\", \"matches_created\": 0}"}

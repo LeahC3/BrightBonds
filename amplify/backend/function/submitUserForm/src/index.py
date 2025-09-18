@@ -9,6 +9,7 @@ from boto3.dynamodb.conditions import Key
 dynamodb = boto3.resource('dynamodb')
 interests_table = dynamodb.Table('dev-user-interests')  # Table for student/senior interest forms
 consent_table = dynamodb.Table('dev-consent-forms')    # Table for parental consent forms
+matches_table = dynamodb.Table('dev-matches')          # Table for matches
 
 def handler(event, context):
     """Main Lambda function handler for form submissions and user checks.
@@ -23,6 +24,9 @@ def handler(event, context):
     """
     print(f"Event: {json.dumps(event)}")
     print(f"Context: {context}")
+    print(f"HTTP Method: {event.get('httpMethod')}")
+    print(f"Raw Path: {event.get('rawPath', '')}")
+    print(f"Request Context HTTP Method: {event.get('requestContext', {}).get('http', {}).get('method')}")
     
     # Handle CORS preflight requests from browsers
     # These are sent automatically before actual requests to check permissions
@@ -32,14 +36,39 @@ def handler(event, context):
             'body': ''
         }
     
-    # Handle GET requests to check if user has completed their forms
-    # URL pattern: /check/{userId}
-    if event.get('httpMethod') == 'GET' or 'check' in event.get('rawPath', ''):
+    # Handle GET requests for checking form completion
+    # Check both httpMethod and requestContext.http.method for Lambda Function URLs
+    http_method = event.get('httpMethod') or event.get('requestContext', {}).get('http', {}).get('method')
+    raw_path = event.get('rawPath', '')
+    
+    if http_method == 'GET' and '/check/' in raw_path:
         return handle_get_request(event)
+    
+    # Handle POST request to run matching algorithm
+    if http_method == 'POST' and raw_path == '/run-matching':
+        return handle_run_matching(event)
+    
+    # Handle GET requests for matches
+    if http_method == 'GET' and '/matches/' in raw_path:
+        return handle_matches_request(event)
+    
+    # All other requests are form submissions
     
     try:
         # Parse the JSON form data from the request body
-        body = json.loads(event.get('body', '{}'))
+        raw_body = event.get('body', '{}')
+        print(f"Raw request body: {raw_body}")
+        body = json.loads(raw_body)
+        
+        # Skip processing if body is empty or only contains minimal data
+        # This prevents empty requests from overwriting valid form submissions
+        # Only apply this validation to POST requests (form submissions)
+        if event.get('httpMethod') == 'POST' and (not body or len(body) < 3):
+            print("Skipping empty or minimal request body")
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'message': 'Invalid form data - insufficient fields'})
+            }
 
         # Default user ID for testing (will be overridden by JWT token)
         user_id = 'test-user'
@@ -93,6 +122,7 @@ def handler(event, context):
         }
         
         # Log what we're storing for debugging
+        print(f"Raw body received: {json.dumps(body)}")
         print(f"Storing interest form: {json.dumps(item, default=str)}")
         
         # Save to DynamoDB interests table
@@ -175,6 +205,117 @@ def handle_get_request(event):
             
     except Exception as e:
         # Log error and return 500 status
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_matches_request(event):
+    """Handle GET requests for user matches"""
+    try:
+        path = event.get('rawPath', '')
+        user_id = path.split('/matches/')[-1]
+        
+        # Get matches for this user
+        response = matches_table.scan(
+            FilterExpression='(studentUserId = :uid OR seniorUserId = :uid)',
+            ExpressionAttributeValues={':uid': user_id}
+        )
+        
+        matches = response['Items']
+        
+        if not matches:
+            return {
+                'statusCode': 200,
+                'body': json.dumps([])
+            }
+            
+        return {
+            'statusCode': 200,
+            'body': json.dumps(matches, default=str)
+        }
+        
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_accept_match(event):
+    """Handle POST requests to accept a match"""
+    try:
+        path = event.get('rawPath', '')
+        match_id = path.split('/matches/')[1].split('/accept')[0]
+        
+        # Update match status to accepted
+        matches_table.update_item(
+            Key={'matchId': match_id},
+            UpdateExpression='SET #status = :status, lastUpdated = :updated',
+            ExpressionAttributeNames={'#status': 'status'},
+            ExpressionAttributeValues={
+                ':status': 'accepted',
+                ':updated': datetime.datetime.utcnow().isoformat()
+            }
+        )
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps({'message': 'Match accepted successfully'})
+        }
+        
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_decline_match(event):
+    """Handle POST requests to decline a match"""
+    try:
+        path = event.get('rawPath', '')
+        match_id = path.split('/matches/')[1].split('/decline')[0]
+        
+        # Update match status to declined
+        matches_table.update_item(
+            Key={'matchId': match_id},
+            UpdateExpression='SET #status = :status, lastUpdated = :updated',
+            ExpressionAttributeNames={'#status': 'status'},
+            ExpressionAttributeValues={
+                ':status': 'declined',
+                ':updated': datetime.datetime.utcnow().isoformat()
+            }
+        )
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps({'message': 'Match declined successfully'})
+        }
+        
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_run_matching(event):
+    """Handle POST requests to run the matching algorithm"""
+    try:
+        import boto3
+        lambda_client = boto3.client('lambda')
+        
+        # Invoke the matching algorithm function
+        response = lambda_client.invoke(
+            FunctionName='matchingAlgorithm-dev',
+            InvocationType='RequestResponse',
+            Payload=json.dumps({})
+        )
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps({'message': 'Matching algorithm executed successfully'})
+        }
+        
+    except Exception as e:
         return {
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})

@@ -20,7 +20,7 @@
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <!-- script -->
         <script src="../js/homeMain.js" defer></script>
-        <script src="../js/home.js" defer></script>
+        <script src="../js/home.js?v=4" defer></script>
 
         <!-- Nunito Sans, Adamina, Open Sans -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,6 +56,7 @@
 
             <div class="nav-links">
                 <a class="page" id="active" href="home.html">Home</a>
+                <a class="page" href="matches.html">My Matches</a>
                 <a class="page" href="messages.html">Messages</a>
                 <a class="page" href="#">Calendar</a>
                 <a class="page" href="#">Resources</a>
@@ -89,10 +90,10 @@
             </section>
             
             <section class="dashboard-cards">
-                <div class="card">
+                <div class="card" onclick="window.location.href='matches.html'" style="cursor: pointer;">
                     <h3>Your Matches</h3>
                     <p>View your volunteer connections</p>
-                    <span class="card-status">Coming Soon</span>
+                    <span class="card-status" style="background: #28a745; color: white;">Available</span>
                 </div>
                 <div class="card">
                     <h3>Messages</h3>

@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"14.0.0\",\"stackType\":\"function-Lambda\",\"metadata\":{\"whyContinueWithGen1\":\"Prefer not to answer\"}}",
+  "Description": "Lambda Function resource stack creation using Amplify CLI",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "submitUserForm",
+            "matchingAlgorithm",
             {
               "Fn::Join": [
                 "",
                 [
-                  "submitUserForm",
+                  "matchingAlgorithm",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "brightbondsLambdaRolee58e7d1c",
+            "brightbondsLambdaRole4c172975",
             {
               "Fn::Join": [
                 "",
                 [
-                  "brightbondsLambdaRolee58e7d1c",
+                  "brightbondsLambdaRole4c172975",
                   "-",
                   {
                     "Ref": "env"
@@ -123,9 +123,6 @@
       }
     },
     "lambdaexecutionpolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "lambda-execution-policy",
@@ -160,65 +157,25 @@
                   }
                 ]
               }
-            }
-          ]
-        }
-      }
-    },
-    "CustomLambdaExecutionPolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "custom-lambda-execution-policy",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
+            },
             {
+              "Effect": "Allow",
               "Action": [
-                "dynamodb:PutItem",
                 "dynamodb:GetItem",
+                "dynamodb:PutItem",
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
                 "dynamodb:Query",
                 "dynamodb:Scan"
               ],
               "Resource": [
-                "arn:aws:dynamodb:us-east-2:851725407388:table/dev-user-interests"
-              ],
-              "Effect": "Allow"
-            }
-          ]
-        },
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ]
-      },
-      "DependsOn": "LambdaExecutionRole"
-    },
-    "LambdaInvokePolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "LambdaInvokeAccess",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "lambda:InvokeFunction"
-              ],
-              "Resource": "arn:aws:lambda:us-east-2:851725407388:function:matchingAlgorithm-dev"
+                "arn:aws:dynamodb:*:*:table/dev-user-interests",
+                "arn:aws:dynamodb:*:*:table/dev-matches"
+              ]
             }
           ]
         }
-      },
-      "DependsOn": "LambdaExecutionRole"
+      }
     }
   },
   "Outputs": {
