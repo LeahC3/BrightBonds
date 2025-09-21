@@ -20,6 +20,20 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
+    },
+    "matchingApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "matchingTrigger"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
     }
   },
   "auth": {
@@ -54,7 +68,7 @@
     }
   },
   "function": {
-    "matchingAlgorithm": {
+    "matchingTrigger": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -71,6 +85,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_matchingTrigger_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "matchingTrigger"
+        }
+      ]
+    },
+    "AMPLIFY_function_matchingTrigger_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "matchingTrigger"
+        }
+      ]
+    },
     "AMPLIFY_function_submitConsentForm_deploymentBucketName": {
       "usedBy": [
         {

@@ -19,7 +19,7 @@
       "function": {
         "submitUserForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitUserForm-78617a4e695066754d65-build.zip"
+          "s3Key": "amplify-builds/submitUserForm-6d6e3761704544477035-build.zip"
         },
         "submitConsentForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
@@ -27,7 +27,14 @@
         },
         "consentFormHandler": {},
         "interestFormHandler": {},
-        "matchingAlgorithm": {}
+        "matchingAlgorithm": {},
+        "matchingTrigger": {
+          "deploymentBucketName": "brightbonds-dev-065205-deployment",
+          "s3Key": "amplify-builds/matchingTrigger-6379314e6e692f66434f-build.zip"
+        }
+      },
+      "api": {
+        "matchingApi": {}
       }
     }
   }

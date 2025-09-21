@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/matching": {
+      "name": "/matching",
+      "lambdaFunction": "matchingTrigger",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

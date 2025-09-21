@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"14.0.0\",\"stackType\":\"function-Lambda\",\"metadata\":{\"whyContinueWithGen1\":\"Prefer not to answer\"}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "matchingAlgorithm",
+            "matchingTrigger",
             {
               "Fn::Join": [
                 "",
                 [
-                  "matchingAlgorithm",
+                  "matchingTrigger",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "brightbondsLambdaRole4c172975",
+            "brightbondsLambdaRole7e1832fa",
             {
               "Fn::Join": [
                 "",
                 [
-                  "brightbondsLambdaRole4c172975",
+                  "brightbondsLambdaRole7e1832fa",
                   "-",
                   {
                     "Ref": "env"
@@ -123,6 +123,9 @@
       }
     },
     "lambdaexecutionpolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "lambda-execution-policy",

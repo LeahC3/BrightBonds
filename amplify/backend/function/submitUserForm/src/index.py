@@ -44,7 +44,7 @@ def handler(event, context):
     if http_method == 'GET' and '/check/' in raw_path:
         return handle_get_request(event)
     
-    # Handle POST request to run matching algorithm
+    # Handle POST request to run matching algorithm (temporary solution)
     if http_method == 'POST' and raw_path == '/run-matching':
         return handle_run_matching(event)
     
@@ -60,14 +60,12 @@ def handler(event, context):
         print(f"Raw request body: {raw_body}")
         body = json.loads(raw_body)
         
-        # Skip processing if body is empty or only contains minimal data
-        # This prevents empty requests from overwriting valid form submissions
-        # Only apply this validation to POST requests (form submissions)
-        if event.get('httpMethod') == 'POST' and (not body or len(body) < 3):
-            print("Skipping empty or minimal request body")
+        # Skip processing if body is completely empty
+        if not body:
+            print("Skipping completely empty request body")
             return {
                 'statusCode': 400,
-                'body': json.dumps({'message': 'Invalid form data - insufficient fields'})
+                'body': json.dumps({'message': 'No form data provided'})
             }
 
         # Default user ID for testing (will be overridden by JWT token)

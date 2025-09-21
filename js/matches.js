@@ -81,81 +81,30 @@ function displayMatches(matches) {
       : 'No shared interests listed';
     
     matchDiv.innerHTML = `
-      <h3>Match Found!</h3>
+      <h3>Your Match</h3>
       <p><strong>Compatibility Score:</strong> ${match.compatibilityScore}</p>
       <p><strong>Location:</strong> ${match.seniorFacility || match.studentLocation}</p>
       <p><strong>Shared Interests:</strong> ${sharedInterests}</p>
-      <p><strong>Status:</strong> ${match.status}</p>
-      <p><strong>Created:</strong> ${new Date(match.createdAt).toLocaleDateString()}</p>
-      
-      ${match.status === 'pending' ? `
-        <div style="margin-top: 1rem;">
-          <button onclick="acceptMatch('${match.matchId}')" class="submitButton" style="margin-right: 1rem;">Accept Match</button>
-          <button onclick="declineMatch('${match.matchId}')" style="background: #dc3545;">Decline Match</button>
-        </div>
-      ` : ''}
+      <p><strong>Matched On:</strong> ${new Date(match.createdAt).toLocaleDateString()}</p>
     `;
     
     container.appendChild(matchDiv);
   });
 }
 
-async function acceptMatch(matchId) {
-  try {
-    const session = await Auth.currentSession();
-    const token = session.getIdToken().getJwtToken();
-    
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/matches/${matchId}/accept`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    
-    if (response.ok) {
-      alert('Match accepted! You can now start connecting.');
-      location.reload();
-    } else {
-      alert('Error accepting match. Please try again.');
-    }
-  } catch (error) {
-    console.error('Error accepting match:', error);
-    alert('Error accepting match. Please try again.');
-  }
-}
 
-async function declineMatch(matchId) {
-  try {
-    const session = await Auth.currentSession();
-    const token = session.getIdToken().getJwtToken();
-    
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/matches/${matchId}/decline`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    
-    if (response.ok) {
-      alert('Match declined.');
-      location.reload();
-    } else {
-      alert('Error declining match. Please try again.');
-    }
-  } catch (error) {
-    console.error('Error declining match:', error);
-    alert('Error declining match. Please try again.');
-  }
-}
 
 async function runMatching() {
   try {
-    const session = await Auth.currentSession();
-    const token = session.getIdToken().getJwtToken();
-    
-    const response = await fetch('https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/run-matching', {
+    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matching', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
     });
     
     if (response.ok) {
-      alert('Matching algorithm completed! Refreshing your matches...');
+      const result = await response.json();
+      alert(`Matching algorithm completed! ${result.message}`);
       location.reload();
     } else {
       alert('Error running matching algorithm. Please try again.');
