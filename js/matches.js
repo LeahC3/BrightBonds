@@ -20,6 +20,44 @@ window.onload = function () {
     .catch(() => {
       window.location.replace("login.html");
     });
+
+  const signOutBtn = document.getElementById("signOut");
+  if (signOutBtn) {
+    signOutBtn.addEventListener("click", async () => {
+      try {
+        await Auth.signOut();
+        window.location.replace("login.html");
+      } catch (err) {
+        alert("Sign out error: " + err.message);
+      }
+    });
+  }
+  
+  // Mobile hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('nav');
+  const overlay = document.getElementById('mobileOverlay');
+  
+  function toggleMobileMenu() {
+    nav.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+  
+  function closeMobileMenu() {
+    nav.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+  
+  if (hamburger && nav && overlay) {
+    hamburger.addEventListener('click', toggleMobileMenu);
+    overlay.addEventListener('click', closeMobileMenu);
+    
+    // Close menu when clicking nav links
+    const navLinks = nav.querySelectorAll('.page');
+    navLinks.forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+  }
 };
 
 async function loadMatches(userId) {
@@ -27,8 +65,8 @@ async function loadMatches(userId) {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    // Get user's matches from dedicated matches function
-    const response = await fetch(`https://NEW_MATCHES_FUNCTION_URL/matches/${userId}`, {
+    // Get user's matches from API Gateway
+    const response = await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matches/${userId}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
     });

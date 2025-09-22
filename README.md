@@ -29,6 +29,7 @@ BrightBonds facilitates intergenerational connections by matching teenagers with
 - Consent form system (`submitConsentForm`)
 - Interest form submission (`submitUserForm-dev`)
 - Maximum Weight Bipartite Matching algorithm (`matchingTrigger`)
+- Match retrieval with user names (`getMatches` via API Gateway)
 - Matches display page with working navbar
 - AWS Amplify deployment
 

@@ -19,7 +19,7 @@
       "function": {
         "submitUserForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitUserForm-6d6e3761704544477035-build.zip"
+          "s3Key": "amplify-builds/submitUserForm-577a506166613439454c-build.zip"
         },
         "submitConsentForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
@@ -30,12 +30,22 @@
         "matchingAlgorithm": {},
         "matchingTrigger": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/matchingTrigger-71565a6a55577a31592b-build.zip"
+          "s3Key": "amplify-builds/matchingTrigger-2f2b4e7578754d4e6937-build.zip"
         },
-        "getMatches": {}
+        "getMatches": {
+          "deploymentBucketName": "brightbonds-dev-065205-deployment",
+          "s3Key": "amplify-builds/getMatches-4a46326c6d4572706942-build.zip"
+        },
+        "messageHandler": {
+          "deploymentBucketName": "brightbonds-dev-065205-deployment",
+          "s3Key": "amplify-builds/messageHandler-72767158717634356857-build.zip"
+        }
       },
       "api": {
         "matchingApi": {}
+      },
+      "storage": {
+        "messages": {}
       }
     }
   }

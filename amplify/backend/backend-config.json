@@ -30,6 +30,22 @@
           ],
           "category": "function",
           "resourceName": "matchingTrigger"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "getMatches"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "messageHandler"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -78,6 +94,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "messageHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "submitConsentForm": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -90,6 +111,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_getMatches_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getMatches"
+        }
+      ]
+    },
+    "AMPLIFY_function_getMatches_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getMatches"
+        }
+      ]
+    },
     "AMPLIFY_function_matchingTrigger_deploymentBucketName": {
       "usedBy": [
         {
@@ -103,6 +140,22 @@
         {
           "category": "function",
           "resourceName": "matchingTrigger"
+        }
+      ]
+    },
+    "AMPLIFY_function_messageHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "messageHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_messageHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "messageHandler"
         }
       ]
     },
@@ -137,6 +190,12 @@
           "resourceName": "submitUserForm"
         }
       ]
+    }
+  },
+  "storage": {
+    "messages": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
     }
   }
 }

@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "getMatches",
+            "messageHandler",
             {
               "Fn::Join": [
                 "",
                 [
-                  "getMatches",
+                  "messageHandler",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "brightbondsLambdaRole762166c0",
+            "brightbondsLambdaRole74d59d9a",
             {
               "Fn::Join": [
                 "",
                 [
-                  "brightbondsLambdaRole762166c0",
+                  "brightbondsLambdaRole74d59d9a",
                   "-",
                   {
                     "Ref": "env"
@@ -172,9 +172,8 @@
                 "dynamodb:Scan"
               ],
               "Resource": [
-                "arn:aws:dynamodb:*:*:table/dev-matches",
-                "arn:aws:dynamodb:*:*:table/dev-user-interests",
-                "arn:aws:dynamodb:*:*:table/dev-consent-forms"
+                "arn:aws:dynamodb:*:*:table/messages-dev",
+                "arn:aws:dynamodb:*:*:table/dev-matches"
               ]
             },
             {

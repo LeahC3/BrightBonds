@@ -7,6 +7,20 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/matches": {
+      "name": "/matches",
+      "lambdaFunction": "getMatches",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/messages": {
+      "name": "/messages",
+      "lambdaFunction": "messageHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }
