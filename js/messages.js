@@ -13,6 +13,7 @@ aws_amplify.Amplify.configure({
 let currentUserId = null;
 let currentConversation = null;
 let conversations = [];
+let refreshInterval = null;
 
 window.onload = function () {
   if (!window.Auth) return;
@@ -87,11 +88,47 @@ async function loadConversations() {
       selectConversation(0);
     }
     
+    // Start auto-refresh for new messages
+    startAutoRefresh();
+    
   } catch (error) {
     console.error('Error loading conversations:', error);
     document.getElementById('conversationList').innerHTML = '<p>No conversations yet. Get matched to start messaging!</p>';
   }
 }
+
+function startAutoRefresh() {
+  // Clear any existing interval
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+  }
+  
+  // Refresh conversations every 5 seconds
+  refreshInterval = setInterval(async () => {
+    const oldConversationId = currentConversation?.otherUserId;
+    await loadConversations();
+    
+    // Reselect the same conversation if it still exists
+    if (oldConversationId) {
+      const conversationIndex = conversations.findIndex(c => c.otherUserId === oldConversationId);
+      if (conversationIndex !== -1) {
+        selectConversation(conversationIndex);
+      }
+    }
+  }, 5000);
+}
+
+// Stop auto-refresh when page is hidden
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+      refreshInterval = null;
+    }
+  } else {
+    startAutoRefresh();
+  }
+});
 
 function displayConversations() {
   const conversationList = document.getElementById('conversationList');
