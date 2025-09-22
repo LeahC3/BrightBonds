@@ -25,15 +25,16 @@ BrightBonds facilitates intergenerational connections by matching teenagers with
 
 ✅ **Completed**
 - User authentication system
-- Frontend interface
-- Basic Lambda function structure (`submitUserForm-dev`)
+- Complete frontend interface with responsive design
+- Consent form system (`submitConsentForm`)
+- Interest form submission (`submitUserForm-dev`)
+- Maximum Weight Bipartite Matching algorithm (`matchingTrigger`)
+- Matches display page with working navbar
 - AWS Amplify deployment
 
 🚧 **In Development**
-- Interest form submission processing
-- User matching algorithm
 - Message storage and retrieval
-- Interest data persistence
+- Real-time messaging interface
 
 ## Development
 

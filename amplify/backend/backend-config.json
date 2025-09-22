@@ -68,6 +68,11 @@
     }
   },
   "function": {
+    "getMatches": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "matchingTrigger": {
       "build": true,
       "providerPlugin": "awscloudformation",

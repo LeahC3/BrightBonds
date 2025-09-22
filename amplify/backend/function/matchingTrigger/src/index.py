@@ -33,21 +33,15 @@ def handler(event, context):
         
         print(f"Found {len(students)} students and {len(seniors)} seniors")
         
-        matches_created = 0
-        matched_seniors = set()  # Track seniors matched in this run to prevent duplicates
+        # Use maximum weight bipartite matching for optimal pairing
+        optimal_matches = maximum_weight_matching(students, seniors)
         
-        # Process each student to find their best match
-        for student in students:
-            # Filter out seniors already matched in this run
-            available_seniors = [s for s in seniors if s['userId'] not in matched_seniors]
-            best_match = find_best_match(student, available_seniors)
-            
-            if best_match:
-                # Create the match in the database
-                match_id = create_match(student, best_match['senior'], best_match['score'], best_match['shared_interests'])
-                matched_seniors.add(best_match['senior']['userId'])  # Mark senior as matched
-                matches_created += 1
-                print(f"Created match: {match_id}")
+        matches_created = 0
+        # Create matches in the database
+        for student, senior, score, shared_interests in optimal_matches:
+            match_id = create_match(student, senior, score, shared_interests)
+            matches_created += 1
+            print(f"Created match: {match_id} with score {score}")
         
         # Return success response
         return {
@@ -126,39 +120,56 @@ def has_active_match(user_id):
     except:
         return False
 
-def find_best_match(student, available_seniors):
+def maximum_weight_matching(students, seniors):
     """
-    Finds the best senior match for a student based on compatibility scoring.
+    Finds the optimal matching that maximizes total compatibility scores.
+    Uses a greedy approach that sorts all possible pairs by score.
     
     Args:
-        student (dict): Student profile data
-        available_seniors (list): List of senior profiles not yet matched
+        students (list): List of student profiles
+        seniors (list): List of senior profiles
         
     Returns:
-        dict: Best match with senior profile, score, and shared interests, or None
+        list: List of tuples (student, senior, score, shared_interests) representing optimal matches
     """
-    best_match = None
-    best_score = 0
+    # Generate all valid student-senior pairs with compatibility scores
+    all_pairs = []
     
-    # Evaluate each available senior for compatibility
-    for senior in available_seniors:
-        # Primary filter: Location compatibility (must match)
-        if not is_location_compatible(student, senior):
-            continue
+    for student in students:
+        for senior in seniors:
+            # Check if this pair is compatible (location and availability)
+            if not is_location_compatible(student, senior):
+                continue
+            if not is_availability_compatible(student, senior):
+                continue
+                
+            # Calculate compatibility score
+            score, shared_interests = calculate_compatibility_score(student, senior)
             
-        # Secondary filter: Availability compatibility (for St. John residents)
-        if not is_availability_compatible(student, senior):
-            continue
-            
-        # Calculate compatibility score based on shared interests and preferences
-        score, shared_interests = calculate_compatibility_score(student, senior)
+            # Only include pairs with positive scores
+            if score > 0:
+                all_pairs.append((score, student, senior, shared_interests))
+    
+    # Sort all pairs by compatibility score (highest first)
+    all_pairs.sort(key=lambda x: x[0], reverse=True)
+    
+    # Greedily select the highest scoring pairs without conflicts
+    matched_students = set()
+    matched_seniors = set()
+    final_matches = []
+    
+    for score, student, senior, shared_interests in all_pairs:
+        student_id = student['userId']
+        senior_id = senior['userId']
         
-        # Keep track of the highest scoring match
-        if score > best_score:
-            best_score = score
-            best_match = {'senior': senior, 'score': score, 'shared_interests': shared_interests}
+        # If neither person is already matched, create this match
+        if student_id not in matched_students and senior_id not in matched_seniors:
+            final_matches.append((student, senior, score, shared_interests))
+            matched_students.add(student_id)
+            matched_seniors.add(senior_id)
     
-    return best_match
+    print(f"Maximum weight matching found {len(final_matches)} optimal pairs")
+    return final_matches
 
 def is_location_compatible(student, senior):
     """

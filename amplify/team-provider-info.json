@@ -30,8 +30,9 @@
         "matchingAlgorithm": {},
         "matchingTrigger": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/matchingTrigger-6379314e6e692f66434f-build.zip"
-        }
+          "s3Key": "amplify-builds/matchingTrigger-71565a6a55577a31592b-build.zip"
+        },
+        "getMatches": {}
       },
       "api": {
         "matchingApi": {}

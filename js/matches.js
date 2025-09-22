@@ -27,8 +27,8 @@ async function loadMatches(userId) {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    // Get user's matches
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/matches/${userId}`, {
+    // Get user's matches from dedicated matches function
+    const response = await fetch(`https://NEW_MATCHES_FUNCTION_URL/matches/${userId}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -81,7 +81,7 @@ function displayMatches(matches) {
       : 'No shared interests listed';
     
     matchDiv.innerHTML = `
-      <h3>Your Match</h3>
+      <h3>Your Match: ${match.matchedUserFirstName || 'Unknown'}</h3>
       <p><strong>Compatibility Score:</strong> ${match.compatibilityScore}</p>
       <p><strong>Location:</strong> ${match.seniorFacility || match.studentLocation}</p>
       <p><strong>Shared Interests:</strong> ${sharedInterests}</p>
