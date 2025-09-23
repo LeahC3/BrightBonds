@@ -16,15 +16,9 @@ window.onload = function () {
 
       try {
         await Auth.confirmSignUp(email, code);
-        const password = localStorage.getItem("signupPassword");
-        if (password) {
-          await Auth.signIn(email, password);
-          localStorage.removeItem("signupEmail");
-          localStorage.removeItem("signupPassword");
-          window.location.replace("home.html");
-        } else {
-          window.location.replace("login.html");
-        }
+        localStorage.removeItem("signupEmail");
+        localStorage.setItem("accountCreated", "true");
+        window.location.replace("logIn.html");
       } catch (err) {
         if (result) result.textContent = "Confirmation failed: " + err.message;
       }

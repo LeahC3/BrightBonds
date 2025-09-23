@@ -4,6 +4,15 @@ window.onload = function () {
 
   if (!form || !window.Auth) return;
 
+  // Check for account creation success message
+  if (localStorage.getItem("accountCreated")) {
+    if (result) {
+      result.textContent = "Account created successfully! Please log in with your email and password.";
+      result.style.color = "green";
+    }
+    localStorage.removeItem("accountCreated");
+  }
+
   // Login form submission
   form.addEventListener("submit", async (event) => {
     event.preventDefault();

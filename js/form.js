@@ -72,11 +72,21 @@ document.getElementById("match_form").addEventListener("submit", async (e) => {
     }
 
     const result = await response.json();
-    alert("Form submitted successfully!");
     console.log(result);
     
-    // Redirect to home page
-    window.location.href = "home.html";
+    // Show success message
+    const successDiv = document.createElement('div');
+    successDiv.innerHTML = `
+      <div style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; text-align: center;">
+        <h3 style="margin: 0 0 0.5rem 0; color: #155724;">Interest Form Submitted Successfully!</h3>
+        <p style="margin: 0; font-size: 1rem;">Thank you for completing your profile. We'll work on finding you a great match!</p>
+        <button onclick="window.location.href='home.html'" class="submitButton" style="margin-top: 1rem;">Go to Home</button>
+      </div>
+    `;
+    
+    // Hide form and show success message
+    document.getElementById('match_form').style.display = 'none';
+    document.getElementById('match_form').parentNode.appendChild(successDiv);
   } catch (err) {
     console.error("Form submission error:", err);
     alert("There was an error submitting the form.");

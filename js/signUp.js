@@ -1,39 +1,44 @@
-console.log("SignUp.js file loaded");
-
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM loaded, looking for form");
   const form = document.getElementById("signup_form");
   const result = document.getElementById("result");
-  
-  console.log("Form found:", !!form);
-  console.log("Result element found:", !!result);
 
-  if (!form) {
-    console.log("No form found, exiting");
-    return;
-  }
+  if (!form) return;
 
-  form.addEventListener("submit", function(event) {
-    console.log("Form submit event triggered");
+  form.addEventListener("submit", async function(event) {
     event.preventDefault();
     
     const password = document.getElementById("pw_input").value;
     const confirmPassword = document.getElementById("conf_pw_input").value;
     
-    console.log("Password:", password);
-    console.log("Confirm Password:", confirmPassword);
-    
     if (password !== confirmPassword) {
-      console.log("Passwords don't match - stopping submission");
       if (result) {
-        result.textContent = "Passwords do not match";
+        result.textContent = "Error: Passwords do not match";
         result.style.color = "red";
       }
-      return false;
+      return;
     }
     
-    console.log("Passwords match - would proceed with signup");
-    // For now, just log instead of actually signing up
-    alert("Form would submit - passwords match!");
+    const email = document.getElementById("email_input").value;
+    const givenName = document.getElementById("first_input").value;
+    const familyName = document.getElementById("last_input").value;
+    const birthdate = document.getElementById("dob_input").value;
+
+    try {
+      await Auth.signUp({
+        username: email,
+        password,
+        attributes: {
+          birthdate,
+          given_name: givenName,
+          family_name: familyName,
+        }
+      });
+
+      localStorage.setItem("signupEmail", email);
+      window.location.replace("verify.html");
+      
+    } catch (err) {
+      if (result) result.textContent = "Signup failed: " + err.message;
+    }
   });
 });
