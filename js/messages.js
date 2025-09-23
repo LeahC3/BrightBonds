@@ -239,9 +239,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const messageInput = document.getElementById('messageInput');
   const sendButton = document.getElementById('sendButton');
   
+  // Auto-resize textarea
+  function autoResize() {
+    messageInput.style.height = 'auto';
+    const scrollHeight = messageInput.scrollHeight;
+    const maxHeight = 96; // 6rem max-height
+    messageInput.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+  }
+  
+  messageInput.addEventListener('input', autoResize);
+  
   sendButton.addEventListener('click', sendMessage);
   messageInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       sendMessage();
     }
   });
@@ -273,8 +284,9 @@ async function sendMessage() {
       throw new Error(`HTTP ${response.status}`);
     }
     
-    // Clear input
+    // Clear input and reset height
     messageInput.value = '';
+    messageInput.style.height = 'auto';
     
     // Reload conversations to show new message
     await loadConversations();

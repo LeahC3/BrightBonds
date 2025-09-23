@@ -17,7 +17,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     </head>
 
-    <body>
+    <body class="messages-page">
         <!-- Mobile Overlay -->
         <div class="mobile-overlay" id="mobileOverlay"></div>
         
@@ -46,7 +46,7 @@
                 <a class="page" href="matches.html">My Matches</a>
                 <a class="page" id="active" href="messages.html">Messages</a>
                 <a class="page" href="#">Calendar</a>
-                <a class="page" href="#">Resources</a>
+                <a class="page" href="resources.html">Resources</a>
             </div>
 
             <div class="bottom">
@@ -58,7 +58,7 @@
             </div>
         </nav>
 
-        <main class="main-content">
+        <main class="main-content messages-page">
             <div class="messages-container">
                 <div class="messages-sidebar">
                     <h2>Conversations</h2>
@@ -81,7 +81,7 @@
 
                     <div class="message-input-container">
                         <div class="message-input-wrapper">
-                            <input type="text" id="messageInput" placeholder="Type your message..." maxlength="500">
+                            <textarea id="messageInput" placeholder="Type your message..." maxlength="500" rows="1"></textarea>
                             <button id="sendButton" class="send-button">Send</button>
                         </div>
                     </div>
