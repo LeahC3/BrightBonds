@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
           birthdate,
           given_name: givenName,
           family_name: familyName,
-          'custom:senior_code': seniorCode || ''
+          address: seniorCode || ''
         }
       });
 
@@ -68,7 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.replace("verify.html");
       
     } catch (err) {
-      if (result) result.textContent = "Signup failed: " + err.message;
+      if (err.message === "PreSignUp failed with error Invalid senior access code.") {
+        if (result) result.textContent = "Error: Incorrect resident access code.";
+      } else
+      if (result) result.textContent = "Error: " + err.message;
     }
   });
 });

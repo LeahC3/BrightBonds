@@ -21,6 +21,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/validate-senior-code": {
+      "name": "/validate-senior-code",
+      "lambdaFunction": "validateSeniorCode",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

@@ -15,7 +15,20 @@ window.onload = function () {
 
   Auth.currentAuthenticatedUser()
     .then(async user => {
-      await loadMatches(user.attributes.sub);
+      // Check if user is admin
+      const isAdmin = user?.attributes?.middle_name === 'ADMIN';
+      if (isAdmin) {
+        // Show admin controls instead of matches
+        showAdminControls();
+        return;
+      }
+      
+      // Check if user has completed required forms first
+      const formUrl = await checkAndRedirectToForms(user);
+      if (!formUrl) {
+        // User has completed forms, load matches
+        await loadMatches(user.attributes.sub);
+      }
     })
     .catch(() => {
       window.location.replace("login.html");
@@ -59,6 +72,62 @@ window.onload = function () {
     });
   }
 };
+
+async function checkAndRedirectToForms(user) {
+  try {
+    const birthdate = user?.attributes?.birthdate;
+    if (!birthdate) return null;
+    
+    const birthDate = new Date(birthdate);
+    const today = new Date();
+    const birthYear = birthDate.getFullYear();
+    
+    // Calculate actual age
+    let age = today.getFullYear() - birthYear;
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    const isStudent = birthYear > 1995;
+    
+    // Check form completion status
+    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ action: 'check', userId: user.attributes.sub })
+    });
+    
+    let hasConsent = false;
+    let hasInterest = false;
+    
+    if (response.status === 200) {
+      const data = await response.json();
+      hasConsent = data.hasConsent;
+      hasInterest = data.hasInterest;
+    }
+    
+    // Determine what form is needed
+    if (isStudent && age < 18 && !hasConsent) {
+      window.location.replace("consentForm.html");
+      return "consentForm.html";
+    } else if (isStudent && !hasInterest) {
+      window.location.replace("studentForm.html");
+      return "studentForm.html";
+    } else if (!isStudent && !hasInterest) {
+      window.location.replace("seniorForm.html");
+      return "seniorForm.html";
+    }
+    
+    return null; // All forms completed
+  } catch (error) {
+    console.log('Form check failed, allowing matches page to load');
+    return null;
+  }
+}
 
 async function loadMatches(userId) {
   try {
@@ -131,6 +200,44 @@ function displayMatches(matches) {
 }
 
 
+
+function showAdminControls() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('no-matches').style.display = 'none';
+  
+  const container = document.getElementById('matches-list');
+  const matchesContainer = document.getElementById('matches-container');
+  
+  matchesContainer.style.display = 'block';
+  
+  container.innerHTML = `
+    <div style="text-align: center; padding: 2rem;">
+      <h2 style="color: #012572; margin-bottom: 2rem;">Admin Dashboard</h2>
+      
+      <div style="display: grid; gap: 1rem; max-width: 400px; margin: 0 auto;">
+        <button onclick="runMatching()" style="
+          background-color: #012572;
+          color: white;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          font-size: 1.1rem;
+        ">Run Matching Algorithm</button>
+        
+        <button onclick="window.location.href='messages.html'" style="
+          background-color: #012572;
+          color: white;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          font-size: 1.1rem;
+        ">Monitor Messages</button>
+      </div>
+    </div>
+  `;
+}
 
 async function runMatching() {
   try {

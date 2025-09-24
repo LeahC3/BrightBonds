@@ -22,7 +22,6 @@ window.onload = function () {
 
     try {
       const user = await Auth.signIn(email, password);
-      if (result) result.textContent = "Login successful. Welcome " + (user.attributes?.given_name || "friend") + "!";
       window.location.replace("home.html");
     } catch (err) {
       if (err.message === "User is not confirmed.") {
@@ -31,6 +30,7 @@ window.onload = function () {
         window.location.replace("verify.html");
       } else {
         if (result) result.textContent = "Login failed: " + err.message;
+        result.style.color = "red";
       }
     }
   });

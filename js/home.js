@@ -7,6 +7,13 @@ window.onload = function () {
       const welcomeEl = document.getElementById("welcome_name");
       if (welcomeEl) welcomeEl.textContent = name;
       
+      // Check if user is admin
+      const isAdmin = user?.attributes?.middle_name === 'ADMIN';
+      if (isAdmin) {
+        // Skip form checks for admin users
+        return;
+      }
+      
       // Determine correct form based on birthdate and age
       const birthdate = user?.attributes?.birthdate;
       let formUrl = "matchForm.html";
@@ -25,21 +32,17 @@ window.onload = function () {
         
         const isStudent = birthYear > 1995;
         
-        console.log(`User birthdate: ${birthdate}, calculated age: ${age}, isStudent: ${isStudent}`);
         
         if (isStudent && age < 18) {
-          console.log("under 18");
           // Minor needs consent form first
           formUrl = "consentForm.html";
-          console.log("Redirecting to consent form - user is under 18");
+
         } else if (isStudent) {
           // Adult student goes to student form
           formUrl = "studentForm.html";
-          console.log("Redirecting to student form - user is 18+");
         } else {
           // Senior goes to senior form
           formUrl = "seniorForm.html";
-          console.log("Redirecting to senior form - user is senior");
         }
         
         // Set matchLink if it exists
@@ -97,11 +100,21 @@ window.onload = function () {
 
 async function checkFormCompletion(userId, formUrl) {
   try {
+    console.log(`Checking form completion for user: ${userId}`);
+    console.log(`Request URL: https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/check/${userId}`);
+    
     // Check form completion status using submitUserForm endpoint (it checks both tables)
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/check/${userId}?t=${Date.now()}`, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
+    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ action: 'check', userId: userId })
     });
+    
+    console.log(`Response status: ${response.status}`);
+    console.log(`Response headers:`, response.headers);
     
     let hasConsent = false;
     let hasInterest = false;

@@ -46,6 +46,14 @@
           ],
           "category": "function",
           "resourceName": "messageHandler"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "validateSeniorCode"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -55,7 +63,17 @@
   "auth": {
     "brightbondscdd97a1f": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "brightbondscdd97a1fPreSignup",
+          "triggerProvider": "Cognito"
+        }
+      ],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -84,6 +102,11 @@
     }
   },
   "function": {
+    "brightbondscdd97a1fPreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "getMatches": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -108,9 +131,30 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "validateSeniorCode": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
+    "AMPLIFY_function_brightbondscdd97a1fPreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "brightbondscdd97a1fPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_brightbondscdd97a1fPreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "brightbondscdd97a1fPreSignup"
+        }
+      ]
+    },
     "AMPLIFY_function_getMatches_deploymentBucketName": {
       "usedBy": [
         {
@@ -188,6 +232,22 @@
         {
           "category": "function",
           "resourceName": "submitUserForm"
+        }
+      ]
+    },
+    "AMPLIFY_function_validateSeniorCode_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "validateSeniorCode"
+        }
+      ]
+    },
+    "AMPLIFY_function_validateSeniorCode_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "validateSeniorCode"
         }
       ]
     }

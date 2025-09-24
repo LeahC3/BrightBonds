@@ -17,103 +17,144 @@
         <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     </head>
 
-    <body class="gradient">
-    <div class="container">
-        <h1>Parental Consent & Waiver Form</h1>
-        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">For Participants Under 18 Years Old</p>
+    <body>
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
         
-        <form id="consent_form">
-            <input type="hidden" name="formType" value="consent">
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+            <div class="mobile-logo">
+                <img src="../brightBondsLogo.PNG" alt="Bright Bonds logo">
+                <span>Bright Bonds</span>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
 
-            <!-- Student Information -->
-            <fieldset>
-                <legend>1. Student Information</legend>
-                <label for="studentName">Student Full Name:</label>
-                <input type="text" id="studentName" name="studentName" required>
-                
-                <label for="studentDOB">Date of Birth:</label>
-                <input type="date" id="studentDOB" name="studentDOB" required>
-                
-                <label for="school">School:</label>
-                <input type="text" id="school" name="school" required>
-            </fieldset>
+        <!-- Desktop/Mobile Navigation -->
+        <nav id="nav">
+            <div class="logo">
+                <img id="brightbondsimg" src="../brightBondsLogo.PNG" alt="Bright Bonds logo">
+                <a id="logoText">Bright Bonds</a>
+            </div>
 
-            <!-- Parent/Guardian Information -->
-            <fieldset>
-                <legend>2. Parent/Guardian Information</legend>
-                <label for="parentName">Parent/Guardian Full Name:</label>
-                <input type="text" id="parentName" name="parentName" required>
-                
-                <label for="parentPhone">Phone Number:</label>
-                <input type="tel" id="parentPhone" name="parentPhone" required>
-                
-                <label for="parentEmail">Email Address:</label>
-                <input type="email" id="parentEmail" name="parentEmail" required>
-            </fieldset>
+            <div class="nav-links">
+                <a class="page" href="home.html">Home</a>
+                <a class="page" id="active" href="matches.html">My Matches</a>
+                <a class="page" href="messages.html">Messages</a>
+                <a class="page" href="#">Calendar</a>
+                <a class="page" href="resources.html">Resources</a>
+            </div>
 
-            <!-- Program Participation Consent -->
-            <fieldset>
-                <legend>3. Program Participation Consent</legend>
-                <div class="consent-text">
-                    <p>I give permission for my child to participate in the Bright Bonds volunteer program. I understand that:</p>
-                    <ul>
-                        <li>Participation includes monthly in-person visits to approved local nursing homes and ongoing communication through the Bright Bonds website.</li>
-                        <li>All digital communication will occur within the monitored Bright Bonds platform — no texting, calling, or personal email exchanges are permitted.</li>
-                        <li>The goal of this program is to foster friendship, reduce loneliness in seniors, and allow students to earn community service hours.</li>
-                        <li>The program is student-led but monitored in partnership with each facility's staff.</li>
-                    </ul>
-                </div>
-                <label><input type="checkbox" name="programConsent" value="yes" required> I agree to the program participation terms</label>
-            </fieldset>
-
-            <!-- Transportation & Liability Release -->
-            <fieldset>
-                <legend>4. Transportation & Liability Release</legend>
-                <label><input type="radio" name="transportation" value="student" required> My child will provide their own transportation to visits</label>
-                <label><input type="radio" name="transportation" value="parent" required> I will be providing transportation for my child</label>
+            <div class="bottom">
+                <svg id="settingsIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewbox="0 0 16 16">
+                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+                </svg>
+                <button id="signOut">Sign Out</button>
+            </div>
+        </nav>
+        <main class="main-content">
+            <div class="container">
+                <h1>Parental Consent & Waiver Form</h1>
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">For Participants Under 18 Years Old</p>
                 
-                <div class="consent-text">
-                    <p>I acknowledge that any transportation to and from Bright Bonds-related activities is the responsibility of the student and/or guardian. I release and hold harmless Bright Bonds and any partnering facilities from any liability related to transportation, accidents, or injuries that may occur during participation in the program.</p>
-                </div>
-                <label><input type="checkbox" name="liabilityRelease" value="yes" required> I agree to the liability release terms</label>
-            </fieldset>
+                <form id="consent_form">
+                    <input type="hidden" name="formType" value="consent">
 
-            <!-- Emergency Contact Info -->
-            <fieldset>
-                <legend>5. Emergency Contact Information</legend>
-                <label for="emergencyName">Emergency Contact Name:</label>
-                <input type="text" id="emergencyName" name="emergencyName" required>
-                
-                <label for="emergencyPhone">Emergency Contact Phone:</label>
-                <input type="tel" id="emergencyPhone" name="emergencyPhone" required>
-            </fieldset>
+                    <!-- Student Information -->
+                    <fieldset>
+                        <legend>1. Student Information</legend>
+                        <label for="studentName">Student Full Name:</label>
+                        <input type="text" id="studentName" name="studentName" required>
+                        
+                        <label for="studentDOB">Date of Birth:</label>
+                        <input type="date" id="studentDOB" name="studentDOB" required>
+                        
+                        <label for="school">School:</label>
+                        <input type="text" id="school" name="school" required>
+                    </fieldset>
 
-            <!-- Photo & Media Consent -->
-            <fieldset>
-                <legend>6. Photo & Media Consent (Optional)</legend>
-                <p>I grant permission for Bright Bonds to use photos or videos that include my child for promotional or social media purposes:</p>
-                <label><input type="radio" name="mediaConsent" value="yes"> Yes</label>
-                <label><input type="radio" name="mediaConsent" value="no"> No</label>
-            </fieldset>
+                    <!-- Parent/Guardian Information -->
+                    <fieldset>
+                        <legend>2. Parent/Guardian Information</legend>
+                        <label for="parentName">Parent/Guardian Full Name:</label>
+                        <input type="text" id="parentName" name="parentName" required>
+                        
+                        <label for="parentPhone">Phone Number:</label>
+                        <input type="tel" id="parentPhone" name="parentPhone" required>
+                        
+                        <label for="parentEmail">Email Address:</label>
+                        <input type="email" id="parentEmail" name="parentEmail" required>
+                    </fieldset>
 
-            <!-- Agreement & Signature -->
-            <fieldset>
-                <legend>7. Agreement & Digital Signature</legend>
-                <div class="consent-text">
-                    <p>I confirm that I have read and understand the nature of the Bright Bonds program and grant my consent for my child to participate.</p>
-                </div>
-                
-                <label for="parentSignature">Parent/Guardian Digital Signature (Type Full Name):</label>
-                <input type="text" id="parentSignature" name="parentSignature" required placeholder="Type your full legal name">
-                
-                <label for="signatureDate">Date:</label>
-                <input type="date" id="signatureDate" name="signatureDate" required>
-                
-                <label><input type="checkbox" name="finalConsent" value="yes" required> I certify that I am the parent/guardian of the above-named student and have the legal authority to give this consent</label>
-            </fieldset>
+                    <!-- Program Participation Consent -->
+                    <fieldset>
+                        <legend>3. Program Participation Consent</legend>
+                        <div class="consent-text">
+                            <p>I give permission for my child to participate in the Bright Bonds volunteer program. I understand that:</p>
+                            <ul>
+                                <li>Participation includes monthly in-person visits to approved local nursing homes and ongoing communication through the Bright Bonds website.</li>
+                                <li>All digital communication will occur within the monitored Bright Bonds platform: no texting, calling, or personal email exchanges are permitted.</li>
+                                <li>The goal of this program is to foster friendship, reduce loneliness in seniors, and allow students to earn community service hours.</li>
+                                <li>The program is student-led but monitored in partnership with each facility's staff.</li>
+                            </ul>
+                        </div>
+                        <label><input type="checkbox" name="programConsent" value="yes" required> I agree to the program participation terms</label>
+                    </fieldset>
 
-            <input type="submit" class="submitButton" value="Submit Consent Form">
-        </form>
-    </div>
+                    <!-- Transportation & Liability Release -->
+                    <fieldset>
+                        <legend>4. Transportation & Liability Release</legend>
+                        <label><input type="radio" name="transportation" value="student" required> My child will provide their own transportation to visits</label>
+                        <label><input type="radio" name="transportation" value="parent" required> I will be providing transportation for my child</label>
+                        
+                        <div class="consent-text">
+                            <p>I acknowledge that any transportation to and from Bright Bonds-related activities is the responsibility of the student and/or guardian. I release and hold harmless Bright Bonds and any partnering facilities from any liability related to transportation, accidents, or injuries that may occur during participation in the program.</p>
+                        </div>
+                        <label><input type="checkbox" name="liabilityRelease" value="yes" required> I agree to the liability release terms</label>
+                    </fieldset>
+
+                    <!-- Emergency Contact Info -->
+                    <fieldset>
+                        <legend>5. Emergency Contact Information</legend>
+                        <label for="emergencyName">Emergency Contact Name:</label>
+                        <input type="text" id="emergencyName" name="emergencyName" required>
+                        
+                        <label for="emergencyPhone">Emergency Contact Phone:</label>
+                        <input type="tel" id="emergencyPhone" name="emergencyPhone" required>
+                    </fieldset>
+
+                    <!-- Photo & Media Consent -->
+                    <fieldset>
+                        <legend>6. Photo & Media Consent (Optional)</legend>
+                        <p>I grant permission for Bright Bonds to use photos or videos that include my child for promotional or social media purposes:</p>
+                        <label><input type="radio" name="mediaConsent" value="yes"> Yes</label>
+                        <label><input type="radio" name="mediaConsent" value="no"> No</label>
+                    </fieldset>
+
+                    <!-- Agreement & Signature -->
+                    <fieldset>
+                        <legend>7. Agreement & Digital Signature</legend>
+                        <div class="consent-text">
+                            <p>I confirm that I have read and understand the nature of the Bright Bonds program and grant my consent for my child to participate.</p>
+                        </div>
+                        
+                        <label for="parentSignature">Parent/Guardian Digital Signature (Type Full Name):</label>
+                        <input type="text" id="parentSignature" name="parentSignature" required placeholder="Type your full legal name">
+                        
+                        <label for="signatureDate">Date:</label>
+                        <input type="date" id="signatureDate" name="signatureDate" required>
+                        
+                        <label><input type="checkbox" name="finalConsent" value="yes" required> I certify that I am the parent/guardian of the above-named student and have the legal authority to give this consent</label>
+                    </fieldset>
+
+                    <input type="submit" class="submitButton" value="Submit Consent Form">
+                </form>
+            </div>
+        </main>
 </body>
 </html>

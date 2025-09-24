@@ -41,7 +41,10 @@ def handler(event, context):
     http_method = event.get('httpMethod') or event.get('requestContext', {}).get('http', {}).get('method')
     raw_path = event.get('rawPath', '')
     
+    print(f"Processing request: Method={http_method}, Path={raw_path}")
+    
     if http_method == 'GET' and '/check/' in raw_path:
+        print(f"Routing to handle_get_request for path: {raw_path}")
         return handle_get_request(event)
     
     # Handle POST request to run matching algorithm (temporary solution)
@@ -59,6 +62,11 @@ def handler(event, context):
         raw_body = event.get('body', '{}')
         print(f"Raw request body: {raw_body}")
         body = json.loads(raw_body)
+        
+        # Handle check requests sent as POST with action=check
+        if body.get('action') == 'check' and body.get('userId'):
+            print(f"Handling check request for user: {body.get('userId')}")
+            return handle_check_via_post(body.get('userId'))
         
         # Skip processing if body is completely empty
         if not body:
@@ -209,6 +217,47 @@ def handle_get_request(event):
         }
 
 
+
+def handle_check_via_post(user_id):
+    """Handle check requests sent via POST method"""
+    try:
+        # Check consent forms table
+        try:
+            consent_response = consent_table.get_item(Key={'userId': user_id})
+            has_consent = 'Item' in consent_response
+        except Exception as e:
+            print(f"Error checking consent table: {e}")
+            has_consent = False
+            
+        # Check interest forms table
+        try:
+            interest_response = interests_table.get_item(Key={'userId': user_id})
+            has_interest = 'Item' in interest_response
+        except Exception as e:
+            print(f"Error checking interests table: {e}")
+            has_interest = False
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                'exists': has_consent or has_interest,
+                'hasConsent': has_consent,
+                'hasInterest': has_interest
+            })
+        }
+        
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_matches_request(event):
+    """Handle GET requests for matches - placeholder function"""
+    return {
+        'statusCode': 404,
+        'body': json.dumps({'message': 'Matches endpoint not implemented in this function'})
+    }
 
 def handle_run_matching(event):
     """Handle POST requests to run the matching algorithm"""
