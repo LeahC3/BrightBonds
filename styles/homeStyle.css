@@ -142,6 +142,10 @@ nav {
     cursor: pointer;
 }
 
+#settingsIcon {
+    cursor: pointer;
+}
+
 #signOut {
     margin-right: 2.5rem;
     margin-left: auto;
@@ -707,6 +711,33 @@ textarea:focus {
     color: #666;
     margin-top: 0.25rem;
     padding: 0 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.report-btn {
+    cursor: pointer;
+    margin-left: 0.5rem;
+    color: #666;
+    font-size: 0.7rem;
+    text-decoration: underline;
+}
+
+.report-btn:hover {
+    color: #d32f2f;
+}
+
+.undo-btn {
+    cursor: pointer;
+    margin-left: 0.5rem;
+    color: #666;
+    font-size: 0.7rem;
+    text-decoration: underline;
+}
+
+.undo-btn:hover {
+    color: #1976d2;
 }
 
 .message-input-container {

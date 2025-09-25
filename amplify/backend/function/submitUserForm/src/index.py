@@ -51,9 +51,7 @@ def handler(event, context):
     if http_method == 'POST' and raw_path == '/run-matching':
         return handle_run_matching(event)
     
-    # Handle GET requests for matches
-    if http_method == 'GET' and '/matches/' in raw_path:
-        return handle_matches_request(event)
+
     
     # All other requests are form submissions
     
@@ -67,6 +65,13 @@ def handler(event, context):
         if body.get('action') == 'check' and body.get('userId'):
             print(f"Handling check request for user: {body.get('userId')}")
             return handle_check_via_post(body.get('userId'))
+        
+        # Handle settings requests
+        if body.get('action') == 'getSettings' and body.get('userId'):
+            return handle_get_settings(body.get('userId'))
+        
+        if body.get('action') == 'saveSettings' and body.get('userId'):
+            return handle_save_settings(body.get('userId'), body.get('settings'))
         
         # Skip processing if body is completely empty
         if not body:
@@ -252,12 +257,43 @@ def handle_check_via_post(user_id):
             'body': json.dumps({'error': str(e)})
         }
 
-def handle_matches_request(event):
-    """Handle GET requests for matches - placeholder function"""
-    return {
-        'statusCode': 404,
-        'body': json.dumps({'message': 'Matches endpoint not implemented in this function'})
-    }
+
+
+def handle_get_settings(user_id):
+    """Get user settings"""
+    try:
+        # Try to get settings from a settings table (create if needed)
+        # For now, return default settings
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                'emailNotifications': True,
+                'matchNotifications': True,
+                'profileVisibility': True,
+                'language': 'en',
+                'theme': 'light'
+            })
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_save_settings(user_id, settings):
+    """Save user settings"""
+    try:
+        # For now, just return success (settings would be saved to DynamoDB in production)
+        print(f"Saving settings for user {user_id}: {settings}")
+        return {
+            'statusCode': 200,
+            'body': json.dumps({'message': 'Settings saved successfully'})
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
 
 def handle_run_matching(event):
     """Handle POST requests to run the matching algorithm"""

@@ -27,7 +27,11 @@ def handler(event, context):
     
     # Handle GET requests for matches
     if http_method == 'GET':
-        return handle_matches_request(event)
+        # Check if this is a request for all matches (admin)
+        if raw_path == '/matches/all' or event.get('path', '') == '/matches/all':
+            return handle_all_matches_request(event)
+        else:
+            return handle_matches_request(event)
     
     return {
         'statusCode': 404,
@@ -102,6 +106,67 @@ def handle_matches_request(event):
         }
         
     except Exception as e:
+        return {
+            'statusCode': 500,
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps({'error': str(e)})
+        }
+
+def handle_all_matches_request(event):
+    """Handle GET requests for all matches (admin only)"""
+    try:
+        # Get all matches from the matches table
+        response = matches_table.scan()
+        matches = response.get('Items', [])
+        
+        # Enrich matches with user names from Cognito
+        for match in matches:
+            try:
+                # Get student name
+                student_response = cognito_client.admin_get_user(
+                    UserPoolId='us-east-2_AxTL9MRLy',
+                    Username=match['studentUserId']
+                )
+                student_given = 'Unknown'
+                student_family = ''
+                for attr in student_response.get('UserAttributes', []):
+                    if attr['Name'] == 'given_name':
+                        student_given = attr['Value']
+                    elif attr['Name'] == 'family_name':
+                        student_family = attr['Value']
+                match['studentName'] = f"{student_given} {student_family}".strip()
+                
+                # Get senior name
+                senior_response = cognito_client.admin_get_user(
+                    UserPoolId='us-east-2_AxTL9MRLy',
+                    Username=match['seniorUserId']
+                )
+                senior_given = 'Unknown'
+                senior_family = ''
+                for attr in senior_response.get('UserAttributes', []):
+                    if attr['Name'] == 'given_name':
+                        senior_given = attr['Value']
+                    elif attr['Name'] == 'family_name':
+                        senior_family = attr['Value']
+                match['seniorName'] = f"{senior_given} {senior_family}".strip()
+                
+            except Exception as e:
+                print(f"Error getting user names from Cognito: {e}")
+                match['studentName'] = match.get('studentName', 'Unknown')
+                match['seniorName'] = match.get('seniorName', 'Unknown')
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps(matches, default=str)
+        }
+        
+    except Exception as e:
+        print(f"Error getting all matches: {e}")
         return {
             'statusCode': 500,
             'headers': {

@@ -37,9 +37,20 @@ def handler(event, context):
         }
     
     if http_method == 'GET':
-        return get_messages(event, user_id)
+        # Check if this is admin request for all conversations
+        raw_path = event.get('rawPath', '') or event.get('path', '')
+        if raw_path == '/messages/all' or '/messages/all' in raw_path:
+            return get_all_messages(event, user_id)
+        else:
+            return get_messages(event, user_id)
     elif http_method == 'POST':
-        return send_message(event, user_id)
+        raw_path = event.get('rawPath', '') or event.get('path', '')
+        if '/messages/report' in raw_path:
+            return report_message(event, user_id)
+        elif '/messages/unreport' in raw_path:
+            return unreport_message(event, user_id)
+        else:
+            return send_message(event, user_id)
     
     return {
         'statusCode': 404,
@@ -170,6 +181,159 @@ def send_message(event, user_id):
         
     except Exception as e:
         print(f"Error sending message: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+
+def get_all_messages(event, admin_user_id):
+    """Get all conversations for admin monitoring"""
+    try:
+        # Get all matches
+        matches_response = matches_table.scan()
+        matches = matches_response['Items']
+        
+        conversations = []
+        processed_pairs = set()
+        
+        for match in matches:
+            student_id = match['studentUserId']
+            senior_id = match['seniorUserId']
+            
+            # Create a unique identifier for this pair to avoid duplicates
+            pair_id = tuple(sorted([student_id, senior_id]))
+            if pair_id in processed_pairs:
+                continue
+            processed_pairs.add(pair_id)
+            
+            # Get messages for this conversation
+            messages_response = messages_table.scan(
+                FilterExpression='(senderId = :uid1 AND receiverId = :uid2) OR (senderId = :uid2 AND receiverId = :uid1)',
+                ExpressionAttributeValues={
+                    ':uid1': student_id,
+                    ':uid2': senior_id
+                }
+            )
+            
+            messages = sorted(messages_response['Items'], key=lambda x: x['timestamp'])
+            
+            # Get both users' names
+            student_name = get_full_user_name(student_id)
+            senior_name = get_full_user_name(senior_id)
+            
+            conversations.append({
+                'matchId': match['matchId'],
+                'otherUserId': f"{student_id}_{senior_id}",  # Combined ID for admin view
+                'otherUserName': f"{student_name} ↔ {senior_name}",  # Show both names
+                'messages': messages,
+                'studentId': student_id,
+                'seniorId': senior_id,
+                'studentName': student_name,
+                'seniorName': senior_name
+            })
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps(conversations, default=str)
+        }
+        
+    except Exception as e:
+        print(f"Error getting all messages: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+
+def get_full_user_name(user_id):
+    """Get user's full name from Cognito"""
+    try:
+        user_response = cognito_client.admin_get_user(
+            UserPoolId='us-east-2_AxTL9MRLy',
+            Username=user_id
+        )
+        
+        given_name = 'Unknown'
+        family_name = ''
+        
+        for attr in user_response.get('UserAttributes', []):
+            if attr['Name'] == 'given_name':
+                given_name = attr['Value']
+            elif attr['Name'] == 'family_name':
+                family_name = attr['Value']
+        
+        return f"{given_name} {family_name}".strip()
+    except Exception as e:
+        print(f"Error getting user name: {e}")
+        return 'Unknown'
+
+def report_message(event, reporter_id):
+    """Report a message as inappropriate"""
+    try:
+        body = json.loads(event.get('body', '{}'))
+        message_id = body.get('messageId')
+        
+        if not message_id:
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'messageId is required'})
+            }
+        
+        # Update the message to mark it as reported
+        messages_table.update_item(
+            Key={'messageId': message_id},
+            UpdateExpression='SET reported = :reported, reporterId = :reporterId, reportedAt = :reportedAt',
+            ExpressionAttributeValues={
+                ':reported': True,
+                ':reporterId': reporter_id,
+                ':reportedAt': datetime.datetime.utcnow().isoformat()
+            }
+        )
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'message': 'Message reported successfully'})
+        }
+        
+    except Exception as e:
+        print(f"Error reporting message: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+
+def unreport_message(event, user_id):
+    """Remove report from a message"""
+    try:
+        body = json.loads(event.get('body', '{}'))
+        message_id = body.get('messageId')
+        
+        if not message_id:
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'messageId is required'})
+            }
+        
+        # Update the message to remove the report
+        messages_table.update_item(
+            Key={'messageId': message_id},
+            UpdateExpression='REMOVE reported, reporterId, reportedAt'
+        )
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'message': 'Report removed successfully'})
+        }
+        
+    except Exception as e:
+        print(f"Error removing report: {e}")
         return {
             'statusCode': 500,
             'headers': {'Access-Control-Allow-Origin': '*'},

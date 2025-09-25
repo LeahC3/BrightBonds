@@ -201,7 +201,7 @@ function displayMatches(matches) {
 
 
 
-function showAdminControls() {
+async function showAdminControls() {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('no-matches').style.display = 'none';
   
@@ -211,10 +211,10 @@ function showAdminControls() {
   matchesContainer.style.display = 'block';
   
   container.innerHTML = `
-    <div style="text-align: center; padding: 2rem;">
-      <h2 style="color: #012572; margin-bottom: 2rem;">Admin Dashboard</h2>
+    <div style="padding: 2rem;">
+      <h2 style="color: #012572; margin-bottom: 2rem; text-align: center;">Admin Dashboard</h2>
       
-      <div style="display: grid; gap: 1rem; max-width: 400px; margin: 0 auto;">
+      <div style="display: grid; gap: 1rem; max-width: 400px; margin: 0 auto 2rem auto;">
         <button onclick="runMatching()" style="
           background-color: #012572;
           color: white;
@@ -235,8 +235,75 @@ function showAdminControls() {
           font-size: 1.1rem;
         ">Monitor Messages</button>
       </div>
+      
+      <h3 style="color: #012572; margin-bottom: 1rem;">Current Matches</h3>
+      <div id="admin-matches-table">Loading matches...</div>
     </div>
   `;
+  
+  // Load all matches for admin view
+  await loadAdminMatches();
+}
+
+async function loadAdminMatches() {
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    // Get all matches from the matches table
+    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matches/all', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    const tableContainer = document.getElementById('admin-matches-table');
+    
+    if (!response.ok) {
+      tableContainer.innerHTML = '<p>No matches found or error loading matches.</p>';
+      return;
+    }
+    
+    const matches = await response.json();
+    
+    if (!matches || matches.length === 0) {
+      tableContainer.innerHTML = '<p>No matches found.</p>';
+      return;
+    }
+    
+    // Create matches table
+    let tableHTML = `
+      <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead>
+          <tr style="background-color: #f0f4ff; border-bottom: 2px solid #012572;">
+            <th style="padding: 1rem; text-align: left; color: #012572;">Student Name</th>
+            <th style="padding: 1rem; text-align: left; color: #012572;">Senior Name</th>
+            <th style="padding: 1rem; text-align: left; color: #012572;">Location</th>
+            <th style="padding: 1rem; text-align: left; color: #012572;">Compatibility Score</th>
+            <th style="padding: 1rem; text-align: left; color: #012572;">Match Date</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    
+    matches.forEach(match => {
+      tableHTML += `
+        <tr style="border-bottom: 1px solid #e0e7ff;">
+          <td style="padding: 0.75rem;">${match.studentName || 'Unknown'}</td>
+          <td style="padding: 0.75rem;">${match.seniorName || 'Unknown'}</td>
+          <td style="padding: 0.75rem;">${match.location || match.seniorFacility || 'Not specified'}</td>
+          <td style="padding: 0.75rem;">${match.compatibilityScore || 'N/A'}</td>
+          <td style="padding: 0.75rem;">${new Date(match.createdAt).toLocaleDateString()}</td>
+        </tr>
+      `;
+    });
+    
+    tableHTML += '</tbody></table>';
+    tableContainer.innerHTML = tableHTML;
+    
+  } catch (error) {
+    console.error('Error loading admin matches:', error);
+    document.getElementById('admin-matches-table').innerHTML = '<p>Error loading matches.</p>';
+  }
 }
 
 async function runMatching() {

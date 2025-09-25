@@ -17,4 +17,14 @@ if (!AmplifyGlobal) {
   });
 
   window.Auth = Auth; // Make available globally
+  
+  // Settings icon click handler
+  document.addEventListener('DOMContentLoaded', function() {
+    const settingsIcon = document.getElementById("settingsIcon");
+    if (settingsIcon) {
+      settingsIcon.addEventListener("click", () => {
+        window.location.href = "settings.html";
+      });
+    }
+  });
 }

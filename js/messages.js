@@ -14,6 +14,7 @@ let currentUserId = null;
 let currentConversation = null;
 let conversations = [];
 let refreshInterval = null;
+let isAdmin = false;
 
 window.onload = function () {
   if (!window.Auth) return;
@@ -21,7 +22,18 @@ window.onload = function () {
   Auth.currentAuthenticatedUser()
     .then(async user => {
       currentUserId = user.attributes.sub;
-      await loadConversations();
+      
+      // Check if user is admin
+      isAdmin = user?.attributes?.middle_name === 'ADMIN';
+      if (isAdmin) {
+        await loadAllConversations();
+        // Hide message input for admins (monitoring only)
+        document.querySelector('.message-input-container').style.display = 'none';
+        // Add admin indicator
+        document.querySelector('.messages-sidebar h2').textContent = 'All Conversations (Admin)';
+      } else {
+        await loadConversations();
+      }
     })
     .catch(() => {
       window.location.replace("login.html");
@@ -66,6 +78,37 @@ window.onload = function () {
   }
 };
 
+async function loadAllConversations() {
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    const response = await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages/all`, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    conversations = await response.json();
+    displayConversations();
+    
+    // Select first conversation if available
+    if (conversations.length > 0) {
+      selectConversation(0);
+    }
+    
+    // Start auto-refresh for new messages
+    startAutoRefresh();
+    
+  } catch (error) {
+    console.error('Error loading all conversations:', error);
+    document.getElementById('conversationList').innerHTML = '<p>No conversations found.</p>';
+  }
+}
+
 async function loadConversations() {
   try {
     const session = await Auth.currentSession();
@@ -106,7 +149,13 @@ function startAutoRefresh() {
   // Refresh conversations every 5 seconds
   refreshInterval = setInterval(async () => {
     const oldConversationId = currentConversation?.otherUserId;
-    await loadConversations();
+    
+    // Call appropriate function based on admin status
+    if (isAdmin) {
+      await loadAllConversations();
+    } else {
+      await loadConversations();
+    }
     
     // Reselect the same conversation if it still exists
     if (oldConversationId) {
@@ -189,12 +238,38 @@ function displayMessages() {
   
   currentConversation.messages.forEach(message => {
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
     
-    messageDiv.innerHTML = `
-      <div class="message-content">${message.message}</div>
-      <div class="message-time">${formatTime(message.timestamp)}</div>
-    `;
+    if (isAdmin) {
+      // For admin view, show sender name and use different colors
+      const isStudent = message.senderId === currentConversation.studentId;
+      const senderName = isStudent ? currentConversation.studentName : currentConversation.seniorName;
+      const backgroundColor = isStudent ? '#f0f4ff' : '#012572';
+      const textColor = isStudent ? '#333' : 'white';
+      const isReported = message.reported || false;
+      
+      messageDiv.className = 'message received';
+      messageDiv.innerHTML = `
+        <div class="message-sender" style="font-size: 0.8rem; color: #666; margin-bottom: 0.25rem;">
+          ${senderName}
+          ${isReported ? '<span style="color: red; font-weight: bold;"> [REPORTED]</span>' : ''}
+        </div>
+        <div class="message-content" style="background-color: ${backgroundColor}; color: ${textColor}; ${isReported ? 'border: 2px solid red;' : ''}">${message.message}</div>
+        <div class="message-time">${formatTime(message.timestamp)}</div>
+      `;
+    } else {
+      // For regular users, use sent/received styling
+      const canReport = message.senderId !== currentUserId; // Can only report other user's messages
+      const isReported = message.reported || false;
+      messageDiv.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
+      messageDiv.innerHTML = `
+        <div class="message-content">${message.message}</div>
+        <div class="message-time">
+          ${formatTime(message.timestamp)}
+          ${canReport && isReported ? '<span style="color: red; font-size: 0.7rem; margin-left: 0.5rem;">Reported</span> <span class="undo-btn" onclick="undoReport(\'' + (message.messageId || message.senderId + '_' + message.timestamp) + '\')" title="Undo report">Undo</span>' : ''}
+          ${canReport && !isReported ? `<span class="report-btn" onclick="reportMessage('${message.messageId || message.senderId + '_' + message.timestamp}')" title="Report message">Report</span>` : ''}
+        </div>
+      `;
+    }
     
     messagesContent.appendChild(messageDiv);
   });
@@ -300,5 +375,78 @@ async function sendMessage() {
   } catch (error) {
     console.error('Error sending message:', error);
     alert('Failed to send message. Please try again.');
+  }
+}
+
+async function reportMessage(messageId) {
+  if (!confirm('Report this message as inappropriate?')) return;
+  
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    const response = await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages/report`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messageId: messageId,
+        reporterId: currentUserId
+      })
+    });
+    
+    if (response.ok) {
+      alert('Message reported successfully.');
+      // Reload conversations to show updated status
+      if (isAdmin) {
+        await loadAllConversations();
+      } else {
+        await loadConversations();
+      }
+    } else {
+      alert('Failed to report message.');
+    }
+    
+  } catch (error) {
+    console.error('Error reporting message:', error);
+    alert('Failed to report message.');
+  }
+}
+
+async function undoReport(messageId) {
+  if (!confirm('Remove report from this message?')) return;
+  
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    const response = await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages/unreport`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messageId: messageId
+      })
+    });
+    
+    if (response.ok) {
+      alert('Report removed successfully.');
+      // Reload conversations to show updated status
+      if (isAdmin) {
+        await loadAllConversations();
+      } else {
+        await loadConversations();
+      }
+    } else {
+      alert('Failed to remove report.');
+    }
+    
+  } catch (error) {
+    console.error('Error removing report:', error);
+    alert('Failed to remove report.');
   }
 }
