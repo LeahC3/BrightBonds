@@ -334,8 +334,10 @@ h5 {
         right: 0;
         left: auto;
         padding-top: 70px;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        height: calc(100dvh - 70px);
         overflow-y: auto;
+        padding-bottom: env(safe-area-inset-bottom, 20px);
     }
     
     nav.open {
@@ -344,7 +346,8 @@ h5 {
     
     .mobile-header {
         display: flex;
-        height: 70px;
+        height: calc(70px + env(safe-area-inset-top));
+        padding-top: env(safe-area-inset-top);
     }
     
     .hamburger {
@@ -353,14 +356,16 @@ h5 {
     
     .main-content {
         margin-left: 0;
-        margin-top: 70px;
+        margin-top: calc(70px + env(safe-area-inset-top));
         padding: 1rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
     }
     
     .main-content.messages-page {
         padding: 0;
-        margin-top: 70px;
-        height: calc(100vh - 70px);
+        margin-top: calc(70px + env(safe-area-inset-top));
+        height: calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        height: calc(100dvh - 70px);
         overflow: hidden;
     }
     
@@ -803,14 +808,22 @@ textarea:focus {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
     body.messages-page {
         overflow: hidden;
         position: fixed;
         width: 100%;
+        height: 100vh;
+        height: 100dvh;
     }
     
     .messages-container {
-        height: calc(100vh - 70px);
+        height: calc(100vh - 70px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        height: calc(100dvh - 70px);
         overflow: hidden;
     }
     
