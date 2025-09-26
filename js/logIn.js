@@ -4,6 +4,16 @@ window.onload = function () {
 
   if (!form || !window.Auth) return;
 
+  // Check if user is already signed in
+  Auth.currentAuthenticatedUser()
+    .then(() => {
+      // User is already signed in, redirect to home
+      window.location.replace("home.html");
+    })
+    .catch(() => {
+      // User is not signed in, continue with login page
+    });
+
   // Check for account creation success message
   if (localStorage.getItem("accountCreated")) {
     if (result) {

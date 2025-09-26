@@ -188,7 +188,8 @@ function displayMatches(matches) {
       : 'No shared interests listed';
     
     matchDiv.innerHTML = `
-      <h3>Your Match: ${match.matchedUserFirstName || 'Unknown'}</h3>
+      <h5>Your Match: ${match.matchedUserFirstName || 'Unknown'}</h5>
+      <br>
       <p><strong>Compatibility Score:</strong> ${match.compatibilityScore}</p>
       <p><strong>Location:</strong> ${match.seniorFacility || match.studentLocation}</p>
       <p><strong>Shared Interests:</strong> ${sharedInterests}</p>
