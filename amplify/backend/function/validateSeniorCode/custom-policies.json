@@ -1,6 +1,10 @@
 [
   {
-    "Action": [],
-    "Resource": []
+    "Action": [
+      "ssm:GetParameter"
+    ],
+    "Resource": [
+      "arn:aws:ssm:*:*:parameter/brightbonds/senior-access-codes"
+    ]
   }
 ]

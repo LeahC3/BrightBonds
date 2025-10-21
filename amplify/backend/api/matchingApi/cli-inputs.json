@@ -28,6 +28,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/settings": {
+      "name": "/settings",
+      "lambdaFunction": "userSettings",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

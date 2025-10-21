@@ -48,13 +48,13 @@ async function loadUserSettings() {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/`, {
+    const response = await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/settings`, {
       method: 'POST',
       headers: { 
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ action: 'getSettings', userId: currentUserId })
+      body: JSON.stringify({ action: 'getSettings' })
     });
     
     if (response.status === 200) {
@@ -99,15 +99,14 @@ async function saveSettings() {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    const response = await fetch(`https://p3wsr6si354o4xw35baf3yo5tm0nhbxn.lambda-url.us-east-2.on.aws/`, {
+    const response = await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/settings`, {
       method: 'POST',
       headers: { 
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ 
-        action: 'saveSettings', 
-        userId: currentUserId,
+        action: 'saveSettings',
         settings: settings
       })
     });

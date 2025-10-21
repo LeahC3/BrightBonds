@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "messageHandler",
+            "userSettings",
             {
               "Fn::Join": [
                 "",
                 [
-                  "messageHandler",
+                  "userSettings",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "brightbondsLambdaRole74d59d9a",
+            "brightbondsLambdaRole7785bb64",
             {
               "Fn::Join": [
                 "",
                 [
-                  "brightbondsLambdaRole74d59d9a",
+                  "brightbondsLambdaRole7785bb64",
                   "-",
                   {
                     "Ref": "env"
@@ -160,28 +160,6 @@
                   }
                 ]
               }
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:GetItem",
-                "dynamodb:PutItem",
-                "dynamodb:UpdateItem",
-                "dynamodb:DeleteItem",
-                "dynamodb:Query",
-                "dynamodb:Scan"
-              ],
-              "Resource": [
-                "arn:aws:dynamodb:*:*:table/messages-dev",
-                "arn:aws:dynamodb:*:*:table/dev-matches"
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "cognito-idp:AdminGetUser"
-              ],
-              "Resource": "*"
             }
           ]
         }
@@ -196,19 +174,11 @@
           "Statement": [
             {
               "Action": [
-                "cognito-idp:AdminGetUser"
+                "cognito-idp:AdminGetUser",
+                "cognito-idp:AdminUpdateUserAttributes"
               ],
               "Resource": [
                 "arn:aws:cognito-idp:us-east-2:*:userpool/us-east-2_AxTL9MRLy"
-              ],
-              "Effect": "Allow"
-            },
-            {
-              "Action": [
-                "ses:SendEmail"
-              ],
-              "Resource": [
-                "*"
               ],
               "Effect": "Allow"
             }

@@ -155,7 +155,7 @@ function hideNotification() {
 
 async function checkUnreadMessages() {
   try {
-    const response = await fetch('https://api.brightbonds.org/messages/unread', {
+    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages/unread', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,

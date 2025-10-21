@@ -1,16 +1,11 @@
 [
   {
     "Action": [
-      "cognito-idp:AdminGetUser"
+      "cognito-idp:AdminGetUser",
+      "cognito-idp:AdminUpdateUserAttributes"
     ],
     "Resource": [
       "arn:aws:cognito-idp:us-east-2:*:userpool/us-east-2_AxTL9MRLy"
     ]
-  },
-  {
-    "Action": [
-      "ses:SendEmail"
-    ],
-    "Resource": ["*"]
   }
 ]

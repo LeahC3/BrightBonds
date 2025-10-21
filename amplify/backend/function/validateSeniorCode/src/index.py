@@ -1,17 +1,26 @@
 import json
+import boto3
 from datetime import datetime
 
-# Valid senior access codes - store these securely
-VALID_SENIOR_CODES = {
-    'SENIOR',  # Example codes - replace with your actual codes
-    'ACCESS',
-    'BRIGHT',
-    'BONDS1',
-    'CARE01'
-}
+ssm = boto3.client('ssm')
+
+def get_valid_codes():
+    """Retrieve valid senior codes from Parameter Store"""
+    try:
+        response = ssm.get_parameter(
+            Name='/brightbonds/senior-access-codes',
+            WithDecryption=True
+        )
+        # Codes stored as comma-separated string
+        codes = response['Parameter']['Value'].split(',')
+        return {code.strip().upper() for code in codes}
+    except Exception as e:
+        print(f"Error retrieving codes: {e}")
+        # Fallback codes (remove in production)
+        # return {'SENIOR', 'ACCESS', 'BRIGHT'}
 
 def handler(event, context):
-    print('Pre Sign-up trigger received:', json.dumps(event))
+    print('Pre Sign-up trigger received')
     
     # Get user attributes
     user_attributes = event['request']['userAttributes']
@@ -23,7 +32,8 @@ def handler(event, context):
         birth_year = datetime.fromisoformat(birthdate).year
         if birth_year < 1995:
             # Senior user - validate access code
-            if not senior_code or senior_code.upper() not in VALID_SENIOR_CODES:
+            valid_codes = get_valid_codes()
+            if not senior_code or senior_code.upper() not in valid_codes:
                 raise Exception('Invalid senior access code')
     
     # Allow signup to proceed

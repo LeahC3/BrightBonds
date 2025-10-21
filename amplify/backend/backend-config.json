@@ -54,6 +54,14 @@
           ],
           "category": "function",
           "resourceName": "validateSeniorCode"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "userSettings"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -128,6 +136,11 @@
       "service": "Lambda"
     },
     "submitUserForm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "userSettings": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -232,6 +245,22 @@
         {
           "category": "function",
           "resourceName": "submitUserForm"
+        }
+      ]
+    },
+    "AMPLIFY_function_userSettings_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userSettings"
+        }
+      ]
+    },
+    "AMPLIFY_function_userSettings_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "userSettings"
         }
       ]
     },

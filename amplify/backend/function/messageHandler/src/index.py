@@ -3,11 +3,12 @@ import boto3
 import datetime
 import base64
 
-# Initialize DynamoDB and Cognito clients
+# Initialize DynamoDB, Cognito, and SES clients
 dynamodb = boto3.resource('dynamodb')
 messages_table = dynamodb.Table('messages-dev')
 matches_table = dynamodb.Table('dev-matches')
 cognito_client = boto3.client('cognito-idp')
+ses_client = boto3.client('ses', region_name='us-east-2')
 
 def handler(event, context):
     """Lambda function handler for messaging functionality."""
@@ -51,6 +52,8 @@ def handler(event, context):
             return report_message(event, user_id)
         elif '/messages/unreport' in raw_path:
             return unreport_message(event, user_id)
+        elif '/messages/markread' in raw_path:
+            return mark_messages_read(event, user_id)
         else:
             return send_message(event, user_id)
     
@@ -189,6 +192,14 @@ def send_message(event, user_id):
         }
         
         messages_table.put_item(Item=message_item)
+        
+        # Send email notification to receiver
+        print(f"Attempting to send email notification to {receiver_id}")
+        try:
+            send_email_notification(receiver_id, user_id, message_text)
+            print(f"Email notification sent successfully")
+        except Exception as e:
+            print(f"Email notification failed: {e}")
         
         return {
             'statusCode': 200,
@@ -385,3 +396,144 @@ def get_user_name(user_id):
     except Exception as e:
         print(f"Error getting user name: {e}")
         return 'Unknown'
+
+def check_unread_messages(event, user_id):
+    """Check if user has unread messages"""
+    try:
+        # Get user's matches
+        matches_response = matches_table.scan(
+            FilterExpression='(studentUserId = :uid OR seniorUserId = :uid)',
+            ExpressionAttributeValues={':uid': user_id}
+        )
+        
+        unread_count = 0
+        
+        for match in matches_response['Items']:
+            other_user_id = match['seniorUserId'] if match['studentUserId'] == user_id else match['studentUserId']
+            
+            # Count unread messages from other user
+            messages_response = messages_table.scan(
+                FilterExpression='senderId = :sender AND receiverId = :receiver AND (#r = :false OR attribute_not_exists(#r))',
+                ExpressionAttributeNames={'#r': 'read'},
+                ExpressionAttributeValues={
+                    ':sender': other_user_id,
+                    ':receiver': user_id,
+                    ':false': False
+                }
+            )
+            
+            unread_count += len(messages_response['Items'])
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'unreadCount': unread_count})
+        }
+        
+    except Exception as e:
+        print(f"Error checking unread messages: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+
+def mark_messages_read(event, user_id):
+    """Mark messages as read when user views conversation"""
+    try:
+        body = json.loads(event.get('body', '{}'))
+        other_user_id = body.get('otherUserId')
+        
+        if not other_user_id:
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'otherUserId is required'})
+            }
+        
+        # Get all unread messages from other user to current user
+        messages_response = messages_table.scan(
+            FilterExpression='senderId = :sender AND receiverId = :receiver AND (#r = :false OR attribute_not_exists(#r))',
+            ExpressionAttributeNames={'#r': 'read'},
+            ExpressionAttributeValues={
+                ':sender': other_user_id,
+                ':receiver': user_id,
+                ':false': False
+            }
+        )
+        
+        # Mark each message as read
+        for message in messages_response['Items']:
+            messages_table.update_item(
+                Key={'messageId': message['messageId']},
+                UpdateExpression='SET #r = :true',
+                ExpressionAttributeNames={'#r': 'read'},
+                ExpressionAttributeValues={':true': True}
+            )
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'message': f'Marked {len(messages_response["Items"])} messages as read'})
+        }
+        
+    except Exception as e:
+        print(f"Error marking messages as read: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+
+def send_email_notification(receiver_id, sender_id, message_text):
+    """Send email notification for new message"""
+    try:
+        print(f"Attempting to send email notification to {receiver_id}")
+        
+        # Get receiver's email and notification preferences
+        receiver_info = cognito_client.admin_get_user(
+            UserPoolId='us-east-2_AxTL9MRLy',
+            Username=receiver_id
+        )
+        
+        receiver_email = None
+        receiver_name = 'User'
+        email_notifications = True
+        
+        for attr in receiver_info.get('UserAttributes', []):
+            if attr['Name'] == 'email':
+                receiver_email = attr['Value']
+            elif attr['Name'] == 'given_name':
+                receiver_name = attr['Value']
+            elif attr['Name'] == 'custom:email_notifications':
+                email_notifications = attr['Value'] == '1'
+        
+        if not receiver_email:
+            print(f"No email address found for user {receiver_id}")
+            return
+            
+        if not email_notifications:
+            print(f"Email notifications disabled for user {receiver_id}")
+            return
+        
+        # Get sender's name
+        sender_name = get_user_name(sender_id)
+        
+        # Send email
+        ses_client.send_email(
+            Source='noreply@brightbonds.org',
+            Destination={'ToAddresses': [receiver_email]},
+            Message={
+                'Subject': {'Data': 'New Message on BrightBonds'},
+                'Body': {
+                    'Text': {
+                        'Data': f'Hi {receiver_name},\n\nYou have a new message from {sender_name} on BrightBonds:\n\n"{message_text[:100]}..."\n\nLog in to view and reply: https://brightbonds.org/messages\n\nBest regards,\nThe BrightBonds Team'
+                    }
+                }
+            }
+        )
+        print(f"Email notification sent successfully to {receiver_email}")
+        
+    except Exception as e:
+        print(f"Error sending email notification: {e}")
+        # Don't re-raise the exception to avoid breaking message sending

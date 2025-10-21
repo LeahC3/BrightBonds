@@ -37,6 +37,17 @@ BrightBonds facilitates intergenerational connections by matching teenagers with
 - Message storage and retrieval
 - Real-time messaging interface
 
+## Senior Access Code Management
+
+Senior users require a 6-letter access code during signup. Codes are stored securely in AWS Parameter Store.
+
+**Documentation**: See [SENIOR_ACCESS_CODES.md](SENIOR_ACCESS_CODES.md) for complete management guide.
+
+**Quick Update**:
+```bash
+aws ssm put-parameter --name "/brightbonds/senior-access-codes" --value "CODE1,CODE2,CODE3" --type "SecureString" --overwrite
+```
+
 ## Development
 
 This project is deployed using AWS Amplify but not yet released to end users.
