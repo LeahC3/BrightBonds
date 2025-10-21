@@ -125,6 +125,15 @@ function startAutoRefresh() {
   // Refresh conversations every 5 seconds
   refreshInterval = setInterval(async () => {
     const oldConversationId = currentConversation?.otherUserId;
+    const oldMessages = currentConversation?.messages || [];
+    const oldHasMore = currentConversation?.hasMore;
+    const messagesContent = document.getElementById('messagesContent');
+    const scrollPosition = messagesContent?.scrollTop;
+    
+    // Mark as refreshing to prevent scroll jumping
+    if (messagesContent) {
+      messagesContent.setAttribute('data-refreshing', 'true');
+    }
     
     // Call appropriate function based on admin status
     if (isAdmin) {
@@ -137,8 +146,23 @@ function startAutoRefresh() {
     if (oldConversationId) {
       const conversationIndex = conversations.findIndex(c => c.otherUserId === oldConversationId);
       if (conversationIndex !== -1) {
+        // Preserve loaded messages if user had loaded more
+        if (oldMessages.length > conversations[conversationIndex].messages.length) {
+          conversations[conversationIndex].messages = oldMessages;
+          conversations[conversationIndex].hasMore = oldHasMore;
+        }
         selectConversation(conversationIndex);
+        
+        // Restore scroll position immediately
+        if (scrollPosition !== undefined && messagesContent) {
+          messagesContent.scrollTop = scrollPosition;
+        }
       }
+    }
+    
+    // Remove refreshing flag
+    if (messagesContent) {
+      messagesContent.removeAttribute('data-refreshing');
     }
   }, 5000);
 }
@@ -189,7 +213,7 @@ function displayConversations() {
   });
 }
 
-function selectConversation(index) {
+async function selectConversation(index) {
   // Remove active class from all conversations
   document.querySelectorAll('.conversation-item').forEach(item => {
     item.classList.remove('active');
@@ -201,6 +225,11 @@ function selectConversation(index) {
   currentConversation = conversations[index];
   displayMessages();
   updateChatHeader();
+  
+  // Mark messages as read for non-admin users
+  if (!isAdmin && currentConversation) {
+    await markMessagesAsRead(currentConversation.otherUserId);
+  }
 }
 
 function displayMessages() {
@@ -210,6 +239,24 @@ function displayMessages() {
   if (!currentConversation || currentConversation.messages.length === 0) {
     messagesContent.innerHTML = '<p>No messages yet. Start the conversation!</p>';
     return;
+  }
+  
+  // Add Load More button if there are more messages
+  if (currentConversation.hasMore) {
+    const loadMoreDiv = document.createElement('div');
+    loadMoreDiv.style.cssText = 'text-align: center; padding: 1rem; border-bottom: 1px solid #e0e7ff;';
+    loadMoreDiv.innerHTML = `
+      <button onclick="loadMoreMessages()" style="
+        background-color: #f0f4ff;
+        color: #012572;
+        border: 1px solid #012572;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+      ">Load More Messages (${currentConversation.totalMessages - currentConversation.messages.length} older)</button>
+    `;
+    messagesContent.appendChild(loadMoreDiv);
   }
   
   currentConversation.messages.forEach(message => {
@@ -250,8 +297,15 @@ function displayMessages() {
     messagesContent.appendChild(messageDiv);
   });
   
-  // Scroll to bottom
-  messagesContent.scrollTop = messagesContent.scrollHeight;
+  // Only scroll to bottom if user was already at bottom or it's a new conversation
+  // Skip auto-scroll during refresh to prevent jumping
+  if (!messagesContent.hasAttribute('data-refreshing')) {
+    const wasAtBottom = messagesContent.scrollHeight - messagesContent.scrollTop <= messagesContent.clientHeight + 50;
+    if (wasAtBottom || !messagesContent.hasAttribute('data-initialized')) {
+      messagesContent.scrollTop = messagesContent.scrollHeight;
+      messagesContent.setAttribute('data-initialized', 'true');
+    }
+  }
 }
 
 function updateChatHeader() {
@@ -424,5 +478,74 @@ async function undoReport(messageId) {
   } catch (error) {
     console.error('Error removing report:', error);
     alert('Failed to remove report.');
+  }
+}
+
+async function loadMoreMessages() {
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    const currentOffset = currentConversation.messages.length;
+    const endpoint = isAdmin ? 
+      `https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages/all?offset=${currentOffset}&limit=50` :
+      `https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages?offset=${currentOffset}&limit=50`;
+    
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const newConversations = await response.json();
+      const currentConvId = currentConversation.otherUserId;
+      const newConversation = newConversations.find(c => c.otherUserId === currentConvId);
+      
+      if (newConversation && newConversation.messages.length > 0) {
+        // Prepend older messages to current messages
+        currentConversation.messages = [...newConversation.messages, ...currentConversation.messages];
+        currentConversation.hasMore = newConversation.hasMore;
+        currentConversation.totalMessages = newConversation.totalMessages;
+        
+        // Save scroll position
+        const messagesContent = document.getElementById('messagesContent');
+        const oldScrollHeight = messagesContent.scrollHeight;
+        
+        displayMessages();
+        
+        // Restore scroll position (maintain position relative to old content)
+        const newScrollHeight = messagesContent.scrollHeight;
+        messagesContent.scrollTop = newScrollHeight - oldScrollHeight;
+        
+        // Update conversations array
+        const convIndex = conversations.findIndex(c => c.otherUserId === currentConvId);
+        if (convIndex !== -1) {
+          conversations[convIndex] = currentConversation;
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error loading more messages:', error);
+    alert('Failed to load more messages.');
+  }
+}
+
+async function markMessagesAsRead(otherUserId) {
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    await fetch(`https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/messages/markread`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        otherUserId: otherUserId
+      })
+    });
+  } catch (error) {
+    console.log('Failed to mark messages as read:', error);
   }
 }

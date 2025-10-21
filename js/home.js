@@ -54,6 +54,9 @@ window.onload = function () {
       
       // Check if user has completed their form
       await checkFormCompletion(user.attributes.sub, formUrl);
+      
+      // Check for unread messages
+      await checkUnreadMessages();
     })
     .catch(() => {
       window.location.replace("login.html");
@@ -148,4 +151,40 @@ function showFormNotification(formUrl) {
 function hideNotification() {
   const notifications = document.getElementById('notifications');
   if (notifications) notifications.style.display = 'none';
+}
+
+async function checkUnreadMessages() {
+  try {
+    const response = await fetch('https://api.brightbonds.org/messages/unread', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.unreadCount > 0) {
+        showUnreadNotification(data.unreadCount);
+      }
+    }
+  } catch (error) {
+    console.log('Failed to check unread messages:', error);
+  }
+}
+
+function showUnreadNotification(count) {
+  const unreadNotifications = document.getElementById('unreadNotifications');
+  const unreadText = document.getElementById('unreadText');
+  
+  if (unreadNotifications) {
+    unreadNotifications.style.display = 'block';
+  }
+  
+  if (unreadText) {
+    unreadText.textContent = count === 1 ? 
+      'You have 1 unread message from your matches.' : 
+      `You have ${count} unread messages from your matches.`;
+  }
 }

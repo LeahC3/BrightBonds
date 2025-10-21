@@ -41,6 +41,8 @@ def handler(event, context):
         raw_path = event.get('rawPath', '') or event.get('path', '')
         if raw_path == '/messages/all' or '/messages/all' in raw_path:
             return get_all_messages(event, user_id)
+        elif '/messages/unread' in raw_path:
+            return check_unread_messages(event, user_id)
         else:
             return get_messages(event, user_id)
     elif http_method == 'POST':
@@ -83,6 +85,10 @@ def extract_user_id(event):
 def get_messages(event, user_id):
     """Get message history for user's matches"""
     try:
+        # Check pagination parameters
+        query_params = event.get('queryStringParameters') or {}
+        offset = int(query_params.get('offset', 0))
+        limit = int(query_params.get('limit', 50))
         # Get user's matches first
         matches_response = matches_table.scan(
             FilterExpression='(studentUserId = :uid OR seniorUserId = :uid)',
@@ -105,7 +111,15 @@ def get_messages(event, user_id):
                 }
             )
             
-            messages = sorted(messages_response['Items'], key=lambda x: x['timestamp'])
+            all_messages = sorted(messages_response['Items'], key=lambda x: x['timestamp'])
+            total_messages = len(all_messages)
+            
+            # Calculate slice for pagination
+            start_index = max(0, total_messages - limit - offset)
+            end_index = total_messages - offset
+            
+            messages = all_messages[start_index:end_index] if start_index < end_index else []
+            has_more = start_index > 0
             
             # Get other user's name from Cognito
             other_user_name = get_user_name(other_user_id)
@@ -114,7 +128,9 @@ def get_messages(event, user_id):
                 'matchId': match['matchId'],
                 'otherUserId': other_user_id,
                 'otherUserName': other_user_name,
-                'messages': messages
+                'messages': messages,
+                'hasMore': has_more,
+                'totalMessages': len(all_messages)
             })
         
         return {
@@ -168,7 +184,8 @@ def send_message(event, user_id):
             'senderId': user_id,
             'receiverId': receiver_id,
             'message': message_text,
-            'timestamp': datetime.datetime.utcnow().isoformat()
+            'timestamp': datetime.datetime.utcnow().isoformat(),
+            'read': False
         }
         
         messages_table.put_item(Item=message_item)
@@ -190,6 +207,9 @@ def send_message(event, user_id):
 def get_all_messages(event, admin_user_id):
     """Get all conversations for admin monitoring"""
     try:
+        # Check if we should load all messages
+        query_params = event.get('queryStringParameters') or {}
+        load_all = query_params.get('loadAll') == 'true'
         # Get all matches
         matches_response = matches_table.scan()
         matches = matches_response['Items']
@@ -216,7 +236,14 @@ def get_all_messages(event, admin_user_id):
                 }
             )
             
-            messages = sorted(messages_response['Items'], key=lambda x: x['timestamp'])
+            all_messages = sorted(messages_response['Items'], key=lambda x: x['timestamp'])
+            # Load only last 50 messages initially unless loadAll is requested
+            if load_all:
+                messages = all_messages
+                has_more = False
+            else:
+                messages = all_messages[-50:] if len(all_messages) > 50 else all_messages
+                has_more = len(all_messages) > 50
             
             # Get both users' names
             student_name = get_full_user_name(student_id)
@@ -230,7 +257,9 @@ def get_all_messages(event, admin_user_id):
                 'studentId': student_id,
                 'seniorId': senior_id,
                 'studentName': student_name,
-                'seniorName': senior_name
+                'seniorName': senior_name,
+                'hasMore': has_more,
+                'totalMessages': len(all_messages)
             })
         
         return {
