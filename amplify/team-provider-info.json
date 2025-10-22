@@ -31,7 +31,7 @@
         "matchingAlgorithm": {},
         "matchingTrigger": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/matchingTrigger-4a4c55424c4539516347-build.zip"
+          "s3Key": "amplify-builds/matchingTrigger-3047496a6a3471364332-build.zip"
         },
         "getMatches": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
@@ -39,7 +39,7 @@
         },
         "messageHandler": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/messageHandler-45533770762b68493665-build.zip"
+          "s3Key": "amplify-builds/messageHandler-364a5a342f7043783354-build.zip"
         },
         "validateSeniorCode": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",

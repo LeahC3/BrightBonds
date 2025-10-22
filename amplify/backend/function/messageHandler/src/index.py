@@ -40,10 +40,6 @@ def is_admin_user(user_id):
         
     except Exception as e:
         print(f"Error checking admin status: {e}")
-        print(f"User email: {user_email if 'user_email' in locals() else 'Not found'}")
-        # Temporary fallback - remove after testing
-        if 'user_email' in locals() and user_email:
-            print(f"Checking fallback admin for: {user_email}")
         return False
 
 def handler(event, context):

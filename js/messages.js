@@ -91,7 +91,10 @@ async function loadAllConversations() {
     startAutoRefresh();
     
   } catch (error) {
-    console.error('Error loading all conversations:', error);
+    // Suppress 403 errors (expected for non-admin users)
+    if (!error.message.includes('403')) {
+      console.error('Error loading all conversations:', error);
+    }
     document.getElementById('conversationList').innerHTML = '<p>No conversations found.</p>';
   }
 }

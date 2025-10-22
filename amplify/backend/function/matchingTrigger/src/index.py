@@ -70,7 +70,6 @@ def get_authenticated_user_id(event):
             except:
                 pass
         
-        print(f"Auth header/token found: {auth_header is not None}")
         if not auth_header:
             return None
         
@@ -87,8 +86,6 @@ def get_authenticated_user_id(event):
         return token_claims.get('sub')
     except Exception as e:
         print(f"Error extracting user ID: {e}")
-        print(f"Headers keys: {list(event.get('headers', {}).keys())}")
-        print(f"Looking for auth header in any case variation")
         return None
 
 def handler(event, context):
@@ -120,10 +117,8 @@ def handler(event, context):
     
     # Verify admin authentication
     user_id = get_authenticated_user_id(event)
-    print(f"Extracted user_id: {user_id}")
     
     if not user_id:
-        print("No user_id found - authentication failed")
         return {
             'statusCode': 403,
             'headers': {
@@ -134,11 +129,7 @@ def handler(event, context):
             'body': json.dumps({'error': 'Authentication required'})
         }
     
-    admin_check = is_admin_user(user_id)
-    print(f"Admin check result: {admin_check}")
-    
-    if not admin_check:
-        print(f"User {user_id} is not an admin")
+    if not is_admin_user(user_id):
         return {
             'statusCode': 403,
             'headers': {
