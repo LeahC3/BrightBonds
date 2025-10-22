@@ -20,30 +20,30 @@
       "function": {
         "submitUserForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitUserForm-574b64546f4461555642-build.zip"
+          "s3Key": "amplify-builds/submitUserForm-684d636e73436b38775a-build.zip"
         },
         "submitConsentForm": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/submitConsentForm-317878357276544d425a-build.zip"
+          "s3Key": "amplify-builds/submitConsentForm-4c644b4a373849514775-build.zip"
         },
         "consentFormHandler": {},
         "interestFormHandler": {},
         "matchingAlgorithm": {},
         "matchingTrigger": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/matchingTrigger-2f2b4e7578754d4e6937-build.zip"
+          "s3Key": "amplify-builds/matchingTrigger-4a4c55424c4539516347-build.zip"
         },
         "getMatches": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/getMatches-54786f4373597a4e794e-build.zip"
+          "s3Key": "amplify-builds/getMatches-566f755935514a615242-build.zip"
         },
         "messageHandler": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/messageHandler-394964706c39316f656c-build.zip"
+          "s3Key": "amplify-builds/messageHandler-45533770762b68493665-build.zip"
         },
         "validateSeniorCode": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/validateSeniorCode-47784e46545044556e35-build.zip"
+          "s3Key": "amplify-builds/validateSeniorCode-382f6d565a356a6e3078-build.zip"
         },
         "brightbondscdd97a1fPreSignup": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
@@ -51,7 +51,7 @@
         },
         "userSettings": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/userSettings-675379592f69734b3856-build.zip"
+          "s3Key": "amplify-builds/userSettings-52714964504a77456a57-build.zip"
         }
       },
       "api": {

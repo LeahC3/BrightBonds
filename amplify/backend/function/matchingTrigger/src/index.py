@@ -5,11 +5,91 @@ import json
 import boto3
 import datetime
 from decimal import Decimal
+import base64
 
 # Initialize DynamoDB connection
 dynamodb = boto3.resource('dynamodb')
 interests_table = dynamodb.Table('dev-user-interests')  # Table containing student/senior profiles
 matches_table = dynamodb.Table('dev-matches')          # Table storing match results
+cognito_client = boto3.client('cognito-idp')
+ssm = boto3.client('ssm')
+
+def is_admin_user(user_id):
+    """Check if user is an admin by comparing email to admin list in Parameter Store"""
+    try:
+        # Get user's email from Cognito
+        user_response = cognito_client.admin_get_user(
+            UserPoolId='us-east-2_AxTL9MRLy',
+            Username=user_id
+        )
+        
+        user_email = None
+        for attr in user_response.get('UserAttributes', []):
+            if attr['Name'] == 'email':
+                user_email = attr['Value'].lower()
+                break
+        
+        if not user_email:
+            return False
+        
+        # Get admin emails from Parameter Store
+        response = ssm.get_parameter(
+            Name='/brightbonds/admin-emails',
+            WithDecryption=True
+        )
+        admin_emails = {email.strip().lower() for email in response['Parameter']['Value'].split(',')}
+        
+        return user_email in admin_emails
+        
+    except Exception as e:
+        print(f"Error checking admin status: {e}")
+        return False
+
+def get_authenticated_user_id(event):
+    """Extract user ID from Cognito authentication context or JWT token"""
+    try:
+        # Try API Gateway authorizer context first
+        request_context = event.get('requestContext', {})
+        authorizer = request_context.get('authorizer', {})
+        claims = authorizer.get('claims', {})
+        user_id = claims.get('sub') or claims.get('cognito:username')
+        if user_id:
+            return user_id
+        
+        # Try headers first
+        headers = event.get('headers', {})
+        auth_header = headers.get('Authorization') or headers.get('authorization')
+        
+        # If no header, try request body for token
+        if not auth_header:
+            try:
+                body = json.loads(event.get('body', '{}'))
+                auth_header = body.get('token')
+                if auth_header and not auth_header.startswith('Bearer '):
+                    auth_header = f'Bearer {auth_header}'
+            except:
+                pass
+        
+        print(f"Auth header/token found: {auth_header is not None}")
+        if not auth_header:
+            return None
+        
+        token = auth_header.replace('Bearer ', '')
+        token_parts = token.split('.')
+        if len(token_parts) != 3:
+            return None
+        
+        payload = token_parts[1]
+        payload += '=' * (4 - len(payload) % 4)
+        decoded_payload = base64.b64decode(payload)
+        token_claims = json.loads(decoded_payload)
+        
+        return token_claims.get('sub')
+    except Exception as e:
+        print(f"Error extracting user ID: {e}")
+        print(f"Headers keys: {list(event.get('headers', {}).keys())}")
+        print(f"Looking for auth header in any case variation")
+        return None
 
 def handler(event, context):
     """
@@ -25,6 +105,49 @@ def handler(event, context):
         HTTP response with match results and count
     """
     print(f"Event: {json.dumps(event)}")
+    
+    # Handle CORS preflight requests
+    if event.get('httpMethod') == 'OPTIONS':
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            },
+            'body': ''
+        }
+    
+    # Verify admin authentication
+    user_id = get_authenticated_user_id(event)
+    print(f"Extracted user_id: {user_id}")
+    
+    if not user_id:
+        print("No user_id found - authentication failed")
+        return {
+            'statusCode': 403,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            },
+            'body': json.dumps({'error': 'Authentication required'})
+        }
+    
+    admin_check = is_admin_user(user_id)
+    print(f"Admin check result: {admin_check}")
+    
+    if not admin_check:
+        print(f"User {user_id} is not an admin")
+        return {
+            'statusCode': 403,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            },
+            'body': json.dumps({'error': 'Admin access required'})
+        }
     
     try:
         # Get all users who don't currently have active matches
@@ -47,7 +170,7 @@ def handler(event, context):
         return {
             'statusCode': 200,
             'headers': {
-                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
@@ -62,7 +185,7 @@ def handler(event, context):
         return {
             'statusCode': 500,
             'headers': {
-                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },

@@ -19,8 +19,8 @@ def handler(event, context):
             'body': ''
         }
     
-    # Extract user ID from JWT token
-    user_id = extract_user_id(event)
+    # Extract user ID from Cognito authentication
+    user_id = get_authenticated_user_id(event)
     if not user_id:
         return {
             'statusCode': 401,
@@ -50,9 +50,18 @@ def handler(event, context):
             'body': json.dumps({'error': str(e)})
         }
 
-def extract_user_id(event):
-    """Extract user ID from JWT token"""
+def get_authenticated_user_id(event):
+    """Extract user ID from Cognito authentication context or JWT token"""
     try:
+        # Try API Gateway authorizer context first
+        request_context = event.get('requestContext', {})
+        authorizer = request_context.get('authorizer', {})
+        claims = authorizer.get('claims', {})
+        user_id = claims.get('sub') or claims.get('cognito:username')
+        if user_id:
+            return user_id
+        
+        # Fallback to manual JWT parsing
         auth_header = event.get('headers', {}).get('Authorization') or event.get('headers', {}).get('authorization')
         if not auth_header:
             return None
@@ -65,11 +74,11 @@ def extract_user_id(event):
         payload = token_parts[1]
         payload += '=' * (4 - len(payload) % 4)
         decoded_payload = base64.b64decode(payload)
-        claims = json.loads(decoded_payload)
+        token_claims = json.loads(decoded_payload)
         
-        return claims.get('sub')
+        return token_claims.get('sub')
     except Exception as e:
-        print(f"Token validation error: {e}")
+        print(f"Error extracting user ID: {e}")
         return None
 
 def get_user_settings(user_id):

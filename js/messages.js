@@ -23,16 +23,17 @@ window.onload = function () {
     .then(async user => {
       currentUserId = user.attributes.sub;
       
-      // Check if user is admin
-      isAdmin = user?.attributes?.middle_name === 'ADMIN';
+      // Check if user is admin - will be determined by server response
+      isAdmin = false; // Default to false, will be set by server response
+      // Try to load admin conversations first
+      await loadAllConversations();
+      
+      // Update UI based on admin status
       if (isAdmin) {
-        await loadAllConversations();
         // Hide message input for admins (monitoring only)
         document.querySelector('.message-input-container').style.display = 'none';
         // Add admin indicator
         document.querySelector('.messages-sidebar h2').textContent = 'All Conversations (Admin)';
-      } else {
-        await loadConversations();
       }
     })
     .catch(() => {
@@ -64,9 +65,19 @@ async function loadAllConversations() {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     
+    if (response.status === 403) {
+      // Not an admin, load regular conversations instead
+      isAdmin = false;
+      await loadConversations();
+      return;
+    }
+    
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
+    
+    // If we get here, user is admin
+    isAdmin = true;
     
     conversations = await response.json();
     displayConversations();

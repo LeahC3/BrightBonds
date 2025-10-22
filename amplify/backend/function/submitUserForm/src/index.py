@@ -12,6 +12,17 @@ consent_table = dynamodb.Table('dev-consent-forms')    # Table for parental cons
 matches_table = dynamodb.Table('dev-matches')          # Table for matches
 cognito_client = boto3.client('cognito-idp')
 
+def get_authenticated_user_id(event):
+    """Extract user ID from Cognito authentication context"""
+    try:
+        request_context = event.get('requestContext', {})
+        authorizer = request_context.get('authorizer', {})
+        claims = authorizer.get('claims', {})
+        return claims.get('sub') or claims.get('cognito:username')
+    except Exception as e:
+        print(f"Error extracting user ID: {e}")
+        return None
+
 def handler(event, context):
     """Main Lambda function handler for form submissions and user checks.
     
@@ -80,43 +91,12 @@ def handler(event, context):
         # Default user ID for testing (will be overridden by JWT token)
         user_id = 'test-user'
         
-        # AUTHENTICATION: Extract and validate JWT token from Authorization header
-        # All requests must include a valid JWT token from AWS Cognito
-        auth_header = event.get('headers', {}).get('Authorization') or event.get('headers', {}).get('authorization')
-        if not auth_header:
+        # AUTHENTICATION: Extract user ID from Cognito authentication context
+        user_id = get_authenticated_user_id(event)
+        if not user_id:
             return {
                 'statusCode': 401,
-                'body': json.dumps({'message': 'Authorization header required'})
-            }
-        
-        try:
-            # JWT token format: "Bearer <token>"
-            # Remove 'Bearer ' prefix to get just the token
-            token = auth_header.replace('Bearer ', '')
-            
-            # JWT tokens have 3 parts separated by dots: header.payload.signature
-            token_parts = token.split('.')
-            if len(token_parts) != 3:
-                raise ValueError('Invalid token format')
-            
-            # Decode the payload (middle part) which contains user information
-            payload = token_parts[1]
-            # Base64 padding must be multiple of 4 characters
-            payload += '=' * (4 - len(payload) % 4)
-            decoded_payload = base64.b64decode(payload)
-            claims = json.loads(decoded_payload)
-            
-            # Extract user ID from the 'sub' (subject) claim
-            user_id = claims.get('sub')
-            
-            if not user_id:
-                raise ValueError('No user ID in token')
-                
-        except Exception as e:
-            print(f"Token validation error: {e}")
-            return {
-                'statusCode': 401,
-                'body': json.dumps({'message': 'Invalid or expired token'})
+                'body': json.dumps({'message': 'Unauthorized'})
             }
 
         # This function handles interest forms (student/senior forms)

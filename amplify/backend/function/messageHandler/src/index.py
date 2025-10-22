@@ -9,6 +9,42 @@ messages_table = dynamodb.Table('messages-dev')
 matches_table = dynamodb.Table('dev-matches')
 cognito_client = boto3.client('cognito-idp')
 ses_client = boto3.client('ses', region_name='us-east-2')
+ssm = boto3.client('ssm')
+
+def is_admin_user(user_id):
+    """Check if user is an admin by comparing email to admin list in Parameter Store"""
+    try:
+        # Get user's email from Cognito
+        user_response = cognito_client.admin_get_user(
+            UserPoolId='us-east-2_AxTL9MRLy',
+            Username=user_id
+        )
+        
+        user_email = None
+        for attr in user_response.get('UserAttributes', []):
+            if attr['Name'] == 'email':
+                user_email = attr['Value'].lower()
+                break
+        
+        if not user_email:
+            return False
+        
+        # Get admin emails from Parameter Store
+        response = ssm.get_parameter(
+            Name='/brightbonds/admin-emails',
+            WithDecryption=True
+        )
+        admin_emails = {email.strip().lower() for email in response['Parameter']['Value'].split(',')}
+        
+        return user_email in admin_emails
+        
+    except Exception as e:
+        print(f"Error checking admin status: {e}")
+        print(f"User email: {user_email if 'user_email' in locals() else 'Not found'}")
+        # Temporary fallback - remove after testing
+        if 'user_email' in locals() and user_email:
+            print(f"Checking fallback admin for: {user_email}")
+        return False
 
 def handler(event, context):
     """Lambda function handler for messaging functionality."""
@@ -28,8 +64,8 @@ def handler(event, context):
     
     http_method = event.get('httpMethod') or event.get('requestContext', {}).get('http', {}).get('method')
     
-    # Extract user ID from JWT token
-    user_id = extract_user_id(event)
+    # Extract user ID from Cognito authentication
+    user_id = get_authenticated_user_id(event)
     if not user_id:
         return {
             'statusCode': 401,
@@ -41,6 +77,12 @@ def handler(event, context):
         # Check if this is admin request for all conversations
         raw_path = event.get('rawPath', '') or event.get('path', '')
         if raw_path == '/messages/all' or '/messages/all' in raw_path:
+            if not is_admin_user(user_id):
+                return {
+                    'statusCode': 403,
+                    'headers': {'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Admin access required'})
+                }
             return get_all_messages(event, user_id)
         elif '/messages/unread' in raw_path:
             return check_unread_messages(event, user_id)
@@ -63,9 +105,18 @@ def handler(event, context):
         'body': json.dumps({'message': 'Not found'})
     }
 
-def extract_user_id(event):
-    """Extract user ID from JWT token"""
+def get_authenticated_user_id(event):
+    """Extract user ID from Cognito authentication context or JWT token"""
     try:
+        # Try API Gateway authorizer context first
+        request_context = event.get('requestContext', {})
+        authorizer = request_context.get('authorizer', {})
+        claims = authorizer.get('claims', {})
+        user_id = claims.get('sub') or claims.get('cognito:username')
+        if user_id:
+            return user_id
+        
+        # Fallback to manual JWT parsing
         auth_header = event.get('headers', {}).get('Authorization') or event.get('headers', {}).get('authorization')
         if not auth_header:
             return None
@@ -78,11 +129,11 @@ def extract_user_id(event):
         payload = token_parts[1]
         payload += '=' * (4 - len(payload) % 4)
         decoded_payload = base64.b64decode(payload)
-        claims = json.loads(decoded_payload)
+        token_claims = json.loads(decoded_payload)
         
-        return claims.get('sub')
+        return token_claims.get('sub')
     except Exception as e:
-        print(f"Token validation error: {e}")
+        print(f"Error extracting user ID: {e}")
         return None
 
 def get_messages(event, user_id):

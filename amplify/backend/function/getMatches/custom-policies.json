@@ -1,6 +1,12 @@
 [
   {
-    "Action": [],
-    "Resource": []
+    "Action": [
+      "cognito-idp:AdminGetUser",
+      "ssm:GetParameter"
+    ],
+    "Resource": [
+      "arn:aws:cognito-idp:us-east-2:*:userpool/us-east-2_AxTL9MRLy",
+      "arn:aws:ssm:us-east-2:*:parameter/brightbonds/admin-emails"
+    ]
   }
 ]

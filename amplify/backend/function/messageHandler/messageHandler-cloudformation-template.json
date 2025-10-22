@@ -211,6 +211,15 @@
                 "*"
               ],
               "Effect": "Allow"
+            },
+            {
+              "Action": [
+                "ssm:GetParameter"
+              ],
+              "Resource": [
+                "arn:aws:ssm:us-east-2:*:parameter/brightbonds/admin-emails"
+              ],
+              "Effect": "Allow"
             }
           ]
         },

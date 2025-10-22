@@ -1,10 +1,74 @@
 import json
 import boto3
+import base64
 
 # Initialize DynamoDB and Cognito clients
 dynamodb = boto3.resource('dynamodb')
 matches_table = dynamodb.Table('dev-matches')
 cognito_client = boto3.client('cognito-idp')
+ssm = boto3.client('ssm')
+
+def is_admin_user(user_id):
+    """Check if user is an admin by comparing email to admin list in Parameter Store"""
+    try:
+        # Get user's email from Cognito
+        user_response = cognito_client.admin_get_user(
+            UserPoolId='us-east-2_AxTL9MRLy',
+            Username=user_id
+        )
+        
+        user_email = None
+        for attr in user_response.get('UserAttributes', []):
+            if attr['Name'] == 'email':
+                user_email = attr['Value'].lower()
+                break
+        
+        if not user_email:
+            return False
+        
+        # Get admin emails from Parameter Store
+        response = ssm.get_parameter(
+            Name='/brightbonds/admin-emails',
+            WithDecryption=True
+        )
+        admin_emails = {email.strip().lower() for email in response['Parameter']['Value'].split(',')}
+        
+        return user_email in admin_emails
+        
+    except Exception as e:
+        print(f"Error checking admin status: {e}")
+        return False
+
+def get_authenticated_user_id(event):
+    """Extract user ID from Cognito authentication context or JWT token"""
+    try:
+        # Try API Gateway authorizer context first
+        request_context = event.get('requestContext', {})
+        authorizer = request_context.get('authorizer', {})
+        claims = authorizer.get('claims', {})
+        user_id = claims.get('sub') or claims.get('cognito:username')
+        if user_id:
+            return user_id
+        
+        # Fallback to manual JWT parsing
+        auth_header = event.get('headers', {}).get('Authorization') or event.get('headers', {}).get('authorization')
+        if not auth_header:
+            return None
+        
+        token = auth_header.replace('Bearer ', '')
+        token_parts = token.split('.')
+        if len(token_parts) != 3:
+            return None
+        
+        payload = token_parts[1]
+        payload += '=' * (4 - len(payload) % 4)
+        decoded_payload = base64.b64decode(payload)
+        token_claims = json.loads(decoded_payload)
+        
+        return token_claims.get('sub')
+    except Exception as e:
+        print(f"Error extracting user ID: {e}")
+        return None
 
 def handler(event, context):
     """Lambda function handler for match-related requests."""
@@ -22,6 +86,15 @@ def handler(event, context):
             'body': ''
         }
     
+    # Verify authentication
+    user_id = get_authenticated_user_id(event)
+    if not user_id:
+        return {
+            'statusCode': 401,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': 'Unauthorized'})
+        }
+    
     http_method = event.get('httpMethod') or event.get('requestContext', {}).get('http', {}).get('method')
     raw_path = event.get('rawPath', '')
     
@@ -29,6 +102,12 @@ def handler(event, context):
     if http_method == 'GET':
         # Check if this is a request for all matches (admin)
         if raw_path == '/matches/all' or event.get('path', '') == '/matches/all':
+            if not is_admin_user(user_id):
+                return {
+                    'statusCode': 403,
+                    'headers': {'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Admin access required'})
+                }
             return handle_all_matches_request(event)
         else:
             return handle_matches_request(event)
@@ -44,16 +123,10 @@ def handler(event, context):
 def handle_matches_request(event):
     """Handle GET requests for user matches"""
     try:
-        # Get user ID from path parameters or path
-        path_params = event.get('pathParameters', {})
-        if path_params and 'proxy' in path_params:
-            user_id = path_params['proxy']
-        else:
-            path = event.get('rawPath', '') or event.get('path', '')
-            if '/matches/' in path:
-                user_id = path.split('/matches/')[-1]
-            else:
-                user_id = path.split('/')[-1]
+        # Get authenticated user ID
+        user_id = get_authenticated_user_id(event)
+        if not user_id:
+            raise Exception('User not authenticated')
         
         # Get matches for this user
         response = matches_table.scan(

@@ -15,8 +15,8 @@ window.onload = function () {
 
   Auth.currentAuthenticatedUser()
     .then(async user => {
-      // Check if user is admin
-      const isAdmin = user?.attributes?.middle_name === 'ADMIN';
+      // Try to load admin matches first to determine admin status
+      const isAdmin = await checkAdminStatus();
       if (isAdmin) {
         // Show admin controls instead of matches
         showAdminControls();
@@ -283,12 +283,34 @@ async function loadAdminMatches() {
   }
 }
 
+async function checkAdminStatus() {
+  try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
+    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matches/all', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    return response.ok; // If 200, user is admin; if 403, user is not admin
+  } catch (error) {
+    return false;
+  }
+}
+
 async function runMatching() {
   try {
+    const session = await Auth.currentSession();
+    const token = session.getIdToken().getJwtToken();
+    
     const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matching', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({})
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ token: token })
     });
     
     if (response.ok) {
