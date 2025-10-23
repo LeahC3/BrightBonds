@@ -81,12 +81,13 @@ document.getElementById("consent_form").addEventListener("submit", async (e) => 
     console.log(result);
     
     // Show success message
+    const nextForm = data.formType === 'seniorConsent' ? 'seniorForm.html' : 'studentForm.html';
     const successDiv = document.createElement('div');
     successDiv.innerHTML = `
       <div style="background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; text-align: center;">
         <h3 style="margin: 0 0 0.5rem 0; color: #155724;">Consent Form Submitted Successfully!</h3>
         <p style="margin: 0; font-size: 1rem;">You can now complete your interest form.</p>
-        <button onclick="window.location.href='studentForm.html'" class="submitButton" style="margin-top: 1rem;">Continue to Interest Form</button>
+        <button onclick="window.location.href='${nextForm}'" class="submitButton" style="margin-top: 1rem;">Continue to Interest Form</button>
       </div>
     `;
     

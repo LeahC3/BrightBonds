@@ -1017,3 +1017,29 @@ textarea:focus {
     margin-right: 0.75rem;
     margin-left: 0rem;
 }
+
+/* Empty and Loading States */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #666;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #666;
+}
+
+.loading-state p {
+    font-size: 1rem;
+    margin: 0;
+    color: #666;
+    font-style: italic;
+}

@@ -73,7 +73,6 @@ async function loadUserSettings() {
 function applySettings(settings) {
   document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
   document.getElementById('matchNotifications').checked = settings.matchNotifications !== false;
-  document.getElementById('profileVisibility').checked = settings.profileVisibility !== false;
   document.getElementById('language').value = settings.language || 'en';
   document.getElementById('theme').value = settings.theme || 'light';
 }
@@ -81,7 +80,6 @@ function applySettings(settings) {
 function applyDefaultSettings() {
   document.getElementById('emailNotifications').checked = true;
   document.getElementById('matchNotifications').checked = true;
-  document.getElementById('profileVisibility').checked = true;
   document.getElementById('language').value = 'en';
   document.getElementById('theme').value = 'light';
 }
@@ -91,7 +89,6 @@ async function saveSettings() {
     const settings = {
       emailNotifications: document.getElementById('emailNotifications').checked,
       matchNotifications: document.getElementById('matchNotifications').checked,
-      profileVisibility: document.getElementById('profileVisibility').checked,
       language: document.getElementById('language').value,
       theme: document.getElementById('theme').value
     };

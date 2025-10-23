@@ -51,32 +51,32 @@ def handler(event, context):
         }
 
 def get_authenticated_user_id(event):
-    """Extract user ID from Cognito authentication context or JWT token"""
+    """Extract user ID from JWT token in Authorization header"""
     try:
-        # Try API Gateway authorizer context first
-        request_context = event.get('requestContext', {})
-        authorizer = request_context.get('authorizer', {})
-        claims = authorizer.get('claims', {})
-        user_id = claims.get('sub') or claims.get('cognito:username')
-        if user_id:
-            return user_id
+        # Get Authorization header
+        headers = event.get('headers', {})
+        auth_header = headers.get('Authorization') or headers.get('authorization')
         
-        # Fallback to manual JWT parsing
-        auth_header = event.get('headers', {}).get('Authorization') or event.get('headers', {}).get('authorization')
-        if not auth_header:
+        if not auth_header or not auth_header.startswith('Bearer '):
             return None
-        
+            
+        # Extract JWT token
         token = auth_header.replace('Bearer ', '')
-        token_parts = token.split('.')
-        if len(token_parts) != 3:
+        
+        # Decode JWT payload (without verification for simplicity)
+        parts = token.split('.')
+        if len(parts) != 3:
             return None
-        
-        payload = token_parts[1]
+            
+        payload = parts[1]
+        # Add padding if needed
         payload += '=' * (4 - len(payload) % 4)
-        decoded_payload = base64.b64decode(payload)
-        token_claims = json.loads(decoded_payload)
         
-        return token_claims.get('sub')
+        decoded = base64.b64decode(payload)
+        claims = json.loads(decoded)
+        
+        return claims.get('sub') or claims.get('cognito:username')
+        
     except Exception as e:
         print(f"Error extracting user ID: {e}")
         return None

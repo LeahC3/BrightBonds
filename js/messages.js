@@ -197,7 +197,7 @@ function displayConversations() {
   const conversationList = document.getElementById('conversationList');
   
   if (conversations.length === 0) {
-    conversationList.innerHTML = '<p>No conversations yet. Get matched to start messaging!</p>';
+    conversationList.innerHTML = '<div class="empty-state"><p>No conversations yet. Get matched to start messaging!</p></div>';
     return;
   }
   

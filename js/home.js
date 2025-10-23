@@ -41,8 +41,8 @@ window.onload = function () {
           // Adult student goes to student form
           formUrl = "studentForm.html";
         } else {
-          // Senior goes to senior form
-          formUrl = "seniorForm.html";
+          // Senior needs consent form first
+          formUrl = "seniorConsentForm.html";
         }
         
         // Set matchLink if it exists
@@ -104,8 +104,9 @@ async function checkFormCompletion(userId, formUrl) {
       hasInterest = data.hasInterest;
     }
     
-    // Check if user needs consent form (under 18)
-    if (formUrl.includes('consent')) {
+    // Check if user needs consent form
+    if (formUrl.includes('consentForm.html')) {
+      // Minor student consent
       if (!hasConsent) {
         showFormNotification(formUrl);
       } else if (!hasInterest) {
@@ -113,8 +114,17 @@ async function checkFormCompletion(userId, formUrl) {
       } else {
         hideNotification();
       }
+    } else if (formUrl.includes('seniorConsentForm.html')) {
+      // Senior consent
+      if (!hasConsent) {
+        showFormNotification(formUrl);
+      } else if (!hasInterest) {
+        showFormNotification('seniorForm.html');
+      } else {
+        hideNotification();
+      }
     } else {
-      // Adult or senior - just check interest form
+      // Adult student - just check interest form
       if (!hasInterest) {
         showFormNotification(formUrl);
       } else {
@@ -137,10 +147,14 @@ function showFormNotification(formUrl) {
   }
   
   // Update notification text based on form type
-  if (notificationText && formUrl.includes('consent')) {
+  if (notificationText && formUrl.includes('consentForm.html')) {
     notificationText.textContent = 'As a minor, you need parental consent before completing your interest form and finding a match.';
-  } else if (notificationText && formUrl.includes('student')) {
+  } else if (notificationText && formUrl.includes('seniorConsentForm.html')) {
+    notificationText.textContent = 'Please complete your consent form before filling out your interest form and finding a match.';
+  } else if (notificationText && formUrl.includes('studentForm.html')) {
     notificationText.textContent = 'Please complete your interest form to get matched with a senior partner.';
+  } else if (notificationText && formUrl.includes('seniorForm.html')) {
+    notificationText.textContent = 'Please complete your interest form to get matched with a student volunteer.';
   }
   
   if (completeBtn) {

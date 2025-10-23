@@ -93,6 +93,9 @@ async function checkAndRedirectToForms(user) {
     } else if (isStudent && !hasInterest) {
       window.location.replace("studentForm.html");
       return "studentForm.html";
+    } else if (!isStudent && !hasConsent) {
+      window.location.replace("seniorConsentForm.html");
+      return "seniorConsentForm.html";
     } else if (!isStudent && !hasInterest) {
       window.location.replace("seniorForm.html");
       return "seniorForm.html";
@@ -167,7 +170,7 @@ function displayMatches(matches) {
       <h5>Your Match: ${match.matchedUserFirstName || 'Unknown'}</h5>
       <br>
       <p><strong>Compatibility Score:</strong> ${match.compatibilityScore}</p>
-      <p><strong>Location:</strong> ${match.seniorFacility || match.studentLocation}</p>
+      <p><strong>Location:</strong> Shell Point</p>
       <p><strong>Shared Interests:</strong> ${sharedInterests}</p>
       <p><strong>Matched On:</strong> ${new Date(match.createdAt).toLocaleDateString()}</p>
     `;
@@ -267,7 +270,7 @@ async function loadAdminMatches() {
         <tr style="border-bottom: 1px solid #e0e7ff;">
           <td style="padding: 0.75rem;">${match.studentName || 'Unknown'}</td>
           <td style="padding: 0.75rem;">${match.seniorName || 'Unknown'}</td>
-          <td style="padding: 0.75rem;">${match.location || match.seniorFacility || 'Not specified'}</td>
+          <td style="padding: 0.75rem;">Shell Point</td>
           <td style="padding: 0.75rem;">${match.compatibilityScore || 'N/A'}</td>
           <td style="padding: 0.75rem;">${new Date(match.createdAt).toLocaleDateString()}</td>
         </tr>

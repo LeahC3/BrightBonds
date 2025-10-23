@@ -13,12 +13,32 @@ matches_table = dynamodb.Table('dev-matches')          # Table for matches
 cognito_client = boto3.client('cognito-idp')
 
 def get_authenticated_user_id(event):
-    """Extract user ID from Cognito authentication context"""
+    """Extract user ID from JWT token in Authorization header"""
     try:
-        request_context = event.get('requestContext', {})
-        authorizer = request_context.get('authorizer', {})
-        claims = authorizer.get('claims', {})
+        # Get Authorization header
+        headers = event.get('headers', {})
+        auth_header = headers.get('Authorization') or headers.get('authorization')
+        
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return None
+            
+        # Extract JWT token
+        token = auth_header.replace('Bearer ', '')
+        
+        # Decode JWT payload (without verification for simplicity)
+        parts = token.split('.')
+        if len(parts) != 3:
+            return None
+            
+        payload = parts[1]
+        # Add padding if needed
+        payload += '=' * (4 - len(payload) % 4)
+        
+        decoded = base64.b64decode(payload)
+        claims = json.loads(decoded)
+        
         return claims.get('sub') or claims.get('cognito:username')
+        
     except Exception as e:
         print(f"Error extracting user ID: {e}")
         return None
@@ -77,6 +97,8 @@ def handler(event, context):
         if body.get('action') == 'check' and body.get('userId'):
             print(f"Handling check request for user: {body.get('userId')}")
             return handle_check_via_post(body.get('userId'))
+        
+
         
 
         
@@ -232,6 +254,8 @@ def handle_check_via_post(user_id):
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
         }
+
+
 
 
 

@@ -109,7 +109,7 @@ def handler(event, context):
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'https://www.brightbonds.org',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
             'body': ''
@@ -123,7 +123,7 @@ def handler(event, context):
             'statusCode': 403,
             'headers': {
                 'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'https://www.brightbonds.org',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
             'body': json.dumps({'error': 'Authentication required'})
@@ -162,7 +162,7 @@ def handler(event, context):
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'https://www.brightbonds.org',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
             'body': json.dumps({
@@ -177,7 +177,7 @@ def handler(event, context):
             'statusCode': 500,
             'headers': {
                 'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'https://www.brightbonds.org',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
             'body': json.dumps({'error': str(e)})
@@ -287,63 +287,29 @@ def maximum_weight_matching(students, seniors):
 
 def is_location_compatible(student, senior):
     """
-    Checks if student and senior location preferences are compatible.
+    All users are now at Shell Point, so location is always compatible.
     
     Args:
-        student (dict): Student profile with locationPreference
-        senior (dict): Senior profile with facility
+        student (dict): Student profile
+        senior (dict): Senior profile
         
     Returns:
-        bool: True if locations are compatible, False otherwise
+        bool: Always True since only Shell Point is supported
     """
-    student_pref = student.get('locationPreference', '')
-    senior_facility = senior.get('facility', '')
-    
-    # Compatible if: exact match OR student has no preference
-    if student_pref == senior_facility or student_pref == 'No preference':
-        return True
-    return False
+    return True
 
 def is_availability_compatible(student, senior):
     """
-    Checks availability compatibility between student and senior.
-    Only applies to St. John XXIII Villas residents (Shell Point residents are always compatible).
+    All meetings are now at Shell Point on Mondays at 4:00 PM, so availability is always compatible.
     
     Args:
-        student (dict): Student profile with availability and times
-        senior (dict): Senior profile with facility, availability, and times
+        student (dict): Student profile
+        senior (dict): Senior profile
         
     Returns:
-        bool: True if availability is compatible, False otherwise
+        bool: Always True since scheduling is standardized
     """
-    senior_facility = senior.get('facility', '')
-    
-    # Shell Point residents don't have availability restrictions
-    if senior_facility != 'St. John XXIII Villas':
-        return True
-        
-    # For St. John residents, check for overlapping availability
-    student_days = student.get('availability', [])
-    senior_days = senior.get('availability', [])
-    student_times = student.get('times', [])
-    senior_times = senior.get('times', [])
-    
-    # Convert single values to lists for consistent processing
-    if isinstance(student_days, str):
-        student_days = [student_days]
-    if isinstance(senior_days, str):
-        senior_days = [senior_days]
-    if isinstance(student_times, str):
-        student_times = [student_times]
-    if isinstance(senior_times, str):
-        senior_times = [senior_times]
-    
-    # Check for overlapping days and times
-    days_overlap = bool(set(student_days) & set(senior_days))
-    times_overlap = bool(set(student_times) & set(senior_times))
-    
-    # Both days and times must overlap
-    return days_overlap and times_overlap
+    return True
 
 def calculate_compatibility_score(student, senior):
     """
@@ -425,8 +391,8 @@ def create_match(student, senior, score, shared_interests):
         'matchId': match_id,
         'studentUserId': student['userId'],
         'seniorUserId': senior['userId'],
-        'studentLocation': student.get('locationPreference', ''),
-        'seniorFacility': senior.get('facility', ''),
+        'studentLocation': 'Shell Point',
+        'seniorFacility': 'Shell Point',
         'compatibilityScore': Decimal(str(score)),  # DynamoDB requires Decimal for numbers
         'sharedInterests': shared_interests,
         'status': 'active',  # Matches are immediately active (no approval needed)

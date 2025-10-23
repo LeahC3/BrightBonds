@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="../styles/homeStyle.css">
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <script src="../js/homeMain.js" defer></script>
+        <script src="../js/formValidation.js" defer></script>
         <script src="../js/form.js" defer></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,14 +65,10 @@
             <form id="match_form">
                 <input type="hidden" name="userType" value="student">
 
-                <!-- Location Preference -->
+                <!-- Partner Information -->
                 <fieldset>
-                    <legend>Location Preference</legend>
-                    <p>Bright Bonds is currently partnered with two communities in SWFL. Please select your preference for where you'd like to volunteer.</p>
-                    <br>
-                    <label><input type="radio" name="locationPreference" value="Shell Point"> Shell Point (Visits take place Mondays at 4:00 PM in public community spaces, not in private living areas)</label><br>
-                    <label><input type="radio" name="locationPreference" value="St. John XXIII Villas"> St. John XXIII Villas (times flexible, based on resident & student availability)</label><br>
-                    <label><input type="radio" name="locationPreference" value="No preference"> No preference (I'm open to either location)</label><br>
+                    <legend>Partner Community</legend>
+                    <p>Bright Bonds is currently partnered with Shell Point in SWFL. Visits take place Fridays at 4:00 PM in public community spaces.</p>
                 </fieldset>
 
                 <!-- Hobbies -->
@@ -178,20 +175,7 @@
                     <label><input type="radio" name="frequency" value="No preference"> No preference</label>
                 </fieldset>
 
-                <!-- Availability-->
-                <fieldset>
-                    <legend>What days are usually best for you to visit? (select all that apply)</legend>
-                    <label><input type="checkbox" name="availability" value="Weekdays"> Weekdays</label><br>
-                    <label><input type="checkbox" name="availability" value="Weekends"> Weekends</label><br>
-                </fieldset>
 
-                <!-- Times -->
-                <fieldset>
-                    <legend>What times of the day are usually best for you to visit? (select all that apply)</legend>
-                    <label><input type="checkbox" name="times" value="Mornings"> Mornings</label><br>
-                    <label><input type="checkbox" name="times" value="Afternoons"> Afternoons</label><br>
-                    <label><input type="checkbox" name="times" value="Evenings"> Evenings</label><br>
-                </fieldset>
 
                 <!-- Talking style -->
                 <fieldset>

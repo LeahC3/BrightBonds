@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Bright Bonds - Settings</title>
+        <title>Bright Bonds - Resident Consent</title>
         <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
         <link rel="icon" href="http://www.brightbonds.org/favicon.ico?v=2" />
         <link rel="manifest" href="../favicon_io/site.webmanifest">
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../styles/homeStyle.css">
-        <link rel="stylesheet" href="../styles/settings.css">
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <script src="../js/homeMain.js" defer></script>
-        <script src="../js/settings.js" defer></script>
+        <script src="../js/formValidation.js" defer></script>
+        <script src="../js/consent.js?v=2" defer></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
@@ -44,7 +44,7 @@
 
             <div class="nav-links">
                 <a class="page" href="home.html">Home</a>
-                <a class="page" href="matches.html">My Matches</a>
+                <a class="page" id="active" href="matches.html">My Matches</a>
                 <a class="page" href="messages.html">Messages</a>
                 <a class="page" href="#">Calendar</a>
                 <a class="page" href="resources.html">Resources</a>
@@ -58,75 +58,41 @@
                 <button id="signOut">Sign Out</button>
             </div>
         </nav>
-
         <main class="main-content">
             <div class="container">
-                <h1>Settings</h1>
+                <h1>Resident Consent Form</h1>
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">Bright Bonds Program Participation</p>
                 
-                <div class="development-notice" style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 1rem; border-radius: 0.5rem; margin-bottom: 2rem; text-align: center;">
-                    <strong>⚠️ Under Development</strong><br>
-                    This settings section is still under development. Many of these settings will not take effect right now.
-                </div>
-                
-                <div class="settings-section">
-                    <h2>Notifications</h2>
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h3>Email Notifications</h3>
-                            <p>Receive email notifications for new messages</p>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" id="emailNotifications">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h3>Match Notifications</h3>
-                            <p>Get notified when you receive a new match</p>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" id="matchNotifications">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
+                <form id="consent_form">
+                    <input type="hidden" name="formType" value="seniorConsent">
 
-                <div class="settings-section">
-                    <h2>Preferences</h2>
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h3>Language</h3>
-                            <p>Choose your preferred language</p>
+                    <!-- Photo & Media Consent -->
+                    <fieldset>
+                        <legend>Photo & Media Consent</legend>
+                        <p>I grant permission for Bright Bonds to use photos or videos that include me for promotional or social media purposes:</p>
+                        <label><input type="radio" name="mediaConsent" value="yes" required> Yes</label>
+                        <label><input type="radio" name="mediaConsent" value="no" required> No</label>
+                    </fieldset>
+
+                    <!-- Agreement & Signature -->
+                    <fieldset>
+                        <legend>Agreement & Digital Signature</legend>
+                        <div class="consent-text">
+                            <p>I confirm that I have read and understand the nature of the Bright Bonds program and grant my consent to participate.</p>
                         </div>
-                        <select id="language" class="setting-select">
-                            <option value="en">English</option>
-                            <option value="es">Español</option>
-                            <option value="fr">Français</option>
-                        </select>
-                    </div>
-                    
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h3>Theme</h3>
-                            <p>Choose your display theme</p>
-                        </div>
-                        <select id="theme" class="setting-select">
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="auto">Auto</option>
-                        </select>
-                    </div>
-                </div>
+                        
+                        <label for="residentSignature">Digital Signature (Type Full Name):</label>
+                        <input type="text" id="residentSignature" name="residentSignature" required placeholder="Type your full legal name">
+                        
+                        <label for="signatureDate">Date:</label>
+                        <input type="date" id="signatureDate" name="signatureDate" required>
+                        
+                        <label><input type="checkbox" name="finalConsent" value="yes" required> I certify that I understand and consent to participate in the Bright Bonds program</label>
+                    </fieldset>
 
-
-
-                <div class="settings-actions">
-                    <button id="saveSettings" class="save-btn">Save Settings</button>
-                    <button id="resetSettings" class="reset-btn">Reset to Default</button>
-                </div>
+                    <input type="submit" class="submitButton" value="Submit Consent Form">
+                </form>
             </div>
         </main>
-    </body>
+</body>
 </html>
