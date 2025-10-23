@@ -197,8 +197,9 @@ function showUnreadNotification(count) {
   }
   
   if (unreadText) {
-    unreadText.textContent = count === 1 ? 
+    const message = count === 1 ? 
       'You have 1 unread message from your matches.' : 
-      `You have ${count} unread messages from your matches.`;
+      `You have ${sanitizeText(count.toString())} unread messages from your matches.`;
+    unreadText.textContent = message;
   }
 }

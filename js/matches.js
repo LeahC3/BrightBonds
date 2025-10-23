@@ -166,13 +166,18 @@ function displayMatches(matches) {
       ? match.sharedInterests.join(', ') 
       : 'No shared interests listed';
     
+    const matchName = sanitizeText(match.matchedUserFirstName || 'Unknown');
+    const compatScore = sanitizeText(match.compatibilityScore || 'N/A');
+    const interests = sanitizeText(sharedInterests);
+    const matchDate = sanitizeText(new Date(match.createdAt).toLocaleDateString());
+    
     matchDiv.innerHTML = `
-      <h5>Your Match: ${match.matchedUserFirstName || 'Unknown'}</h5>
+      <h5>Your Match: ${matchName}</h5>
       <br>
-      <p><strong>Compatibility Score:</strong> ${match.compatibilityScore}</p>
+      <p><strong>Compatibility Score:</strong> ${compatScore}</p>
       <p><strong>Location:</strong> Shell Point</p>
-      <p><strong>Shared Interests:</strong> ${sharedInterests}</p>
-      <p><strong>Matched On:</strong> ${new Date(match.createdAt).toLocaleDateString()}</p>
+      <p><strong>Shared Interests:</strong> ${interests}</p>
+      <p><strong>Matched On:</strong> ${matchDate}</p>
     `;
     
     container.appendChild(matchDiv);
@@ -266,13 +271,18 @@ async function loadAdminMatches() {
     `;
     
     matches.forEach(match => {
+      const studentName = sanitizeText(match.studentName || 'Unknown');
+      const seniorName = sanitizeText(match.seniorName || 'Unknown');
+      const compatScore = sanitizeText(match.compatibilityScore || 'N/A');
+      const matchDate = sanitizeText(new Date(match.createdAt).toLocaleDateString());
+      
       tableHTML += `
         <tr style="border-bottom: 1px solid #e0e7ff;">
-          <td style="padding: 0.75rem;">${match.studentName || 'Unknown'}</td>
-          <td style="padding: 0.75rem;">${match.seniorName || 'Unknown'}</td>
+          <td style="padding: 0.75rem;">${studentName}</td>
+          <td style="padding: 0.75rem;">${seniorName}</td>
           <td style="padding: 0.75rem;">Shell Point</td>
-          <td style="padding: 0.75rem;">${match.compatibilityScore || 'N/A'}</td>
-          <td style="padding: 0.75rem;">${new Date(match.createdAt).toLocaleDateString()}</td>
+          <td style="padding: 0.75rem;">${compatScore}</td>
+          <td style="padding: 0.75rem;">${matchDate}</td>
         </tr>
       `;
     });

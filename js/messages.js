@@ -214,12 +214,16 @@ function displayConversations() {
     
     const initials = conversation.otherUserName.split(' ').map(n => n[0]).join('').toUpperCase();
     
+    const safeUserName = sanitizeText(conversation.otherUserName);
+    const safeMessageText = sanitizeText(lastMessageText);
+    const safeMessageTime = sanitizeText(lastMessageTime);
+    
     conversationDiv.innerHTML = `
       <div class="conversation-avatar">${initials}</div>
       <div class="conversation-info">
-        <div class="conversation-name">${conversation.otherUserName}</div>
-        <div class="conversation-preview">${lastMessageText}</div>
-        <div class="conversation-time">${lastMessageTime}</div>
+        <div class="conversation-name">${safeUserName}</div>
+        <div class="conversation-preview">${safeMessageText}</div>
+        <div class="conversation-time">${safeMessageTime}</div>
       </div>
     `;
     
@@ -285,25 +289,33 @@ function displayMessages() {
       const isReported = message.reported || false;
       
       messageDiv.className = 'message received';
+      const safeSenderName = sanitizeText(senderName);
+      const safeMessage = sanitizeText(message.message);
+      const safeTimestamp = sanitizeText(formatTime(message.timestamp));
+      
       messageDiv.innerHTML = `
         <div class="message-sender" style="font-size: 0.8rem; color: #666; margin-bottom: 0.25rem;">
-          ${senderName}
+          ${safeSenderName}
           ${isReported ? '<span style="color: red; font-weight: bold;"> [REPORTED]</span>' : ''}
         </div>
-        <div class="message-content" style="background-color: ${backgroundColor}; color: ${textColor}; ${isReported ? 'border: 2px solid red;' : ''}">${message.message}</div>
-        <div class="message-time">${formatTime(message.timestamp)}</div>
+        <div class="message-content" style="background-color: ${backgroundColor}; color: ${textColor}; ${isReported ? 'border: 2px solid red;' : ''}">${safeMessage}</div>
+        <div class="message-time">${safeTimestamp}</div>
       `;
     } else {
       // For regular users, use sent/received styling
       const canReport = message.senderId !== currentUserId; // Can only report other user's messages
       const isReported = message.reported || false;
       messageDiv.className = `message ${message.senderId === currentUserId ? 'sent' : 'received'}`;
+      const safeMessage = sanitizeText(message.message);
+      const safeTimestamp = sanitizeText(formatTime(message.timestamp));
+      const safeMessageId = sanitizeText(message.messageId || message.senderId + '_' + message.timestamp);
+      
       messageDiv.innerHTML = `
-        <div class="message-content">${message.message}</div>
+        <div class="message-content">${safeMessage}</div>
         <div class="message-time">
-          ${formatTime(message.timestamp)}
-          ${canReport && isReported ? '<span style="color: red; font-size: 0.7rem; margin-left: 0.5rem;">Reported</span> <span class="undo-btn" onclick="undoReport(\'' + (message.messageId || message.senderId + '_' + message.timestamp) + '\')" title="Undo report">Undo</span>' : ''}
-          ${canReport && !isReported ? `<span class="report-btn" onclick="reportMessage('${message.messageId || message.senderId + '_' + message.timestamp}')" title="Report message">Report</span>` : ''}
+          ${safeTimestamp}
+          ${canReport && isReported ? '<span style="color: red; font-size: 0.7rem; margin-left: 0.5rem;">Reported</span> <span class="undo-btn" onclick="undoReport(\'' + safeMessageId + '\')" title="Undo report">Undo</span>' : ''}
+          ${canReport && !isReported ? `<span class="report-btn" onclick="reportMessage('${safeMessageId}')" title="Report message">Report</span>` : ''}
         </div>
       `;
     }

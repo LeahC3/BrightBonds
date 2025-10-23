@@ -39,8 +39,10 @@ window.onload = function () {
         localStorage.setItem("signupPassword", password);
         window.location.replace("verify.html");
       } else {
-        if (result) result.textContent = "Login failed: " + err.message;
-        result.style.color = "red";
+        if (result) {
+          result.textContent = "Login failed: " + sanitizeText(err.message || 'Unknown error');
+          result.style.color = "red";
+        }
       }
     }
   });

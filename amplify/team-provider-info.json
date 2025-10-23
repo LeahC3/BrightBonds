@@ -35,15 +35,15 @@
         },
         "getMatches": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/getMatches-3854382f49786f6d6132-build.zip"
+          "s3Key": "amplify-builds/getMatches-7a4c7331497939764d62-build.zip"
         },
         "messageHandler": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/messageHandler-4750786a6a6634357548-build.zip"
+          "s3Key": "amplify-builds/messageHandler-7a777471633430734c4a-build.zip"
         },
         "validateSeniorCode": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/validateSeniorCode-382f6d565a356a6e3078-build.zip"
+          "s3Key": "amplify-builds/validateSeniorCode-7938386e6c3675584850-build.zip"
         },
         "brightbondscdd97a1fPreSignup": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
@@ -51,7 +51,7 @@
         },
         "userSettings": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/userSettings-574e5642325441342f61-build.zip"
+          "s3Key": "amplify-builds/userSettings-7653774168524443436f-build.zip"
         }
       },
       "api": {
