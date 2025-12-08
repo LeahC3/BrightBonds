@@ -5,8 +5,11 @@ import base64
 # Initialize DynamoDB and Cognito clients
 dynamodb = boto3.resource('dynamodb')
 matches_table = dynamodb.Table('dev-matches')
+consent_table = dynamodb.Table('dev-consent-forms')
+interests_table = dynamodb.Table('dev-user-interests')
 cognito_client = boto3.client('cognito-idp')
 ssm = boto3.client('ssm')
+USER_POOL_ID = 'us-east-2_AxTL9MRLy'
 
 def is_admin_user(user_id):
     """Check if user is an admin by comparing email to admin list in Parameter Store"""
@@ -70,6 +73,90 @@ def get_authenticated_user_id(event):
         print(f"Error extracting user ID: {e}")
         return None
 
+def check_consent_form(user_id):
+    try:
+        response = consent_table.get_item(Key={'userId': user_id})
+        return 'Item' in response
+    except:
+        return False
+
+def check_interest_form(user_id):
+    try:
+        response = interests_table.get_item(Key={'userId': user_id})
+        return 'Item' in response
+    except:
+        return False
+
+def check_admin_status(email):
+    try:
+        response = ssm.get_parameter(Name='/brightbonds/admin-emails', WithDecryption=True)
+        admin_emails = {e.strip().lower() for e in response['Parameter']['Value'].split(',')}
+        return email.lower() in admin_emails
+    except:
+        return False
+
+def handle_all_users_request():
+    """Admin endpoint to list all Cognito users"""
+    try:
+        users = []
+        pagination_token = None
+        
+        while True:
+            if pagination_token:
+                response = cognito_client.list_users(UserPoolId=USER_POOL_ID, PaginationToken=pagination_token)
+            else:
+                response = cognito_client.list_users(UserPoolId=USER_POOL_ID)
+            
+            for user in response.get('Users', []):
+                user_id = user['Username']
+                email = ''
+                given_name = ''
+                family_name = ''
+                birthdate = ''
+                
+                for attr in user.get('Attributes', []):
+                    if attr['Name'] == 'email':
+                        email = attr['Value']
+                    elif attr['Name'] == 'given_name':
+                        given_name = attr['Value']
+                    elif attr['Name'] == 'family_name':
+                        family_name = attr['Value']
+                    elif attr['Name'] == 'birthdate':
+                        birthdate = attr['Value']
+                
+                user_type = 'Student'
+                if birthdate:
+                    birth_year = int(birthdate.split('-')[0])
+                    if birth_year < 1995:
+                        user_type = 'Resident'
+                
+                users.append({
+                    'userId': user_id,
+                    'name': f"{given_name} {family_name}".strip(),
+                    'email': email,
+                    'type': user_type,
+                    'hasConsent': check_consent_form(user_id),
+                    'hasInterest': check_interest_form(user_id),
+                    'isAdmin': check_admin_status(email)
+                })
+            
+            pagination_token = response.get('PaginationToken')
+            if not pagination_token:
+                break
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps(users, default=str)
+        }
+    except Exception as e:
+        print(f"Error listing users: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
+
 def handler(event, context):
     """Lambda function handler for match-related requests."""
     print(f"Event: {json.dumps(event)}")
@@ -100,8 +187,17 @@ def handler(event, context):
     
     # Handle GET requests for matches
     if http_method == 'GET':
+        # Check if this is a request for all users (admin)
+        if raw_path == '/users/all' or event.get('path', '') == '/users/all':
+            if not is_admin_user(user_id):
+                return {
+                    'statusCode': 403,
+                    'headers': {'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Admin access required'})
+                }
+            return handle_all_users_request()
         # Check if this is a request for all matches (admin)
-        if raw_path == '/matches/all' or event.get('path', '') == '/matches/all':
+        elif raw_path == '/matches/all' or event.get('path', '') == '/matches/all':
             if not is_admin_user(user_id):
                 return {
                     'statusCode': 403,

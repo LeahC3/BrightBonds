@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bright Bonds - My Matches</title>
+    <title>Bright Bonds - Admin Users</title>
     <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
@@ -12,14 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
     <script src="../js/sanitizer.js"></script>
     <script src="../js/homeMain.js" defer></script>
-    <script src="../js/matches.js" defer></script>
+    <script src="../js/users.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
     <!-- Mobile Overlay -->
     <div class="mobile-overlay" id="mobileOverlay"></div>
     
@@ -45,11 +44,11 @@
 
         <div class="nav-links">
             <a class="page" href="home.html">Home</a>
-            <a class="page" id="active" href="matches.html">My Matches</a>
+            <a class="page" href="matches.html">My Matches</a>
             <a class="page" href="messages.html">Messages</a>
             <a class="page" href="#">Calendar</a>
             <a class="page" href="resources.html">Resources</a>
-            <a class="page" href="users.html" style="display: none;">Users</a>
+            <a class="page" id="active" href="users.html" style="display: none;">Users</a>
         </div>
 
         <div class="bottom">
@@ -63,20 +62,21 @@
 
     <div class="main-content">
         <div class="container">
-            <h1>My Matches</h1>
+            <h1>Admin Dashboard</h1>
             
             <div id="loading" style="text-align: center; padding: 2rem;">
-                <p>Loading your matches...</p>
+                <p>Loading admin dashboard...</p>
             </div>
             
-            <div id="no-matches" style="display: none; text-align: center; padding: 2rem;">
-                <h2>No Matches Yet</h2>
-                <p>We haven't found any matches for you yet. Check back soon!</p>
-                <!-- <button onclick="runMatching()" class="submitButton">Run Matching Algorithm</button> -->
+            <div id="admin-content" style="display: none;">
+                <h3 style="color: #012572; margin-bottom: 1rem;">Registered Users</h3>
+                <div id="users-table">Loading users...</div>
             </div>
             
-            <div id="matches-container" style="display: none;">
-                <div id="matches-list"></div>
+            <div id="access-denied" style="display: none; text-align: center; padding: 2rem;">
+                <h2>Access Denied</h2>
+                <p>You do not have permission to view this page.</p>
+                <button onclick="window.location.href='home.html'" class="submitButton">Go to Home</button>
             </div>
         </div>
     </div>

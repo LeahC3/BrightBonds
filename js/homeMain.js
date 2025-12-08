@@ -18,8 +18,35 @@ if (!AmplifyGlobal) {
 
   window.Auth = Auth; // Make available globally
   
+  // Check admin status and show Users tab
+  async function showUsersTabForAdmin() {
+    try {
+      const session = await Auth.currentSession();
+      const token = session.getIdToken().getJwtToken();
+      
+      const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matches/all', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        // User is admin, show Users tab
+        const usersLinks = document.querySelectorAll('a[href="users.html"]');
+        usersLinks.forEach(link => {
+          link.style.display = '';
+        });
+      }
+    } catch (error) {
+      // Not admin, keep Users tab hidden
+    }
+  }
+  
   // Settings icon click handler and mobile menu
   document.addEventListener('DOMContentLoaded', function() {
+    // Show Users tab for admin users
+    Auth.currentAuthenticatedUser()
+      .then(() => showUsersTabForAdmin())
+      .catch(() => {});
     const settingsIcon = document.getElementById("settingsIcon");
     if (settingsIcon) {
       settingsIcon.addEventListener("click", () => {

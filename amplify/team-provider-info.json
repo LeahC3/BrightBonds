@@ -35,7 +35,7 @@
         },
         "getMatches": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
-          "s3Key": "amplify-builds/getMatches-7a4c7331497939764d62-build.zip"
+          "s3Key": "amplify-builds/getMatches-47396b55752f31526236-build.zip"
         },
         "messageHandler": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
