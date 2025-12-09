@@ -43,7 +43,7 @@ async function checkAdminStatus() {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/users/all', {
+    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matches/users/all', {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -70,7 +70,7 @@ async function loadAllUsers() {
     const session = await Auth.currentSession();
     const token = session.getIdToken().getJwtToken();
     
-    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/users/all', {
+    const response = await fetch('https://j65hehh767.execute-api.us-east-2.amazonaws.com/dev/matches/users/all', {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -98,37 +98,75 @@ async function loadAllUsers() {
 }
 
 function displayUsersTable(users, container) {
+  const students = users.filter(u => u.type === 'Student').sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+  const residents = users.filter(u => u.type === 'Resident').sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+  
   let tableHTML = `
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+    <h4 style="color: #012572; margin-top: 2rem; margin-bottom: 0.5rem;">Students (${students.length})</h4>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
       <thead>
         <tr style="background-color: #f0f4ff; border-bottom: 2px solid #012572;">
           <th style="padding: 1rem; text-align: left; color: #012572;">Name</th>
           <th style="padding: 1rem; text-align: left; color: #012572;">Email</th>
-          <th style="padding: 1rem; text-align: left; color: #012572;">Type</th>
-          <th style="padding: 1rem; text-align: left; color: #012572;">Consent Form</th>
-          <th style="padding: 1rem; text-align: left; color: #012572;">Interest Form</th>
-          <th style="padding: 1rem; text-align: left; color: #012572;">Admin</th>
+          <th style="padding: 1rem; text-align: center; color: #012572;">Email Verified</th>
+          <th style="padding: 1rem; text-align: center; color: #012572;">Consent Form</th>
+          <th style="padding: 1rem; text-align: center; color: #012572;">Interest Form</th>
         </tr>
       </thead>
       <tbody>
   `;
   
-  users.forEach(user => {
-    const name = sanitizeText(user.name);
+  students.forEach(user => {
+    const name = sanitizeText(user.name) + (user.isAdmin ? ' <span style="color: #012572; font-weight: bold;">(Admin)</span>' : '');
     const email = sanitizeText(user.email);
-    const type = sanitizeText(user.type);
-    const consent = user.hasConsent ? '✓' : '✗';
-    const interest = user.hasInterest ? '✓' : '✗';
-    const admin = user.isAdmin ? '✓' : '✗';
+    const verified = user.emailVerified ? '<span style="color: green;">&#10003;</span>' : '<span style="color: red;">&#10007;</span>';
+    const consent = user.hasConsent ? '<span style="color: green;">&#10003;</span>' : '<span style="color: red;">&#10007;</span>';
+    const interest = user.hasInterest ? '<span style="color: green;">&#10003;</span>' : '<span style="color: red;">&#10007;</span>';
+    const isComplete = user.emailVerified && user.hasConsent && user.hasInterest;
+    const rowStyle = isComplete ? 'background-color: #d4edda; border-bottom: 1px solid #e0e7ff;' : 'border-bottom: 1px solid #e0e7ff;';
     
     tableHTML += `
-      <tr style="border-bottom: 1px solid #e0e7ff;">
+      <tr style="${rowStyle}">
         <td style="padding: 0.75rem;">${name}</td>
         <td style="padding: 0.75rem;">${email}</td>
-        <td style="padding: 0.75rem;">${type}</td>
+        <td style="padding: 0.75rem; text-align: center;">${verified}</td>
         <td style="padding: 0.75rem; text-align: center;">${consent}</td>
         <td style="padding: 0.75rem; text-align: center;">${interest}</td>
-        <td style="padding: 0.75rem; text-align: center;">${admin}</td>
+      </tr>
+    `;
+  });
+  
+  tableHTML += `</tbody></table>
+    <h4 style="color: #012572; margin-top: 2rem; margin-bottom: 0.5rem;">Residents (${residents.length})</h4>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #f0f4ff; border-bottom: 2px solid #012572;">
+          <th style="padding: 1rem; text-align: left; color: #012572;">Name</th>
+          <th style="padding: 1rem; text-align: left; color: #012572;">Email</th>
+          <th style="padding: 1rem; text-align: center; color: #012572;">Email Verified</th>
+          <th style="padding: 1rem; text-align: center; color: #012572;">Consent Form</th>
+          <th style="padding: 1rem; text-align: center; color: #012572;">Interest Form</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  
+  residents.forEach(user => {
+    const name = sanitizeText(user.name) + (user.isAdmin ? ' <span style="color: #012572; font-weight: bold;">(Admin)</span>' : '');
+    const email = sanitizeText(user.email);
+    const verified = user.emailVerified ? '<span style="color: green;">&#10003;</span>' : '<span style="color: red;">&#10007;</span>';
+    const consent = user.hasConsent ? '<span style="color: green;">&#10003;</span>' : '<span style="color: red;">&#10007;</span>';
+    const interest = user.hasInterest ? '<span style="color: green;">&#10003;</span>' : '<span style="color: red;">&#10007;</span>';
+    const isComplete = user.emailVerified && user.hasConsent && user.hasInterest;
+    const rowStyle = isComplete ? 'background-color: #ddf8e4ff; border-bottom: 1px solid #e0e7ff;' : 'border-bottom: 1px solid #e0e7ff;';
+    
+    tableHTML += `
+      <tr style="${rowStyle}">
+        <td style="padding: 0.75rem;">${name}</td>
+        <td style="padding: 0.75rem;">${email}</td>
+        <td style="padding: 0.75rem; text-align: center;">${verified}</td>
+        <td style="padding: 0.75rem; text-align: center;">${consent}</td>
+        <td style="padding: 0.75rem; text-align: center;">${interest}</td>
       </tr>
     `;
   });

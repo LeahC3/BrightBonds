@@ -198,6 +198,7 @@
             {
               "Action": [
                 "cognito-idp:AdminGetUser",
+                "cognito-idp:ListUsers",
                 "ssm:GetParameter"
               ],
               "Resource": [

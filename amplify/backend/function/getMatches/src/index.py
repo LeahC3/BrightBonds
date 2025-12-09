@@ -113,6 +113,8 @@ def handle_all_users_request():
                 given_name = ''
                 family_name = ''
                 birthdate = ''
+                email_verified = False
+                created_date = user.get('UserCreateDate')
                 
                 for attr in user.get('Attributes', []):
                     if attr['Name'] == 'email':
@@ -123,6 +125,8 @@ def handle_all_users_request():
                         family_name = attr['Value']
                     elif attr['Name'] == 'birthdate':
                         birthdate = attr['Value']
+                    elif attr['Name'] == 'email_verified':
+                        email_verified = attr['Value'] == 'true'
                 
                 user_type = 'Student'
                 if birthdate:
@@ -134,10 +138,12 @@ def handle_all_users_request():
                     'userId': user_id,
                     'name': f"{given_name} {family_name}".strip(),
                     'email': email,
+                    'emailVerified': email_verified,
                     'type': user_type,
                     'hasConsent': check_consent_form(user_id),
                     'hasInterest': check_interest_form(user_id),
-                    'isAdmin': check_admin_status(email)
+                    'isAdmin': check_admin_status(email),
+                    'createdDate': created_date.isoformat() if created_date else None
                 })
             
             pagination_token = response.get('PaginationToken')
@@ -187,8 +193,9 @@ def handler(event, context):
     
     # Handle GET requests for matches
     if http_method == 'GET':
+        path = event.get('path', '')
         # Check if this is a request for all users (admin)
-        if raw_path == '/users/all' or event.get('path', '') == '/users/all':
+        if '/users/all' in raw_path or '/users/all' in path:
             if not is_admin_user(user_id):
                 return {
                     'statusCode': 403,
@@ -197,7 +204,7 @@ def handler(event, context):
                 }
             return handle_all_users_request()
         # Check if this is a request for all matches (admin)
-        elif raw_path == '/matches/all' or event.get('path', '') == '/matches/all':
+        elif '/all' in raw_path or '/all' in path:
             if not is_admin_user(user_id):
                 return {
                     'statusCode': 403,
