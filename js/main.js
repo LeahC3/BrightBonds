@@ -32,3 +32,15 @@ function togglePages() {
     menu.classList.add("visible");
   }
 }
+
+// Toggle password visibility
+function togglePassword(inputId, icon) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'Hide';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'Show';
+  }
+}

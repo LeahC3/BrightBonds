@@ -19,7 +19,7 @@
         <!-- Load Amplify from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <!-- script -->
-        <script defer src="../js/main.js"></script>   <!-- shared logic -->
+        <script defer src="../js/main.js?v=3"></script>   <!-- shared logic -->
         <script defer src="../js/signUp.js"></script>  <!-- signup page only -->
 
         <!-- Nunito Sans, Adamina, Open Sans -->
@@ -73,10 +73,16 @@
                     <input type="email" id="email_input" name="email" autocomplete="on" required><br>
 
                     <label for="pw_input">Password</label><br>
-                    <input type="password" id="pw_input" name="password" required><br>
+                    <div style="position: relative;">
+                        <input type="password" id="pw_input" name="password" required>
+                        <span onclick="togglePassword('pw_input', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 0.85rem; color: #012572; text-decoration: underline;">Show</span>
+                    </div><br>
 
                     <label for="conf_pw_input">Confirm Password</label><br>
-                    <input type="password" id="conf_pw_input" name="confirm_password" required><br>
+                    <div style="position: relative;">
+                        <input type="password" id="conf_pw_input" name="confirm_password" required>
+                        <span onclick="togglePassword('conf_pw_input', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 0.85rem; color: #012572; text-decoration: underline;">Show</span>
+                    </div><br>
 
                     <div id="senior_code_field" style="display: none;">
                         <label for="senior_code">Resident Access Code</label><br>

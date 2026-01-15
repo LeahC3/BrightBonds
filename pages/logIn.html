@@ -20,7 +20,7 @@
         <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
         <!-- script -->
         <script src="../js/sanitizer.js"></script>
-        <script defer src="../js/main.js"></script>   <!-- shared logic -->
+        <script defer src="../js/main.js?v=3"></script>   <!-- shared logic -->
         <script defer src="../js/logIn.js"></script>  <!-- login page only -->
 
         <!-- Nunito Sans, Adamina, Open Sans -->
@@ -65,7 +65,10 @@
                     <input type="email" id="email_input" autocomplete="email" required><br>
 
                     <label for="pw_input">Password:</label><br>
-                    <input type="password" id="pw_input" autocomplete="current-password" required><br>
+                    <div style="position: relative;">
+                        <input type="password" id="pw_input" autocomplete="current-password" required>
+                        <span onclick="togglePassword('pw_input', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 0.85rem; color: #012572; text-decoration: underline;">Show</span>
+                    </div><br>
 
                     <input type="submit" class="submitButton" value="Log In">
                 
