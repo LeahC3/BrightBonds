@@ -1,0 +1,10 @@
+{
+  "resourceName": "userAvailability",
+  "tableName": "userAvailability",
+  "partitionKey": {
+    "fieldName": "availabilityId",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

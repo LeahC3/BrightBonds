@@ -35,6 +35,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/calendar": {
+      "name": "/calendar",
+      "lambdaFunction": "calendarHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

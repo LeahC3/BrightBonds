@@ -62,6 +62,14 @@
           ],
           "category": "function",
           "resourceName": "userSettings"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "calendarHandler"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -111,6 +119,11 @@
   },
   "function": {
     "brightbondscdd97a1fPreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "calendarHandler": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -165,6 +178,22 @@
         {
           "category": "function",
           "resourceName": "brightbondscdd97a1fPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_calendarHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "calendarHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_calendarHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "calendarHandler"
         }
       ]
     },
@@ -282,7 +311,15 @@
     }
   },
   "storage": {
+    "meetingSlots": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
     "messages": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "userAvailability": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"
     }

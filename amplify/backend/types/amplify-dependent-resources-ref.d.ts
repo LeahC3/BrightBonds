@@ -25,6 +25,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "calendarHandler": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "getMatches": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -77,7 +84,23 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
+    "meetingSlots": {
+      "Arn": "string",
+      "Name": "string",
+      "PartitionKeyName": "string",
+      "PartitionKeyType": "string",
+      "Region": "string",
+      "StreamArn": "string"
+    },
     "messages": {
+      "Arn": "string",
+      "Name": "string",
+      "PartitionKeyName": "string",
+      "PartitionKeyType": "string",
+      "Region": "string",
+      "StreamArn": "string"
+    },
+    "userAvailability": {
       "Arn": "string",
       "Name": "string",
       "PartitionKeyName": "string",

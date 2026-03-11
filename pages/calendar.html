@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bright Bonds - Calendar</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+    <link rel="icon" href="https://www.brightbonds.org/favicon.ico?v=2" />
+    <link rel="manifest" href="../favicon_io/site.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel="stylesheet" href="../styles/homeStyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.27/dist/aws-amplify.min.js"></script>
+    <script src="../js/sanitizer.js"></script>
+    <script src="../js/homeMain.js" defer></script>
+    <script src="../js/calendar.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <style>
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e7ff;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar-nav button {
+            background-color: #012572;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-family: "Open Sans", sans-serif;
+            font-size: 1rem;
+        }
+
+        .calendar-nav button:hover {
+            background-color: #00184c;
+        }
+
+        .current-month {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #012572;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #e0e7ff;
+            border: 1px solid #e0e7ff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background-color: #012572;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            background-color: white;
+            min-height: 120px;
+            padding: 0.5rem;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .calendar-day:hover {
+            background-color: #f8faff;
+        }
+
+        .calendar-day.other-month {
+            background-color: #f5f5f5;
+            color: #999;
+        }
+
+        .calendar-day.today {
+            background-color: #f0f4ff;
+        }
+
+        .day-number {
+            font-weight: 600;
+            color: #012572;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day.other-month .day-number {
+            color: #999;
+        }
+
+        .availability-indicator {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .availability-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            text-align: center;
+        }
+
+        .availability-badge.you {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .availability-badge.partner {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .availability-badge.both {
+            background-color: #ffc107;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .legend {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8faff;
+            border-radius: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 0.25rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: #012572;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-modal:hover {
+            color: #012572;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .availability-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+
+        .availability-option input[type="checkbox"] {
+            transform: scale(1.3);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-footer button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-family: "Open Sans", sans-serif;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #012572;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #00184c;
+        }
+
+        .btn-secondary {
+            background-color: #e0e7ff;
+            color: #012572;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d7ef;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                gap: 0;
+            }
+
+            .calendar-day {
+                min-height: 80px;
+                padding: 0.25rem;
+            }
+
+            .calendar-day-header {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .day-number {
+                font-size: 0.8rem;
+            }
+
+            .availability-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.3rem;
+            }
+
+            .current-month {
+                font-size: 1.2rem;
+                min-width: 150px;
+            }
+
+            .calendar-nav button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .legend {
+                gap: 1rem;
+            }
+
+            .legend-item {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="mobile-logo">
+            <img src="../brightBondsLogo.PNG" alt="Bright Bonds logo">
+            <span>Bright Bonds</span>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Desktop/Mobile Navigation -->
+    <nav id="nav">
+        <div class="logo">
+            <img id="brightbondsimg" src="../brightBondsLogo.PNG" alt="Bright Bonds logo">
+            <a id="logoText">Bright Bonds</a>
+        </div>
+
+        <div class="nav-links">
+            <a class="page" href="home.html">Home</a>
+            <a class="page" href="matches.html">My Matches</a>
+            <a class="page" href="messages.html">Messages</a>
+            <a class="page" id="active" href="calendar.html">Calendar</a>
+            <a class="page" href="resources.html">Resources</a>
+            <a class="page" href="users.html" style="display: none;">Users</a>
+        </div>
+
+        <div class="bottom">
+            <svg id="settingsIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewbox="0 0 16 16">
+                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+            </svg>
+            <button id="signOut">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="calendar-container">
+            <h1>Visit Calendar</h1>
+            
+            <div style="background-color: #f0f4ff; border-left: 4px solid #012572; padding: 1.5rem; margin-bottom: 2rem; border-radius: 0.5rem;">
+                <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: #333;">
+                    <strong style="color: #012572;">How it works:</strong> Use this calendar to coordinate visits with your matched partner. 
+                    Mark the dates you're available, and you'll see when your partner is available too. 
+                    All meetings take place from <strong>4pm-5pm at The Blend at Shell Point</strong>.
+                </p>
+            </div>
+            
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button id="prevMonth">← Previous</button>
+                    <div class="current-month" id="currentMonth">January 2024</div>
+                    <button id="nextMonth">Next →</button>
+                </div>
+                <button id="todayBtn">Today</button>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #28a745;"></div>
+                    <span>Your Availability</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #667eea;"></div>
+                    <span>Partner's Availability</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ffc107;"></div>
+                    <span>Both Available</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Availability Modal -->
+    <div class="modal" id="availabilityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalDate">Select Date</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: #666;">Mark your availability for this date:</p>
+                <div class="availability-option">
+                    <input type="checkbox" id="availableCheckbox">
+                    <label for="availableCheckbox">I am available on this date</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="btn-primary" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

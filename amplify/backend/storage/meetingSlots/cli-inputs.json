@@ -1,0 +1,10 @@
+{
+  "resourceName": "meetingSlots",
+  "tableName": "meetingSlots",
+  "partitionKey": {
+    "fieldName": "slotId",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

@@ -52,13 +52,19 @@
         "userSettings": {
           "deploymentBucketName": "brightbonds-dev-065205-deployment",
           "s3Key": "amplify-builds/userSettings-7653774168524443436f-build.zip"
+        },
+        "calendarHandler": {
+          "deploymentBucketName": "brightbonds-dev-065205-deployment",
+          "s3Key": "amplify-builds/calendarHandler-64663464394f554e4447-build.zip"
         }
       },
       "api": {
         "matchingApi": {}
       },
       "storage": {
-        "messages": {}
+        "messages": {},
+        "meetingSlots": {},
+        "userAvailability": {}
       }
     }
   }
