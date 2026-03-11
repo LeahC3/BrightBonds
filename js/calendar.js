@@ -6,6 +6,7 @@ let selectedDate = null;
 let meetingSlots = new Set();
 let userAvailability = new Set();
 let partnerAvailability = new Set();
+let allAvailability = {}; // For admin: stores all users' availability by date
 let isAdmin = false;
 
 async function initCalendar() {
@@ -24,6 +25,8 @@ async function initCalendar() {
         await loadMeetingSlots();
         if (!isAdmin) {
             await loadAvailability();
+        } else {
+            await loadAllAvailability();
         }
         renderCalendar();
         updateUIForRole();
@@ -165,6 +168,28 @@ async function loadAvailability() {
     }
 }
 
+async function loadAllAvailability() {
+    try {
+        const session = await window.Auth.currentSession();
+        const token = session.getIdToken().getJwtToken();
+        
+        const response = await fetch(`${API_ENDPOINT}/calendar/availability/all`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to load all availability');
+        
+        allAvailability = await response.json();
+        console.log('Loaded all availability:', allAvailability);
+    } catch (error) {
+        console.error('Error loading all availability:', error);
+    }
+}
+
 function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -241,6 +266,30 @@ function createDayElement(day, isOtherMonth, isToday = false) {
             dayEl.addEventListener('click', () => openModal(day, dateStr));
             if (meetingSlots.has(dateStr)) {
                 dayEl.style.backgroundColor = '#e8f5e9';
+                // Show who's available on this date
+                if (allAvailability[dateStr]) {
+                    const availList = allAvailability[dateStr];
+                    let namesHTML = '<div style="font-size: 0.7rem; margin-top: 0.3rem; color: #333; max-height: 80px; overflow-y: auto;">';
+                    const processedPairs = new Set();
+                    
+                    availList.forEach(user => {
+                        // Create a unique pair ID to avoid duplicates
+                        const pairId = [user.userId, user.partnerId].sort().join('_');
+                        
+                        if (user.partnerAvailable) {
+                            // Both available - only show once per pair
+                            if (!processedPairs.has(pairId)) {
+                                processedPairs.add(pairId);
+                                namesHTML += `<div style="margin: 0.1rem 0; padding: 0.2rem; background: white; border-radius: 0.2rem; font-size: 0.65rem;">${user.userName} & ${user.partnerName}</div>`;
+                            }
+                        } else {
+                            // Only one person available
+                            namesHTML += `<div style="margin: 0.1rem 0; padding: 0.2rem; background: white; border-radius: 0.2rem; font-size: 0.65rem;">${user.userName}</div>`;
+                        }
+                    });
+                    namesHTML += '</div>';
+                    dayEl.querySelector('.availability-indicator').innerHTML = namesHTML;
+                }
             }
         } else if (meetingSlots.has(dateStr)) {
             // Users can only click dates with existing slots
@@ -408,6 +457,8 @@ document.getElementById('prevMonth').addEventListener('click', async () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     if (!isAdmin) {
         await loadAvailability();
+    } else {
+        await loadAllAvailability();
     }
     renderCalendar();
 });
@@ -416,6 +467,8 @@ document.getElementById('nextMonth').addEventListener('click', async () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     if (!isAdmin) {
         await loadAvailability();
+    } else {
+        await loadAllAvailability();
     }
     renderCalendar();
 });
@@ -424,6 +477,8 @@ document.getElementById('todayBtn').addEventListener('click', async () => {
     currentDate = new Date();
     if (!isAdmin) {
         await loadAvailability();
+    } else {
+        await loadAllAvailability();
     }
     renderCalendar();
 });

@@ -312,3 +312,102 @@ def set_availability(event, user_id):
             'headers': {'Access-Control-Allow-Origin': '*'},
             'body': json.dumps({'error': str(e)})
         }
+
+def get_all_availability():
+    """Admin endpoint to get all users' availability with names"""
+    try:
+        # Get all availability records
+        availability_response = user_availability_table.scan()
+        all_availability = availability_response.get('Items', [])
+        
+        # Get all matches to pair users
+        matches_response = matches_table.scan()
+        matches = matches_response.get('Items', [])
+        
+        # Group availability by date
+        availability_by_date = {}
+        
+        for avail in all_availability:
+            date = avail['date']
+            user_id = avail['userId']
+            
+            if date not in availability_by_date:
+                availability_by_date[date] = []
+            
+            # Find the match for this user
+            user_match = None
+            partner_id = None
+            for match in matches:
+                if match['studentUserId'] == user_id:
+                    user_match = match
+                    partner_id = match['seniorUserId']
+                    break
+                elif match['seniorUserId'] == user_id:
+                    user_match = match
+                    partner_id = match['studentUserId']
+                    break
+            
+            # Get user name from Cognito
+            try:
+                user_response = cognito_client.admin_get_user(
+                    UserPoolId=USER_POOL_ID,
+                    Username=user_id
+                )
+                given_name = 'Unknown'
+                family_name = ''
+                for attr in user_response.get('UserAttributes', []):
+                    if attr['Name'] == 'given_name':
+                        given_name = attr['Value']
+                    elif attr['Name'] == 'family_name':
+                        family_name = attr['Value']
+                user_name = f"{given_name} {family_name}".strip()
+            except:
+                user_name = 'Unknown'
+            
+            # Get partner name if exists
+            partner_name = None
+            if partner_id:
+                try:
+                    partner_response = cognito_client.admin_get_user(
+                        UserPoolId=USER_POOL_ID,
+                        Username=partner_id
+                    )
+                    given_name = 'Unknown'
+                    family_name = ''
+                    for attr in partner_response.get('UserAttributes', []):
+                        if attr['Name'] == 'given_name':
+                            given_name = attr['Value']
+                        elif attr['Name'] == 'family_name':
+                            family_name = attr['Value']
+                    partner_name = f"{given_name} {family_name}".strip()
+                except:
+                    partner_name = 'Unknown'
+            
+            # Check if partner is also available on this date
+            partner_available = False
+            if partner_id:
+                for p_avail in all_availability:
+                    if p_avail['userId'] == partner_id and p_avail['date'] == date:
+                        partner_available = True
+                        break
+            
+            availability_by_date[date].append({
+                'userId': user_id,
+                'userName': user_name,
+                'partnerId': partner_id,
+                'partnerName': partner_name,
+                'partnerAvailable': partner_available
+            })
+        
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps(availability_by_date, default=str)
+        }
+    except Exception as e:
+        print(f"Error getting all availability: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': str(e)})
+        }
