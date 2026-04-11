@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Bright Bonds</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../favicon_io/favicon.ico">
+  <style>
+    .gallery-grid video {
+      cursor: pointer;
+      position: relative;
+    }
+    .media-label {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Arial', sans-serif;
+      margin-top: 0.3rem;
+    }
+    .gallery-item { display: flex; flex-direction: column; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <img src="../brightBondsLogo.PNG" alt="Bright Bonds Logo">
+    <span>Bright Bonds</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+    <li><a href="gallery.html" class="active">Gallery</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>Gallery</h1>
+  <p>Moments from our sessions at Shell Point Retirement Community.</p>
+</div>
+
+<section>
+  <div class="gallery-grid container">
+
+    <div class="gallery-item">
+      <img src="../photos/IMG_0087.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0088.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0089.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0091.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0092.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0093.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0094.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_0095.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_1151.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_1163.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_1164.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_7041.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_7042.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_7043.JPG" alt="Students and residents at Shell Point">
+    </div>
+    <div class="gallery-item">
+      <img src="../photos/IMG_7994.JPG" alt="Students and residents at Shell Point">
+    </div>
+
+    <div class="gallery-item">
+      <video controls preload="metadata">
+        <source src="../photos/IMG_0077.MP4" type="video/mp4">
+      </video>
+      <div class="media-label">▶ Video from a Bright Bonds session</div>
+    </div>
+    <div class="gallery-item">
+      <video controls preload="metadata">
+        <source src="../photos/IMG_7991.MP4" type="video/mp4">
+      </video>
+      <div class="media-label">▶ Video from a Bright Bonds session</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>Bright Bonds &mdash; A RISE Project, Bishop Verot Scholars' Academy &middot; Shell Point Retirement Community, Fort Myers, FL</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

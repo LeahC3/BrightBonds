@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story — Bright Bonds</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../favicon_io/favicon.ico">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <img src="../brightBondsLogo.PNG" alt="Bright Bonds Logo">
+    <span>Bright Bonds</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="our-story.html" class="active">Our Story</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>Our Story</h1>
+  <p>How the project came together, where it ran into difficulty, and what we took from it.</p>
+</div>
+
+<!-- Intro -->
+<section>
+  <div class="container fade-up" style="max-width: 720px;">
+    <p>Bright Bonds took longer to develop than we anticipated. The original plan was to begin individual matching relatively early, but the reality involved more obstacles than expected.</p>
+  </div>
+</section>
+
+<!-- Photo Banner -->
+<div style="width:100%; height:300px; overflow:hidden; position:relative;">
+  <img src="../photos/IMG_1163.JPG" alt="Bright Bonds session at Shell Point" style="width:100%; height:100%; object-fit:cover; object-position:center 40%;">
+  <div style="position:absolute; inset:0; background:rgba(26,79,138,0.3);"></div>
+</div>
+
+<!-- Timeline -->
+<section class="alt">
+  <div class="section-title">
+    <h2>How It Unfolded</h2>
+    <div class="underline"></div>
+  </div>
+  <div class="timeline container">
+
+    <div class="timeline-item fade-up">
+      <div class="date">January 2025</div>
+      <h3>The Idea</h3>
+      <p>Savannah and I co-founded Bright Bonds as our RISE project for the Bishop Verot Scholars' Academy. We wanted to address social isolation among seniors through a program that felt more personal and sustained than a standard volunteer arrangement.</p>
+    </div>
+
+    <div class="timeline-item fade-up fade-up-delay-1">
+      <div class="date">Early 2025</div>
+      <h3>Getting Ready</h3>
+      <p>We wrote a volunteer handbook, compiled an activity and conversation guide, and established the partnership with Shell Point. I built the website during this period as well.</p>
+    </div>
+
+    <div class="timeline-item fade-up fade-up-delay-2">
+      <div class="date">November 2025</div>
+      <h3>First Sessions</h3>
+      <p>Sessions began at Shell Point in November 2025. We held group sessions rather than moving immediately to individual matching, with the goal of building familiarity and identifying participants who could commit to a regular schedule.</p>
+    </div>
+
+    <div class="timeline-item fade-up fade-up-delay-1">
+      <div class="date">Late 2025</div>
+      <h3>Slower Than Expected</h3>
+      <p>Sustaining consistent participation was the most difficult part of the process. Students had scheduling conflicts, and generating steady interest on both sides took longer than anticipated. Matching was delayed as a result. We continued meeting and adjusted our approach along the way.</p>
+    </div>
+
+    <div class="timeline-item fade-up fade-up-delay-2">
+      <div class="date">2025–2026</div>
+      <h3>Congressional App Challenge</h3>
+      <p>We submitted the Bright Bonds website to the Congressional App Challenge for FL-19 (Rep. Byron Donalds) and placed runner-up. We were subsequently invited to meet with Congressman Donalds.</p>
+    </div>
+
+    <div class="timeline-item fade-up fade-up-delay-1">
+      <div class="date">2026</div>
+      <h3>Matching</h3>
+      <p>After 14 sessions, we established 5 individual pairs based on shared interests. The timeline was longer than we originally planned, but these matches are what the program was designed to produce.</p>
+    </div>
+
+    <div class="timeline-item fade-up fade-up-delay-2">
+      <div class="date">Ongoing</div>
+      <h3>Next Year</h3>
+      <p>The program is still active. We plan to continue next year, invest more time in the existing pairs, and expand participation on both sides.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Reflection -->
+<section>
+  <div class="container" style="max-width: 720px;">
+    <div class="section-title">
+      <h2>What We Learned</h2>
+      <div class="underline"></div>
+    </div>
+    <p>We didn't anticipate how much the project would be affected by logistics. Bringing students and residents together consistently was harder than expected, and it pushed back the matching timeline. These challenges, however, taught us a lot about communication and planning.</p>
+    <p style="margin-top: 1rem;">We kept working together, eventually creating 5 pairs. The program is still running, and Savannah and I plan to use what we've learned to continue expanding it next year.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Bright Bonds &mdash; A RISE Project, Bishop Verot Scholars' Academy &middot; Shell Point Retirement Community, Fort Myers, FL</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

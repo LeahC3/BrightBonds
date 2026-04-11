@@ -3,8 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BrightBonds</title>
+  <title>Bright Bonds</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon_io/favicon.ico">
 </head>
 <body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="brightBondsLogo.PNG" alt="Bright Bonds Logo">
+    <span>Bright Bonds</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="pages/about.html">About</a></li>
+    <li><a href="pages/our-story.html">Our Story</a></li>
+    <li><a href="pages/gallery.html">Gallery</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <img class="hero-logo" src="brightBondsLogo.PNG" alt="Bright Bonds Logo">
+  <h1>Bright Bonds</h1>
+  <p>A RISE project for the Bishop Verot Scholars' Academy, connecting high school students with seniors at Shell Point Retirement Community.</p>
+</section>
+
+<!-- Project Overview -->
+<section>
+  <div class="container fade-up" style="max-width: 780px;">
+    <div class="section-title">
+      <h2>The Project</h2>
+      <div class="underline"></div>
+    </div>
+    <p>Bright Bonds is a program that pairs high school students with seniors at Shell Point Retirement Community based on shared interests. Savannah and I co-founded it as our RISE (Capstone) project for the Bishop Verot Scholars' Academy. We aimed to match students up with seniors by shared interests and have them meet regularly over time. By founding the program, we wanted to produce something more impactful than a typical one-time volunteer event.</p>
+    <p style="margin-top: 1rem;">Planning began in January 2025, with ongoing sessions launched at Shell Point in November. Individual matching took longer than we originally anticipated, but we eventually established 5 pairs, and we intend to continue the program next year.</p>
+  </div>
+</section>
+
+<!-- Photo Strip -->
+<section style="padding: 0; overflow: hidden;">
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); height: 220px;">
+    <div style="overflow:hidden; height:220px;"><img src="photos/IMG_0087.JPG" alt="Bright Bonds session" style="width:100%; height:300px; object-fit:cover; object-position:center 80%; display:block; margin-top:-40px;"></div>
+    <div style="overflow:hidden; height:220px;"><img src="photos/IMG_1164.JPG" alt="Bright Bonds session" style="width:100%; height:300px; object-fit:cover; object-position:center 80%; display:block; margin-top:-10px;"></div>
+    <div style="overflow:hidden; height:220px;"><img src="photos/IMG_0095.JPG" alt="Bright Bonds session" style="width:100%; height:300px; object-fit:cover; object-position:center 80%; display:block; margin-top:-10px;"></div>
+    <div style="overflow:hidden; height:220px;"><img src="photos/IMG_0093.JPG" alt="Bright Bonds session" style="width:100%; height:300px; object-fit:cover; object-position:center 80%; display:block; margin-top:-40px;"></div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section>
+  <div class="section-title">
+    <h2>By the Numbers</h2>
+    <div class="underline"></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat">
+      <div class="number">14</div>
+      <div class="label">Sessions Held</div>
+    </div>
+    <div class="stat">
+      <div class="number">5</div>
+      <div class="label">Matches Created</div>
+    </div>
+    <div class="stat">
+      <div class="number">[X]</div>
+      <div class="label">Students Participated</div>
+    </div>
+    <div class="stat">
+      <div class="number">[X]</div>
+      <div class="label">Residents Participated</div>
+    </div>
+    <div class="stat">
+      <div class="number">[X]</div>
+      <div class="label">Volunteer Hours</div>
+    </div>
+  </div>
+</section>
+
+<!-- Recognition -->
+<section class="yellow-tint">
+  <div class="container" style="max-width: 720px; text-align: center;">
+    <div class="section-title">
+      <h2>Congressional App Challenge</h2>
+      <div class="underline"></div>
+    </div>
+    <p style="margin-bottom: 1rem;">The Bright Bonds website was submitted to the <strong>Congressional App Challenge for FL-19</strong> (Rep. Byron Donalds) and placed <strong>runner-up</strong>. We were subsequently invited to meet with Congressman Donalds.</p>
+    <span class="badge">🏆 Runner-Up — FL-19 Congressional App Challenge</span>
+    <p style="margin-top: 1.5rem;">
+      <a href="https://m.youtube.com/watch?v=59T4zvmsql4" target="_blank" rel="noopener" class="btn">Watch Our Submission Video</a>
+    </p>
+  </div>
+</section>
+
+<!-- Quote -->
+<section>
+  <div class="container">
+    <div class="quote-block" style="display:flex; align-items:center; gap:1.5rem; max-width:780px;">
+      <img src="photos/IMG_7042.JPG" alt="Jesse" style="width:120px; height:120px; object-fit:cover; object-position:center 20%; border-radius:50%; flex-shrink:0; border:3px solid var(--yellow); transform:scale(1.15);">
+      <div>
+        <p>"There's not a particular moment that stuck with me, but it was through all the moments with the residents I remembered. I loved hearing the stories of their lives... I think most of the residents really enjoyed talking to a younger generation... hearing how we're navigating our lives and how we're planning our future."</p>
+        <cite>— Jesse, student participant</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Bright Bonds &mdash; A RISE Project, Bishop Verot Scholars' Academy &middot; Shell Point Retirement Community, Fort Myers, FL</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>

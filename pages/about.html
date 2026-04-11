@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Bright Bonds</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../favicon_io/favicon.ico">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <img src="../brightBondsLogo.PNG" alt="Bright Bonds Logo">
+    <span>Bright Bonds</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>About Bright Bonds</h1>
+  <p>What it is, why we started it, and who's involved.</p>
+</div>
+
+<!-- The Problem -->
+<section>
+  <div class="container fade-up" style="max-width: 780px;">
+    <div class="section-title">
+      <h2>The Problem</h2>
+      <div class="underline"></div>
+    </div>
+    <p>Many seniors, particularly those in retirement communities, go extended periods without regular visitors or meaningful conversation. The issue isn't indifference so much as a lack of structure — there's no easy way for people outside those communities to form ongoing connections with the people inside them. Most high school volunteering follows a similar pattern: a single visit, a few hours, and then nothing sustained.</p>
+    <p style="margin-top: 1rem;">The matching idea came from college roommate programs, where incoming students fill out forms about their lifestyle and interests and get paired with someone compatible. We wanted to apply the same logic here: have students and residents fill out interest forms, then match pairs who could engage in shared hobbies or simply have something genuine to talk about. The goal was to create something closer to a real relationship than a routine volunteer obligation.</p>
+  </div>
+</section>
+
+<!-- The Program -->
+<section class="alt">
+  <div class="section-title">
+    <h2>The Program</h2>
+    <div class="underline"></div>
+  </div>
+  <div class="card-grid container">
+    <div class="card fade-up">
+      <div class="card-icon">📍</div>
+      <h3>Where</h3>
+      <p>Shell Point Retirement Community in Fort Myers, Florida. It's one of the largest continuing care retirement communities in the country.</p>
+    </div>
+    <div class="card fade-up fade-up-delay-1">
+      <div class="card-icon">🗓️</div>
+      <h3>When</h3>
+      <p>We started planning in January 2025 and held our first sessions in November 2025. We spent the first several months running group sessions to build familiarity and identify participants who could commit to a regular schedule before moving to individual pairs. The program is ongoing, and we plan to continue next year.</p>
+    </div>
+    <div class="card fade-up fade-up-delay-2">
+      <div class="card-icon">💛</div>
+      <h3>How</h3>
+      <p>Students and residents each fill out an interest form when they join. An algorithm on the Bright Bonds website uses those responses to automatically pair them with someone who shares their interests. Once matched, pairs can communicate through the site's messaging system and coordinate visits using a shared calendar.</p>
+    </div>
+    <div class="card fade-up fade-up-delay-3">
+      <div class="card-icon">📖</div>
+      <h3>Support Materials</h3>
+      <p>We compiled a volunteer handbook and a library of activities and conversation starters for volunteers to use during visits. Both were developed during the planning phase starting in January 2025.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Who's Behind It -->
+<section>
+  <div class="section-title">
+    <h2>Who's Behind It</h2>
+    <div class="underline"></div>
+    <p>Bright Bonds was co-founded by two Bishop Verot Scholars' Academy students as their RISE project.</p>
+  </div>
+  <div class="bio-grid">
+    <div class="bio-card fade-up">
+      <div class="avatar">👤</div>
+      <h3>Leah Chung</h3>
+      <div class="role">Co-Founder</div>
+      <p>Handled the website and assisted with planning. Built the full Bright Bonds web platform at <a href="https://BrightBonds.org" target="_blank" rel="noopener">BrightBonds.org</a>, which includes an interest-based matching algorithm, a messaging system, a shared calendar, and user authentication. The site is built with HTML, CSS, and JavaScript on the frontend, with AWS Lambda functions handling the backend, DynamoDB for data storage, and AWS Cognito for authentication. The matching algorithm automatically pairs students and residents based on shared interests. The platform placed runner-up in the FL-19 Congressional App Challenge.</p>
+    </div>
+    <div class="bio-card fade-up fade-up-delay-1">
+      <div class="avatar">👤</div>
+      <h3>Savannah Emrich</h3>
+      <div class="role">Co-Founder</div>
+      <p>Handled logistics, outreach, and communication — recruiting students and residents, coordinating sessions, and keeping things running on the ground.</p>
+      <p style="margin-top: 0.75rem;">Savannah has her own project website documenting her side of Bright Bonds. <a href="[Savannah's website URL]" target="_blank" rel="noopener">View Savannah's project website</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- RISE Context -->
+<section class="yellow-tint">
+  <div class="container" style="max-width: 720px; text-align: center;">
+    <div class="section-title">
+      <h2>A RISE Project</h2>
+      <div class="underline"></div>
+    </div>
+    <p>Bright Bonds is a RISE project through the <strong>Bishop Verot Scholars' Academy</strong>. The RISE project is a two-year, take-action service-learning requirement that asks students to find a real problem, research it, and build something that addresses it in a meaningful way.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Bright Bonds &mdash; A RISE Project, Bishop Verot Scholars' Academy &middot; Shell Point Retirement Community, Fort Myers, FL</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
