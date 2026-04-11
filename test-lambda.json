@@ -1,8 +1,0 @@
-{
-  "httpMethod": "POST",
-  "body": "{\"hobby\": \"reading\", \"age\": \"65\"}",
-  "headers": {
-    "Content-Type": "application/json"
-  },
-  "requestContext": {}
-}
