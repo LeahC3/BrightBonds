@@ -71,6 +71,7 @@
     <img src="../brightBondsLogo.PNG" alt="Bright Bonds Logo">
     <span>Bright Bonds</span>
   </a>
+  <button class="nav-hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   <ul class="nav-links">
     <li><a href="../index.html">Home</a></li>
     <li><a href="about.html">About</a></li>
@@ -170,6 +171,12 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  const btn = document.querySelector('.nav-hamburger');
+  const menu = document.querySelector('.nav-links');
+  btn.addEventListener('click', () => { btn.classList.toggle('open'); menu.classList.toggle('open'); });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { btn.classList.remove('open'); menu.classList.remove('open'); }));
+  document.addEventListener('click', e => { if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) { btn.classList.remove('open'); menu.classList.remove('open'); } });
 
   const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
   const lb = document.getElementById('lightbox');
