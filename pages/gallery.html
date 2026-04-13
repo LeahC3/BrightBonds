@@ -19,6 +19,49 @@
       margin-top: 0.3rem;
     }
     .gallery-item { display: flex; flex-direction: column; }
+    .gallery-item img { cursor: pointer; }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+    #lb-close {
+      position: fixed;
+      top: 1rem;
+      right: 1.25rem;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      line-height: 1;
+      background: none;
+      border: none;
+    }
+    #lb-prev, #lb-next {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0 1rem;
+      user-select: none;
+    }
+    #lb-prev { left: 0.5rem; }
+    #lb-next { right: 0.5rem; }
   </style>
 </head>
 <body>
@@ -33,6 +76,7 @@
     <li><a href="about.html">About</a></li>
     <li><a href="our-story.html">Our Story</a></li>
     <li><a href="gallery.html" class="active">Gallery</a></li>
+    <li><a href="get-involved.html">Get Involved</a></li>
   </ul>
 </nav>
 
@@ -94,17 +138,28 @@
       <video controls preload="metadata">
         <source src="../photos/IMG_0077.MP4" type="video/mp4">
       </video>
-      <div class="media-label">▶ Video from a Bright Bonds session</div>
+      <div class="media-label">▶ Our table setup before a Bright Bonds session</div>
     </div>
     <div class="gallery-item">
       <video controls preload="metadata">
         <source src="../photos/IMG_7991.MP4" type="video/mp4">
       </video>
-      <div class="media-label">▶ Video from a Bright Bonds session</div>
+      <div class="media-label">▶ A student plays piano at Shell Point before a session</div>
     </div>
 
   </div>
 </section>
+
+<div class="container" style="max-width: var(--max-width); padding: 0.5rem 2rem 1.5rem; font-size: 0.82rem; color: var(--text-muted); font-family: 'Arial', sans-serif;">
+  Photos by <a href="https://www.instagram.com/mleabates/" target="_blank" rel="noopener">Emily Bates</a> and Savannah Emrich.
+</div>
+
+<div id="lightbox">
+  <button id="lb-close">&#x2715;</button>
+  <button id="lb-prev">&#8249;</button>
+  <img id="lb-img" src="" alt="">
+  <button id="lb-next">&#8250;</button>
+</div>
 
 <footer>
   <p>Bright Bonds &mdash; A RISE Project, Bishop Verot Scholars' Academy &middot; Shell Point Retirement Community, Fort Myers, FL</p>
@@ -115,6 +170,31 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  let cur = 0;
+
+  function open(i) {
+    cur = i;
+    lbImg.src = imgs[i].src;
+    lbImg.alt = imgs[i].alt;
+    lb.classList.add('open');
+  }
+  function close() { lb.classList.remove('open'); lbImg.src = ''; }
+
+  imgs.forEach((img, i) => img.addEventListener('click', () => open(i)));
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', () => open((cur - 1 + imgs.length) % imgs.length));
+  document.getElementById('lb-next').addEventListener('click', () => open((cur + 1) % imgs.length));
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') open((cur - 1 + imgs.length) % imgs.length);
+    if (e.key === 'ArrowRight') open((cur + 1) % imgs.length);
+  });
 </script>
 
 </body>

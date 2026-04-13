@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Involved — Bright Bonds</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../favicon_io/favicon.ico">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <img src="../brightBondsLogo.PNG" alt="Bright Bonds Logo">
+    <span>Bright Bonds</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="get-involved.html" class="active">Get Involved</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>Get Involved</h1>
+  <p>Join Bright Bonds as a student volunteer, follow along on Instagram, or bring the program to your community.</p>
+</div>
+
+<!-- Volunteer as a Student -->
+<section>
+  <div class="container fade-up" style="max-width: 780px;">
+    <div class="section-title">
+      <h2>Volunteer as a Student</h2>
+      <div class="underline"></div>
+    </div>
+    <p>We're looking for student participants for the <strong>2026–2027 school year</strong>. Sign up on the Bright Bonds platform to fill out an interest form and get matched with a Shell Point resident who shares your hobbies and interests. Matches meet regularly for visits.</p>
+    <p style="margin-top: 1rem;">Signing up takes a few minutes, and we'll reach out when sessions start next year.</p>
+    <p style="margin-top: 2rem; text-align: center;">
+      <a href="https://brightbonds.org" target="_blank" rel="noopener" class="btn">Sign Up at BrightBonds.org</a>
+    </p>
+  </div>
+</section>
+
+<!-- Photo Banner -->
+<div style="width:100%; height:300px; overflow:hidden; position:relative;">
+  <img src="../photos/IMG_0088.JPG" alt="Bright Bonds session at Shell Point" style="width:100%; height:100%; object-fit:cover; object-position:center 35%;">
+  <div style="position:absolute; inset:0; background:rgba(26,79,138,0.25);"></div>
+</div>
+
+<!-- Follow on Instagram -->
+<section class="alt">
+  <div class="container fade-up" style="max-width: 620px; text-align: center;">
+    <div class="section-title">
+      <h2>Follow Us on Instagram</h2>
+      <div class="underline"></div>
+    </div>
+    <p>We're on Instagram at <strong><a href="https://www.instagram.com/brightbonds_swfl/" target="_blank" rel="noopener">@brightbonds_swfl</a></strong>. Follow along for photos and updates from our sessions, and send us a DM with any questions or feedback!</p>
+    <p style="margin-top: 2rem;">
+      <a href="https://www.instagram.com/brightbonds_swfl/" target="_blank" rel="noopener" class="btn">Visit @brightbonds_swfl</a>
+    </p>
+  </div>
+</section>
+
+<!-- Expand to Your Community -->
+<section class="yellow-tint">
+  <div class="container fade-up" style="max-width: 720px; text-align: center;">
+    <div class="section-title">
+      <h2>Bring Bright Bonds to Your Community</h2>
+      <div class="underline"></div>
+    </div>
+    <p>We're currently at Shell Point Retirement Community, and we're looking to expand. If you're a student, educator, or retirement community coordinator interested in launching this program elsewhere, we'd love to hear from you.</p>
+    <p style="margin-top: 2rem;">
+      <a href="https://www.instagram.com/brightbonds_swfl/" target="_blank" rel="noopener" class="btn">Get in Touch</a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  <p>Bright Bonds &mdash; A RISE Project, Bishop Verot Scholars' Academy &middot; Shell Point Retirement Community, Fort Myers, FL</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

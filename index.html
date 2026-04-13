@@ -19,6 +19,7 @@
     <li><a href="pages/about.html">About</a></li>
     <li><a href="pages/our-story.html">Our Story</a></li>
     <li><a href="pages/gallery.html">Gallery</a></li>
+    <li><a href="pages/get-involved.html">Get Involved</a></li>
   </ul>
 </nav>
 
@@ -57,25 +58,25 @@
     <div class="underline"></div>
   </div>
   <div class="stats-row">
-    <div class="stat">
-      <div class="number">14</div>
+    <div class="stat fade-up">
+      <div class="number" data-target="14">0</div>
       <div class="label">Sessions Held</div>
     </div>
-    <div class="stat">
-      <div class="number">5</div>
-      <div class="label">Matches Created</div>
+    <div class="stat fade-up fade-up-delay-1">
+      <div class="number" data-target="10">0</div>
+      <div class="label">Participants Matched</div>
     </div>
-    <div class="stat">
-      <div class="number">[X]</div>
+    <div class="stat fade-up fade-up-delay-2">
+      <div class="number" data-target="9">0</div>
       <div class="label">Students Participated</div>
     </div>
-    <div class="stat">
-      <div class="number">[X]</div>
+    <div class="stat fade-up fade-up-delay-3">
+      <div class="number">10+</div>
       <div class="label">Residents Participated</div>
     </div>
-    <div class="stat">
+    <div class="stat fade-up fade-up-delay-4">
       <div class="number">[X]</div>
-      <div class="label">Volunteer Hours</div>
+      <div class="label">Total Volunteer Hours</div>
     </div>
   </div>
 </section>
@@ -114,7 +115,24 @@
 
 <script>
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        const num = e.target.querySelector('.number[data-target]');
+        if (num && !num.dataset.done) {
+          num.dataset.done = '1';
+          const target = +num.dataset.target;
+          const duration = 900;
+          const step = Math.max(Math.ceil(duration / target), 16);
+          let cur = 0;
+          const timer = setInterval(() => {
+            cur = Math.min(cur + 1, target);
+            num.textContent = cur;
+            if (cur >= target) clearInterval(timer);
+          }, step);
+        }
+      }
+    });
   }, { threshold: 0.15 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 </script>
