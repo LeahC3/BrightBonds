@@ -74,11 +74,11 @@
       <div class="label">Students Participated</div>
     </div>
     <div class="stat fade-up fade-up-delay-3">
-      <div class="number">10+</div>
+      <div class="number" data-target="10" data-suffix="+">0</div>
       <div class="label">Residents Participated</div>
     </div>
     <div class="stat fade-up fade-up-delay-4">
-      <div class="number">[X]</div>
+      <div class="number" data-target="50" data-suffix="+">0</div>
       <div class="label">Total Volunteer Hours</div>
     </div>
   </div>
@@ -125,12 +125,13 @@
         if (num && !num.dataset.done) {
           num.dataset.done = '1';
           const target = +num.dataset.target;
+          const suffix = num.dataset.suffix || '';
           const duration = 900;
           const step = Math.max(Math.ceil(duration / target), 16);
           let cur = 0;
           const timer = setInterval(() => {
             cur = Math.min(cur + 1, target);
-            num.textContent = cur;
+            num.textContent = cur + suffix;
             if (cur >= target) clearInterval(timer);
           }, step);
         }
